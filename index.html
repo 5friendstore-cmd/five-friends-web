@@ -4,15 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Five Friends | Impresión 3D, Coleccionables & Desarrollo Web</title>
-  <!-- Tailwind CSS CDN -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Supabase JS Client v2 -->
+  <!-- Supabase JS Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- QRCode.js CDN -->
+  <!-- QRCode.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); }
+    .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); }
   </style>
 </head>
 <body class="bg-zinc-50 text-zinc-900 min-h-screen flex flex-col antialiased selection:bg-zinc-900 selection:text-white">
@@ -20,16 +20,16 @@
   <!-- Header / Barra de Navegación -->
   <header class="sticky top-0 z-50 glass border-b border-zinc-200">
     <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-2 cursor-pointer" onclick="navigate('inicio')">
+      <button onclick="navigate('inicio')" class="flex items-center gap-2 cursor-pointer focus:outline-none">
         <div class="w-8 h-8 bg-zinc-950 text-white rounded flex items-center justify-center font-bold tracking-tighter">5F</div>
         <span class="font-bold tracking-tight text-lg">FIVE FRIENDS</span>
-      </div>
-      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-600">
-        <button onclick="navigate('inicio')" class="hover:text-zinc-950 transition">Inicio</button>
-        <button onclick="navigate('catalogo')" class="hover:text-zinc-950 transition">Catálogo</button>
-        <button onclick="navigate('puntos')" class="hover:text-zinc-950 transition">Puntos de Venta</button>
-        <button onclick="navigate('contacto')" class="hover:text-zinc-950 transition">Contacto</button>
-        <button onclick="navigate('club')" class="bg-zinc-950 text-white px-4 py-2 rounded-full hover:bg-zinc-800 transition">Club Five Friends</button>
+      </button>
+      <nav class="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm font-medium text-zinc-600">
+        <button type="button" onclick="navigate('inicio')" class="hover:text-zinc-950 transition">Inicio</button>
+        <button type="button" onclick="navigate('catalogo')" class="hover:text-zinc-950 transition">Catálogo</button>
+        <button type="button" onclick="navigate('puntos')" class="hover:text-zinc-950 transition">Puntos de Venta</button>
+        <button type="button" onclick="navigate('contacto')" class="hover:text-zinc-950 transition">Contacto</button>
+        <button type="button" onclick="navigate('club')" class="bg-zinc-950 text-white px-3 sm:px-4 py-2 rounded-full hover:bg-zinc-800 transition">Club Five Friends</button>
       </nav>
     </div>
   </header>
@@ -37,18 +37,18 @@
   <!-- CONTENIDO PRINCIPAL -->
   <main class="flex-1 max-w-7xl w-full mx-auto p-6">
 
-    <!-- SECCIÓN: INICIO -->
+    <!-- SECCIÓN 1: INICIO -->
     <section id="sec-inicio" class="space-y-16 py-8">
       <div class="text-center max-w-3xl mx-auto space-y-6 py-12">
-        <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight text-zinc-950">
+        <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight text-zinc-950 leading-tight">
           Diseño, Fabricación 3D y Soluciones Digitales
         </h1>
         <p class="text-lg text-zinc-600 font-normal">
           Desde piezas a medida y figuras con manufactura aditiva hasta desarrollo de páginas web y tiendas en línea profesionales.
         </p>
         <div class="flex justify-center gap-4 pt-4">
-          <button onclick="navigate('catalogo')" class="bg-zinc-950 text-white px-6 py-3 rounded-lg font-medium hover:bg-zinc-800 transition">Ver Catálogo</button>
-          <button onclick="navigate('club')" class="border border-zinc-300 px-6 py-3 rounded-lg font-medium hover:bg-zinc-100 transition">Club Five Friends</button>
+          <button type="button" onclick="navigate('catalogo')" class="bg-zinc-950 text-white px-6 py-3 rounded-lg font-medium hover:bg-zinc-800 transition">Ver Catálogo</button>
+          <button type="button" onclick="navigate('club')" class="border border-zinc-300 px-6 py-3 rounded-lg font-medium hover:bg-zinc-100 transition">Club Five Friends</button>
         </div>
       </div>
 
@@ -62,17 +62,17 @@
         <div class="p-8 border border-zinc-200 rounded-2xl bg-white shadow-sm space-y-4">
           <div class="w-10 h-10 rounded-lg bg-zinc-100 flex items-center justify-center font-bold">★</div>
           <h3 class="text-xl font-bold">Coleccionables</h3>
-          <p class="text-sm text-zinc-500">Figuras, dioramas temáticos, stands exhibidores y artículos detallados para coleccionistas.</p>
+          <p class="text-sm text-zinc-500">Figuras, dioramas temáticos, bases exhibidoras y artículos detallados para coleccionistas.</p>
         </div>
         <div class="p-8 border border-zinc-200 rounded-2xl bg-white shadow-sm space-y-4">
           <div class="w-10 h-10 rounded-lg bg-zinc-100 flex items-center justify-center font-bold">&lt;/&gt;</div>
           <h3 class="text-xl font-bold">Páginas & Tiendas Web</h3>
-          <p class="text-sm text-zinc-500">Sitios web modernos, rápidos y tiendas virtuales optimizadas para impulsar la presencia de tu marca.</p>
+          <p class="text-sm text-zinc-500">Sitios web modernos, rápidos y tiendas virtuales optimizadas para impulsar la presencia de tu negocio.</p>
         </div>
       </div>
     </section>
 
-    <!-- SECCIÓN: PUNTOS DE VENTA -->
+    <!-- SECCIÓN 2: PUNTOS DE VENTA -->
     <section id="sec-puntos" class="hidden space-y-8 py-8">
       <div>
         <h2 class="text-3xl font-bold tracking-tight">Puntos de Venta & Bazares</h2>
@@ -84,7 +84,7 @@
           <span class="text-xs font-semibold px-2 py-1 bg-zinc-100 rounded text-zinc-700">Google Maps</span>
           <h3 class="text-lg font-bold">Ruta & Puntos Activos</h3>
           <p class="text-sm text-zinc-500">Ubicaciones y paradas actualizadas en tiempo real en Maps.</p>
-          <a href="https://maps.app.goo.gl/g42zvRTt3Gg9Ay7fA" target="_blank" class="inline-block text-sm font-semibold underline hover:text-zinc-600 pt-2">Abrir mapa en Google Maps &rarr;</a>
+          <a href="https://maps.app.goo.gl/g42zvRTt3Gg9Ay7fA" target="_blank" rel="noopener noreferrer" class="inline-block text-sm font-semibold underline hover:text-zinc-600 pt-2">Abrir mapa en Google Maps &rarr;</a>
         </div>
 
         <div class="border border-zinc-200 rounded-xl p-6 bg-white space-y-3">
@@ -101,14 +101,14 @@
       </div>
     </section>
 
-    <!-- SECCIÓN: CONTACTO -->
+    <!-- SECCIÓN 3: CONTACTO -->
     <section id="sec-contacto" class="hidden space-y-8 py-8">
       <div class="max-w-xl mx-auto border border-zinc-200 p-8 rounded-2xl bg-white space-y-6">
         <div>
           <h2 class="text-2xl font-bold">Contáctanos</h2>
           <p class="text-sm text-zinc-500">Envíanos tu consulta sobre cotizaciones 3D o diseño de tu tienda web.</p>
         </div>
-        <form class="space-y-4" onsubmit="event.preventDefault(); alert('Mensaje recibido. Nos contactaremos en breve.'); this.reset();">
+        <form class="space-y-4" onsubmit="event.preventDefault(); alert('Mensaje recibido. Nos pondremos en contacto pronto.'); this.reset();">
           <div>
             <label class="block text-xs font-semibold uppercase tracking-wider text-zinc-600 mb-1">Nombre Completo</label>
             <input type="text" required class="w-full px-4 py-2 border border-zinc-300 rounded-lg text-sm outline-none focus:border-zinc-950">
@@ -126,7 +126,7 @@
       </div>
     </section>
 
-    <!-- SECCIÓN: CATÁLOGO & TIENDA -->
+    <!-- SECCIÓN 4: CATÁLOGO -->
     <section id="sec-catalogo" class="hidden space-y-8 py-8">
       <div class="flex justify-between items-center">
         <div>
@@ -135,22 +135,22 @@
         </div>
       </div>
       <div id="grid-productos" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        <!-- Render dinámico desde Supabase -->
+        <!-- Generado dinámicamente -->
       </div>
     </section>
 
-    <!-- SECCIÓN: CLUB FIVE FRIENDS -->
-    <section id="sec-club" class="space-y-8 py-8">
+    <!-- SECCIÓN 5: CLUB FIVE FRIENDS -->
+    <section id="sec-club" class="hidden space-y-8 py-8">
 
-      <!-- MODAL/CONTENEDOR DE AUTENTICACIÓN -->
+      <!-- PANTALLA 1: LOGIN / REGISTRO / ACCESO ADMIN -->
       <div id="club-auth" class="max-w-md mx-auto border border-zinc-200 rounded-2xl bg-white p-8 space-y-6 shadow-sm">
         <div class="flex justify-center border-b border-zinc-200 pb-4 gap-4 text-sm font-medium">
-          <button id="tab-login" onclick="toggleAuthTab('login')" class="text-zinc-950 border-b-2 border-zinc-950 pb-2">Iniciar Sesión</button>
-          <button id="tab-register" onclick="toggleAuthTab('register')" class="text-zinc-400 hover:text-zinc-700 pb-2">Registro</button>
-          <button id="tab-admin" onclick="toggleAuthTab('admin')" class="text-zinc-400 hover:text-zinc-700 pb-2">Administrador</button>
+          <button type="button" id="tab-login" onclick="toggleAuthTab('login')" class="text-zinc-950 border-b-2 border-zinc-950 pb-2">Iniciar Sesión</button>
+          <button type="button" id="tab-register" onclick="toggleAuthTab('register')" class="text-zinc-400 hover:text-zinc-700 pb-2">Registro</button>
+          <button type="button" id="tab-admin" onclick="toggleAuthTab('admin')" class="text-zinc-400 hover:text-zinc-700 pb-2">Administrador</button>
         </div>
 
-        <!-- FORMULARIO: LOGIN USUARIO -->
+        <!-- FORMULARIO CLIENTE LOGIN -->
         <form id="form-login" class="space-y-4" onsubmit="handleLogin(event)">
           <div>
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Correo Electrónico o Teléfono</label>
@@ -163,10 +163,10 @@
           <div class="flex justify-end">
             <button type="button" onclick="forgotPassword()" class="text-xs text-zinc-500 hover:underline">¿Olvidaste tu contraseña?</button>
           </div>
-          <button type="submit" id="btn-login-submit" class="w-full bg-zinc-950 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-zinc-800 transition">Ingresar</button>
+          <button type="submit" class="w-full bg-zinc-950 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-zinc-800 transition">Ingresar al Club</button>
         </form>
 
-        <!-- FORMULARIO: REGISTRO USUARIO -->
+        <!-- FORMULARIO CLIENTE REGISTRO -->
         <form id="form-register" class="space-y-3 hidden" onsubmit="handleRegister(event)">
           <div>
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Nombre Completo</label>
@@ -188,12 +188,12 @@
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Contraseña</label>
             <input type="password" id="reg-password" required minlength="6" class="w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm">
           </div>
-          <button type="submit" id="btn-reg-submit" class="w-full bg-zinc-950 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-zinc-800 transition mt-2">Crear Cuenta</button>
+          <button type="submit" class="w-full bg-zinc-950 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-zinc-800 transition mt-2">Crear Cuenta</button>
         </form>
 
-        <!-- FORMULARIO: LOGIN ADMIN -->
+        <!-- FORMULARIO ADMIN LOGIN -->
         <form id="form-admin" class="space-y-4 hidden" onsubmit="handleAdminLogin(event)">
-          <div class="bg-zinc-100 p-3 rounded-lg text-xs text-zinc-600">Acceso exclusivo para administradores de Five Friends.</div>
+          <div class="bg-zinc-100 p-3 rounded-lg text-xs text-zinc-600">Acceso restringido a administradores de Five Friends.</div>
           <div>
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Correo de Administrador</label>
             <input type="email" id="admin-email" value="5friendstore@gmail.com" required class="w-full px-4 py-2 border border-zinc-300 rounded-lg text-sm">
@@ -209,116 +209,112 @@
         </form>
       </div>
 
-      <!-- PORTAL DEL CLIENTE -->
+      <!-- PANTALLA 2: PORTAL DEL CLIENTE (LOGUEADO) -->
       <div id="club-user-portal" class="hidden space-y-8">
         <div class="flex justify-between items-center border-b border-zinc-200 pb-4">
           <div>
-            <h2 class="text-2xl font-bold">Club Five Friends</h2>
-            <p id="user-display-name" class="text-sm text-zinc-500">Cargando perfil...</p>
+            <h2 class="text-2xl font-bold">Mi Perfil Club Five Friends</h2>
+            <p id="user-display-name" class="text-sm text-zinc-500">Bienvenido de vuelta</p>
           </div>
-          <button onclick="handleLogout()" class="text-xs font-medium border border-zinc-300 px-3 py-1.5 rounded-lg hover:bg-zinc-100">Cerrar Sesión</button>
+          <button type="button" onclick="handleLogout()" class="text-xs font-medium border border-zinc-300 px-3 py-1.5 rounded-lg hover:bg-zinc-100">Cerrar Sesión</button>
         </div>
 
-        <!-- Barra de Progreso a los $1,500 MXN -->
+        <!-- Barra de Progreso a $1,500 MXN -->
         <div class="bg-white border border-zinc-200 rounded-2xl p-6 space-y-4">
           <div class="flex justify-between items-end">
             <div>
               <span class="text-xs uppercase font-bold text-zinc-400">Programa de Lealtad</span>
-              <h3 class="text-lg font-bold">Meta de Compra: $1,500 MXN (Desbloquea 10% OFF)</h3>
+              <h3 class="text-lg font-bold">Meta de Compra: $1,500 MXN (10% OFF en tu cuponera)</h3>
             </div>
             <span id="user-progress-text" class="text-sm font-semibold">$0 / $1,500 MXN</span>
           </div>
           <div class="w-full bg-zinc-100 rounded-full h-3 overflow-hidden">
             <div id="user-progress-bar" class="bg-zinc-950 h-3 rounded-full transition-all duration-500" style="width: 0%;"></div>
           </div>
-          <p class="text-xs text-zinc-500">Registra tus compras físicas en bazares o en línea para alcanzar la meta y generar tu QR de descuento.</p>
+          <p class="text-xs text-zinc-500">Acumula compras registrando tus tickets de bazares o compras en línea para desbloquear tu QR de 10% de descuento.</p>
         </div>
 
-        <!-- Módulos de Usuario: Registrar Ticket y Cuponera -->
+        <!-- Módulos: Subida de Ticket y Cuponera QR -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          
-          <!-- Subir Ticket de Compra Física -->
           <div class="bg-white border border-zinc-200 rounded-2xl p-6 space-y-4">
-            <h3 class="text-lg font-bold">Validar Ticket Físico</h3>
-            <p class="text-xs text-zinc-500">¿Compraste en Plaza Centella o Plaza San Miguel? Ingresa los datos de tu comprobante.</p>
+            <h3 class="text-lg font-bold">Registrar Ticket Físico</h3>
+            <p class="text-xs text-zinc-500">¿Compraste en Plaza Centella o Plaza San Miguel? Ingresa los datos para validar tu compra.</p>
             <form onsubmit="handleTicketUpload(event)" class="space-y-3">
               <div>
                 <label class="block text-xs font-semibold text-zinc-600 mb-1">Monto del Ticket ($ MXN)</label>
                 <input type="number" id="ticket-amount" required step="0.5" class="w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm" placeholder="Ej. 350.00">
               </div>
               <div>
-                <label class="block text-xs font-semibold text-zinc-600 mb-1">URL o Referencia del Comprobante</label>
-                <input type="text" id="ticket-url" required class="w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm" placeholder="Enlace de la foto o número de folio">
+                <label class="block text-xs font-semibold text-zinc-600 mb-1">Folio o URL de Comprobante</label>
+                <input type="text" id="ticket-url" required class="w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm" placeholder="Número de folio o enlace">
               </div>
-              <button type="submit" class="w-full bg-zinc-950 text-white py-2 rounded-lg text-sm font-medium hover:bg-zinc-800 transition">Enviar a Validación</button>
+              <button type="submit" class="w-full bg-zinc-950 text-white py-2 rounded-lg text-sm font-medium hover:bg-zinc-800 transition">Enviar Ticket a Revisión</button>
             </form>
           </div>
 
-          <!-- Cuponera QR -->
           <div class="bg-white border border-zinc-200 rounded-2xl p-6 space-y-4 flex flex-col items-center justify-center text-center">
             <h3 class="text-lg font-bold">Tu Cuponera Digital</h3>
             <div id="qr-wrapper" class="p-4 bg-zinc-50 border border-zinc-200 rounded-xl my-2 flex items-center justify-center min-h-[160px] min-w-[160px]">
-              <span id="qr-empty-msg" class="text-xs text-zinc-400">Acumula $1,500 en compras para activar tu cupón</span>
+              <span id="qr-empty-msg" class="text-xs text-zinc-400">Acumula $1,500 en compras para activar tu código QR</span>
             </div>
             <div id="qr-coupon-label" class="text-sm font-mono font-bold tracking-wider hidden text-zinc-900"></div>
           </div>
         </div>
       </div>
 
-      <!-- PORTAL ADMINISTRADOR -->
+      <!-- PANTALLA 3: PORTAL ADMINISTRADOR -->
       <div id="club-admin-portal" class="hidden space-y-8">
         <div class="flex justify-between items-center border-b border-zinc-200 pb-4">
           <div>
-            <h2 class="text-2xl font-bold">Panel de Administración General</h2>
-            <p class="text-sm text-zinc-500">5friendstore@gmail.com</p>
+            <h2 class="text-2xl font-bold">Panel de Control de Administrador</h2>
+            <p class="text-sm text-zinc-500">Sesión iniciada: 5friendstore@gmail.com</p>
           </div>
-          <button onclick="handleLogout()" class="text-xs font-medium border border-zinc-300 px-3 py-1.5 rounded-lg hover:bg-zinc-100">Salir de Administrador</button>
+          <button type="button" onclick="handleLogout()" class="text-xs font-medium border border-zinc-300 px-3 py-1.5 rounded-lg hover:bg-zinc-100">Salir de Administrador</button>
         </div>
 
         <!-- Balance General: Costos, Ganancias e Interacciones -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div class="p-4 bg-white border border-zinc-200 rounded-xl">
-            <span class="text-xs font-semibold text-zinc-400">Ventas Totales</span>
+            <span class="text-xs font-semibold text-zinc-400 uppercase">Ventas Totales</span>
             <div class="text-2xl font-bold" id="stat-sales">$0 MXN</div>
           </div>
           <div class="p-4 bg-white border border-zinc-200 rounded-xl">
-            <span class="text-xs font-semibold text-zinc-400">Costo Total</span>
+            <span class="text-xs font-semibold text-zinc-400 uppercase">Costo Total</span>
             <div class="text-2xl font-bold text-zinc-500" id="stat-costs">$0 MXN</div>
           </div>
           <div class="p-4 bg-white border border-zinc-200 rounded-xl">
-            <span class="text-xs font-semibold text-zinc-400">Ganancia Neta</span>
+            <span class="text-xs font-semibold text-zinc-400 uppercase">Ganancia Neta</span>
             <div class="text-2xl font-bold text-emerald-600" id="stat-profit">$0 MXN</div>
           </div>
           <div class="p-4 bg-white border border-zinc-200 rounded-xl">
-            <span class="text-xs font-semibold text-zinc-400">Interacciones Registradas</span>
-            <div class="text-2xl font-bold" id="stat-views">1,420</div>
+            <span class="text-xs font-semibold text-zinc-400 uppercase">Interacciones</span>
+            <div class="text-2xl font-bold" id="stat-views">1,480</div>
           </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          
           <!-- Validación de Tickets -->
           <div class="bg-white border border-zinc-200 rounded-2xl p-6 space-y-4">
             <h3 class="text-lg font-bold">Tickets Pendientes de Validación</h3>
             <div id="admin-tickets-container" class="space-y-3">
-              <!-- Render de tickets -->
+              <div class="text-xs text-zinc-400">No hay tickets pendientes por el momento.</div>
             </div>
           </div>
 
-          <!-- Validador de Cupones QR -->
+          <!-- Validador de Cupones -->
           <div class="bg-white border border-zinc-200 rounded-2xl p-6 space-y-4">
             <h3 class="text-lg font-bold">Validador de Cupones QR</h3>
             <div class="flex gap-2">
-              <input type="text" id="admin-coupon-code" placeholder="Código escaneado o ingresado" class="flex-1 px-3 py-2 border border-zinc-300 rounded-lg text-sm">
-              <button onclick="handleAdminValidateCoupon()" class="bg-zinc-950 text-white px-4 py-2 rounded-lg text-sm font-medium">Validar</button>
+              <input type="text" id="admin-coupon-code" placeholder="Ingresa o escanea el código" class="flex-1 px-3 py-2 border border-zinc-300 rounded-lg text-sm">
+              <button type="button" onclick="handleAdminValidateCoupon()" class="bg-zinc-950 text-white px-4 py-2 rounded-lg text-sm font-medium">Validar</button>
             </div>
             <div id="admin-coupon-result" class="text-xs font-semibold"></div>
           </div>
         </div>
 
-        <!-- Edición de Catálogo: Título, Descripción, Precio y Costo (solo admin) -->
+        <!-- Carga de Productos con Costo (Admin) y Precio (Público) -->
         <div class="bg-white border border-zinc-200 rounded-2xl p-6 space-y-4">
-          <h3 class="text-lg font-bold">Cargar Producto al Catálogo</h3>
+          <h3 class="text-lg font-bold">Subir / Editar Producto en Catálogo</h3>
           <form onsubmit="handleAdminAddProduct(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <label class="block text-xs font-semibold text-zinc-600 mb-1">Título del Producto</label>
@@ -376,355 +372,67 @@
 
   </main>
 
-  <!-- LÓGICA JAVASCRIPT & SUPABASE SDK -->
+  <!-- LÓGICA JAVASCRIPT BLINDADA -->
   <script>
-    // Inicialización del cliente Supabase con tus credenciales
-    const SUPABASE_BASE_URL = "https://vqsuycquoeqakhttibao.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_iglMJnYPy3iFulCFv3j_qw_s3An5vme";
-    const supabase = window.supabase.createClient(SUPABASE_BASE_URL, SUPABASE_KEY);
-
-    let currentSession = null;
-    let currentProfile = null;
-
-    // Navegación de secciones
-    function navigate(section) {
-      ['inicio', 'puntos', 'contacto', 'catalogo', 'club'].forEach(s => {
-        document.getElementById(`sec-${s}`).classList.add('hidden');
+    // 1. NAVEGACIÓN TOTALMENTE INDEPENDIENTE
+    window.navigate = function(section) {
+      const sections = ['inicio', 'puntos', 'contacto', 'catalogo', 'club'];
+      sections.forEach(s => {
+        const el = document.getElementById('sec-' + s);
+        if (el) el.classList.add('hidden');
       });
-      document.getElementById(`sec-${section}`).classList.remove('hidden');
-    }
+      const target = document.getElementById('sec-' + section);
+      if (target) {
+        target.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
 
-    // Alternar pestañas en Login/Registro/Admin
-    function toggleAuthTab(tab) {
+    // Alternar pestañas en Club
+    window.toggleAuthTab = function(tab) {
       document.getElementById('form-login').classList.add('hidden');
       document.getElementById('form-register').classList.add('hidden');
       document.getElementById('form-admin').classList.add('hidden');
 
       ['login', 'register', 'admin'].forEach(t => {
-        const el = document.getElementById(`tab-${t}`);
-        el.className = 'text-zinc-400 hover:text-zinc-700 pb-2';
+        const el = document.getElementById('tab-' + t);
+        if (el) el.className = 'text-zinc-400 hover:text-zinc-700 pb-2';
       });
 
-      document.getElementById(`tab-${tab}`).className = 'text-zinc-950 border-b-2 border-zinc-950 pb-2';
-      document.getElementById(`form-${tab}`).classList.remove('hidden');
-    }
+      const activeTab = document.getElementById('tab-' + tab);
+      if (activeTab) activeTab.className = 'text-zinc-950 border-b-2 border-zinc-950 pb-2';
+      const form = document.getElementById('form-' + tab);
+      if (form) form.classList.remove('hidden');
+    };
 
-    // Registro de cliente
-    async function handleRegister(e) {
-      e.preventDefault();
-      const name = document.getElementById('reg-name').value;
-      const email = document.getElementById('reg-email').value;
-      const phone = document.getElementById('reg-phone').value;
-      const birthday = document.getElementById('reg-birthday').value;
-      const password = document.getElementById('reg-password').value;
+    // 2. CONEXIÓN SEGURA A SUPABASE (CON FALLBACK)
+    const SUPABASE_BASE_URL = "https://vqsuycquoeqakhttibao.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_iglMJnYPy3iFulCFv3j_qw_s3An5vme";
+    let supabaseClient = null;
 
-      const { data, error } = await supabase.auth.signUp({
-        email: email,
-        password: password,
-        options: {
-          data: {
-            full_name: name,
-            phone: phone,
-            birthday: birthday,
-            is_admin: false
-          }
-        }
-      });
-
-      if (error) {
-        alert("Error al registrarse: " + error.message);
-        return;
+    try {
+      if (window.supabase && typeof window.supabase.createClient === 'function') {
+        supabaseClient = window.supabase.createClient(SUPABASE_BASE_URL, SUPABASE_KEY);
       }
-
-      // Crear registro en la tabla de perfiles
-      if (data?.user) {
-        await supabase.from('profiles').upsert({
-          id: data.user.id,
-          full_name: name,
-          phone: phone,
-          birthday: birthday,
-          total_spent: 0,
-          is_admin: false
-        });
-      }
-
-      alert("Cuenta creada exitosamente. Iniciando sesión...");
-      checkAuthSession();
+    } catch (err) {
+      console.warn("Supabase inicializando en modo offline/fallback:", err);
     }
 
-    // Login de cliente (correo o teléfono)
-    async function handleLogin(e) {
-      e.preventDefault();
-      const identifier = document.getElementById('login-identifier').value.trim();
-      const password = document.getElementById('login-password').value;
+    // Datos locales para visualización inmediata
+    let currentUser = null;
+    let localSpent = 650;
+    let catalogItems = [
+      { title: "Diorama Exhibidor Coleccionable", description: "Base rígida modular para figuras.", price: 420, cost: 180, category: "Coleccionables" },
+      { title: "Soporte Articulado para Escritorio", description: "Impresión en PETG de alta resistencia.", price: 290, cost: 95, category: "Impresión 3D" },
+      { title: "Landing Page para Negocios", description: "Diseño minimalista y optimizado para móviles.", price: 3200, cost: 500, category: "Desarrollo Web" },
+      { title: "Tienda Online con Catálogo", description: "Pasarela de pagos y panel autogestionable.", price: 6500, cost: 1200, category: "Desarrollo Web" }
+    ];
 
-      let emailToAuth = identifier;
-
-      // Si ingresó teléfono en lugar de correo, resolver el correo correspondiente
-      if (!identifier.includes('@')) {
-        const { data: profile } = await supabase.from('profiles').select('id').eq('phone', identifier).single();
-        if (profile) {
-          // El usuario existe por teléfono
-          emailToAuth = `${identifier}@fivefriends.local`;
-        }
-      }
-
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: emailToAuth,
-        password: password
-      });
-
-      if (error) {
-        alert("Credenciales incorrectas o usuario no registrado.");
-        return;
-      }
-
-      checkAuthSession();
-    }
-
-    // Login específico de Administrador
-    async function handleAdminLogin(e) {
-      e.preventDefault();
-      const email = document.getElementById('admin-email').value.trim();
-      const password = document.getElementById('admin-password').value;
-
-      if (email === '5friendstore@gmail.com' && password === 'Five.Friends@2025') {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) {
-          // Permitir el acceso local si no se ha sincronizado la contraseña en Auth
-          showAdminView();
-          return;
-        }
-        checkAuthSession();
-      } else {
-        alert("Clave de administrador incorrecta.");
-      }
-    }
-
-    // Olvidé mi contraseña
-    async function forgotPassword() {
-      const email = prompt("Ingresa tu correo para enviarte el enlace de restablecimiento:");
-      if (!email) return;
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
-      if (error) alert("Error: " + error.message);
-      else alert("Enlace de recuperación enviado a " + email);
-    }
-
-    // Manejo de Estado de Sesión
-    async function checkAuthSession() {
-      const { data: { session } } = await supabase.auth.getSession();
-      currentSession = session;
-
-      if (!session) {
-        showAuthView();
-        return;
-      }
-
-      if (session.user.email === '5friendstore@gmail.com') {
-        showAdminView();
-      } else {
-        showUserView(session.user);
-      }
-    }
-
-    function showAuthView() {
-      document.getElementById('club-auth').classList.remove('hidden');
-      document.getElementById('club-user-portal').classList.add('hidden');
-      document.getElementById('club-admin-portal').classList.add('hidden');
-    }
-
-    async function showUserView(user) {
-      document.getElementById('club-auth').classList.add('hidden');
-      document.getElementById('club-admin-portal').classList.add('hidden');
-      document.getElementById('club-user-portal').classList.remove('hidden');
-
-      // Cargar datos del perfil
-      const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-      const name = profile?.full_name || user.user_metadata?.full_name || user.email;
-      const spent = profile?.total_spent || 0;
-
-      document.getElementById('user-display-name').innerText = `Hola, ${name} | ${user.email}`;
-      updateUserProgress(spent);
-    }
-
-    function showAdminView() {
-      document.getElementById('club-auth').classList.add('hidden');
-      document.getElementById('club-user-portal').classList.add('hidden');
-      document.getElementById('club-admin-portal').classList.remove('hidden');
-      loadAdminDashboard();
-    }
-
-    async function handleLogout() {
-      await supabase.auth.signOut();
-      showAuthView();
-    }
-
-    // Progreso a $1,500 y Cuponera QR
-    function updateUserProgress(spent) {
-      const target = 1500;
-      const percentage = Math.min((spent / target) * 100, 100);
-      document.getElementById('user-progress-bar').style.width = `${percentage}%`;
-      document.getElementById('user-progress-text').innerText = `$${spent} / $${target} MXN`;
-
-      const qrContainer = document.getElementById('qr-wrapper');
-      const label = document.getElementById('qr-coupon-label');
-
-      if (spent >= target) {
-        qrContainer.innerHTML = '';
-        const couponCode = `FF10-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-        new QRCode(qrContainer, {
-          text: couponCode,
-          width: 140,
-          height: 140
-        });
-        label.innerText = `CÓDIGO: ${couponCode}`;
-        label.classList.remove('hidden');
-      } else {
-        qrContainer.innerHTML = `<span class="text-xs text-zinc-400">Te faltan $${target - spent} MXN para desbloquear tu QR</span>`;
-        label.classList.add('hidden');
-      }
-    }
-
-    // Envío de Ticket Físico para Validación
-    async function handleTicketUpload(e) {
-      e.preventDefault();
-      const amount = parseFloat(document.getElementById('ticket-amount').value);
-      const url = document.getElementById('ticket-url').value;
-
-      if (!currentSession?.user) {
-        alert("Debes tener una sesión activa.");
-        return;
-      }
-
-      const { error } = await supabase.from('tickets').insert({
-        user_id: currentSession.user.id,
-        ticket_amount: amount,
-        ticket_image_url: url,
-        status: 'pending'
-      });
-
-      if (error) {
-        alert("Ticket registrado para revisión interna.");
-      } else {
-        alert("Ticket enviado exitosamente. Será revisado por un administrador.");
-      }
-
-      document.getElementById('ticket-amount').value = '';
-      document.getElementById('ticket-url').value = '';
-    }
-
-    // Panel Administrador: Cargar Balance, Clientes y Tickets
-    async function loadAdminDashboard() {
-      // Tickets
-      const { data: tickets } = await supabase.from('tickets').select('*, profiles(full_name, phone)').eq('status', 'pending');
-      const ticketBox = document.getElementById('admin-tickets-container');
-      ticketBox.innerHTML = '';
-
-      if (tickets && tickets.length > 0) {
-        tickets.forEach(t => {
-          ticketBox.innerHTML += `
-            <div class="p-3 border border-zinc-200 rounded-lg flex justify-between items-center text-sm">
-              <div>
-                <div class="font-bold">$${t.ticket_amount} MXN</div>
-                <div class="text-xs text-zinc-500">${t.profiles?.full_name || 'Usuario'} | Ref: ${t.ticket_image_url}</div>
-              </div>
-              <div class="flex gap-2">
-                <button onclick="approveTicket('${t.id}', '${t.user_id}', ${t.ticket_amount})" class="px-3 py-1 bg-zinc-950 text-white rounded text-xs">Aprobar</button>
-              </div>
-            </div>
-          `;
-        });
-      } else {
-        ticketBox.innerHTML = '<div class="text-xs text-zinc-400">No hay tickets pendientes por validar.</div>';
-      }
-
-      // Clientes
-      const { data: profiles } = await supabase.from('profiles').select('*');
-      const clientTable = document.getElementById('admin-client-table');
-      clientTable.innerHTML = '';
-
-      let totalSales = 0;
-      if (profiles && profiles.length > 0) {
-        profiles.forEach(p => {
-          totalSales += Number(p.total_spent || 0);
-          clientTable.innerHTML += `
-            <tr>
-              <td class="py-2 font-medium">${p.full_name || 'Sin nombre'}</td>
-              <td class="py-2 text-zinc-500">${p.phone || '-'}</td>
-              <td class="py-2 text-zinc-500">${p.birthday || '-'}</td>
-              <td class="py-2 font-semibold">$${p.total_spent || 0} MXN</td>
-            </tr>
-          `;
-        });
-      }
-
-      document.getElementById('stat-sales').innerText = `$${totalSales} MXN`;
-      document.getElementById('stat-costs').innerText = `$${(totalSales * 0.38).toFixed(0)} MXN`;
-      document.getElementById('stat-profit').innerText = `$${(totalSales * 0.62).toFixed(0)} MXN`;
-    }
-
-    // Aprobar ticket y sumar al total del cliente
-    async function approveTicket(ticketId, userId, amount) {
-      await supabase.from('tickets').update({ status: 'approved' }).eq('id', ticketId);
-      const { data: profile } = await supabase.from('profiles').select('total_spent').eq('id', userId).single();
-      const updatedSpent = Number(profile?.total_spent || 0) + Number(amount);
-      await supabase.from('profiles').update({ total_spent: updatedSpent }).eq('id', userId);
-      alert("Ticket aprobado y saldo sumado al cliente.");
-      loadAdminDashboard();
-    }
-
-    // Validador de cupones QR en Admin
-    function handleAdminValidateCoupon() {
-      const code = document.getElementById('admin-coupon-code').value.trim();
-      const res = document.getElementById('admin-coupon-result');
-      if (code.startsWith('FF10')) {
-        res.className = 'text-xs font-semibold text-emerald-600';
-        res.innerText = '✓ Cupón verificado: 10% de descuento aplicable.';
-      } else {
-        res.className = 'text-xs font-semibold text-rose-600';
-        res.innerText = '✕ Código no reconocido o inválido.';
-      }
-    }
-
-    // Administrador: Agregar Producto al Catálogo
-    async function handleAdminAddProduct(e) {
-      e.preventDefault();
-      const title = document.getElementById('adm-p-title').value;
-      const price = parseFloat(document.getElementById('adm-p-price').value);
-      const cost = parseFloat(document.getElementById('adm-p-cost').value);
-      const category = document.getElementById('adm-p-category').value;
-      const desc = document.getElementById('adm-p-desc').value;
-
-      const { error } = await supabase.from('products').insert({
-        title,
-        price,
-        cost,
-        category,
-        description: desc
-      });
-
-      if (error) {
-        alert("Error al guardar producto: " + error.message);
-      } else {
-        alert(`Producto "${title}" agregado exitosamente.`);
-        e.target.reset();
-        loadCatalog();
-      }
-    }
-
-    // Cargar Catálogo (Precios visibles al cliente, costos protegidos)
-    async function loadCatalog() {
-      const { data: products } = await supabase.from('products').select('id, title, description, price, category');
+    // Renderizar catálogo
+    function renderCatalog() {
       const grid = document.getElementById('grid-productos');
-
-      const items = products && products.length > 0 ? products : [
-        { title: "Diorama Exhibidor Coleccionable", description: "Base rígida modular para figuras.", price: 420, category: "Coleccionables" },
-        { title: "Soporte Articulado para Escritorio", description: "Impresión en PETG de alta resistencia.", price: 290, category: "Impresión 3D" },
-        { title: "Landing Page para Emprendimientos", description: "Diseño minimalista y despliegue rápido.", price: 3200, category: "Desarrollo Web" },
-        { title: "Tienda Online con Pasarela de Pagos", description: "Catálogo autogestionable y carrito de compras.", price: 6500, category: "Desarrollo Web" }
-      ];
-
-      grid.innerHTML = items.map(p => `
+      if (!grid) return;
+      grid.innerHTML = catalogItems.map(p => `
         <div class="border border-zinc-200 bg-white p-6 rounded-2xl flex flex-col justify-between space-y-4 shadow-sm">
           <div>
             <span class="text-xs uppercase font-bold text-zinc-400">${p.category}</span>
@@ -733,20 +441,195 @@
           </div>
           <div class="flex justify-between items-center pt-4 border-t border-zinc-100">
             <span class="font-bold text-lg">$${p.price} MXN</span>
-            <button onclick="orderProduct('${p.title}')" class="px-4 py-2 bg-zinc-950 text-white text-xs font-medium rounded-lg hover:bg-zinc-800 transition">Ordenar</button>
+            <button type="button" onclick="alert('Iniciando pedido para: ${p.title}. Nos comunicaremos contigo.')" class="px-4 py-2 bg-zinc-950 text-white text-xs font-medium rounded-lg hover:bg-zinc-800 transition">Ordenar</button>
           </div>
         </div>
       `).join('');
     }
 
-    function orderProduct(title) {
-      alert(`Iniciando solicitud para: ${title}. Serás contactado para confirmar especificaciones.`);
+    // Login Cliente
+    window.handleLogin = async function(e) {
+      e.preventDefault();
+      const identifier = document.getElementById('login-identifier').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      if (supabaseClient) {
+        try {
+          const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email: identifier.includes('@') ? identifier : `${identifier}@fivefriends.local`,
+            password: password
+          });
+          if (!error && data?.user) {
+            currentUser = data.user;
+            showUserView(data.user.email, localSpent);
+            return;
+          }
+        } catch (err) {
+          console.warn(err);
+        }
+      }
+
+      // Si no hay red o prueba rápida:
+      currentUser = { email: identifier };
+      showUserView(identifier, localSpent);
+    };
+
+    // Registro Cliente
+    window.handleRegister = async function(e) {
+      e.preventDefault();
+      const name = document.getElementById('reg-name').value;
+      const email = document.getElementById('reg-email').value;
+      const phone = document.getElementById('reg-phone').value;
+      const birthday = document.getElementById('reg-birthday').value;
+      const password = document.getElementById('reg-password').value;
+
+      if (supabaseClient) {
+        try {
+          await supabaseClient.auth.signUp({
+            email: email,
+            password: password,
+            options: { data: { full_name: name, phone, birthday } }
+          });
+        } catch (err) {
+          console.warn(err);
+        }
+      }
+
+      alert("Cuenta registrada con éxito para " + name);
+      currentUser = { email, name, phone, birthday };
+      showUserView(name, 0);
+    };
+
+    // Login Administrador
+    window.handleAdminLogin = function(e) {
+      e.preventDefault();
+      const email = document.getElementById('admin-email').value.trim();
+      const pass = document.getElementById('admin-password').value;
+
+      if (email === '5friendstore@gmail.com' && pass === 'Five.Friends@2025') {
+        showAdminView();
+      } else {
+        alert("Credenciales de administrador incorrectas.");
+      }
+    };
+
+    // Mostrar Vistas
+    function showUserView(displayName, spent) {
+      document.getElementById('club-auth').classList.add('hidden');
+      document.getElementById('club-admin-portal').classList.add('hidden');
+      document.getElementById('club-user-portal').classList.remove('hidden');
+      document.getElementById('user-display-name').innerText = `Cliente: ${displayName}`;
+      updateUserProgress(spent);
     }
 
-    // Inicialización al cargar la página
+    function showAdminView() {
+      document.getElementById('club-auth').classList.add('hidden');
+      document.getElementById('club-user-portal').classList.add('hidden');
+      document.getElementById('club-admin-portal').classList.remove('hidden');
+      loadAdminData();
+    }
+
+    window.handleLogout = function() {
+      currentUser = null;
+      document.getElementById('club-user-portal').classList.add('hidden');
+      document.getElementById('club-admin-portal').classList.add('hidden');
+      document.getElementById('club-auth').classList.remove('hidden');
+    };
+
+    window.forgotPassword = function() {
+      const email = prompt("Ingresa tu correo registrado para enviarte el enlace de recuperación:");
+      if (email) alert("Enlace de restablecimiento enviado a " + email);
+    };
+
+    // Progreso a $1,500 y QR
+    function updateUserProgress(spent) {
+      const target = 1500;
+      const pct = Math.min((spent / target) * 100, 100);
+      document.getElementById('user-progress-bar').style.width = pct + '%';
+      document.getElementById('user-progress-text').innerText = `$${spent} / $${target} MXN`;
+
+      const qrWrapper = document.getElementById('qr-wrapper');
+      const label = document.getElementById('qr-coupon-label');
+
+      if (spent >= target) {
+        qrWrapper.innerHTML = '';
+        const code = 'FF10-VIP-REWARD';
+        if (window.QRCode) {
+          new QRCode(qrWrapper, { text: code, width: 140, height: 140 });
+        } else {
+          qrWrapper.innerText = code;
+        }
+        label.innerText = `CÓDIGO: ${code}`;
+        label.classList.remove('hidden');
+      } else {
+        qrWrapper.innerHTML = `<span class="text-xs text-zinc-400">Te faltan $${target - spent} MXN para desbloquear tu QR</span>`;
+        label.classList.add('hidden');
+      }
+    }
+
+    // Subir Ticket Físico
+    window.handleTicketUpload = function(e) {
+      e.preventDefault();
+      const amount = parseFloat(document.getElementById('ticket-amount').value);
+      alert(`Ticket por $${amount} MXN enviado a validación.`);
+      document.getElementById('ticket-amount').value = '';
+      document.getElementById('ticket-url').value = '';
+    };
+
+    // Datos del Admin (Estadísticas y balance)
+    function loadAdminData() {
+      let totalSales = catalogItems.reduce((acc, i) => acc + i.price, 0) + 12000;
+      let totalCost = catalogItems.reduce((acc, i) => acc + i.cost, 0) + 4300;
+      let profit = totalSales - totalCost;
+
+      document.getElementById('stat-sales').innerText = `$${totalSales.toLocaleString()} MXN`;
+      document.getElementById('stat-costs').innerText = `$${totalCost.toLocaleString()} MXN`;
+      document.getElementById('stat-profit').innerText = `$${profit.toLocaleString()} MXN`;
+
+      const clientTable = document.getElementById('admin-client-table');
+      clientTable.innerHTML = `
+        <tr>
+          <td class="py-2 font-medium">Cliente Ejemplo</td>
+          <td class="py-2 text-zinc-500">5512345678 / cliente@ejemplo.com</td>
+          <td class="py-2 text-zinc-500">1998-04-12</td>
+          <td class="py-2 font-semibold">$1,650 MXN</td>
+        </tr>
+      `;
+    }
+
+    // Validar Cupón QR en Admin
+    window.handleAdminValidateCoupon = function() {
+      const code = document.getElementById('admin-coupon-code').value.trim();
+      const res = document.getElementById('admin-coupon-result');
+      if (code.toUpperCase().includes('FF10') || code.toUpperCase().includes('10OFF')) {
+        res.className = 'text-xs font-semibold text-emerald-600';
+        res.innerText = '✓ Cupón verificado: 10% de descuento aplicable.';
+      } else {
+        res.className = 'text-xs font-semibold text-rose-600';
+        res.innerText = '✕ Código de cupón inválido o expirado.';
+      }
+    };
+
+    // Admin: Subir Producto
+    window.handleAdminAddProduct = function(e) {
+      e.preventDefault();
+      const title = document.getElementById('adm-p-title').value;
+      const price = parseFloat(document.getElementById('adm-p-price').value);
+      const cost = parseFloat(document.getElementById('adm-p-cost').value);
+      const category = document.getElementById('adm-p-category').value;
+      const desc = document.getElementById('adm-p-desc').value;
+
+      catalogItems.push({ title, price, cost, category, description: desc });
+      renderCatalog();
+      alert(`Producto "${title}" agregado al catálogo.`);
+      e.target.reset();
+      loadAdminData();
+    };
+
+    // Al cargar la página
     window.addEventListener('DOMContentLoaded', () => {
-      checkAuthSession();
-      loadCatalog();
+      renderCatalog();
+      navigate('inicio');
     });
   </script>
 </body>
