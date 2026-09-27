@@ -76,7 +76,7 @@
           Desde piezas a medida y figuras con manufactura aditiva hasta desarrollo de páginas web y tiendas en línea profesionales.
         </p>
         <div class="flex flex-col sm:flex-row justify-center gap-3 pt-3 px-4 sm:px-0">
-          <button type="button" onclick="navigate('catalogo')" class="w-full sm:w-auto bg-zinc-950 text-white px-6 py-3 rounded-xl font-medium text-sm hover:bg-zinc-800 transition shadow-sm">Ver Catálogo Dividido</button>
+          <button type="button" onclick="navigate('catalogo')" class="w-full sm:w-auto bg-zinc-950 text-white px-6 py-3 rounded-xl font-medium text-sm hover:bg-zinc-800 transition shadow-sm">Ver Catálogo</button>
           <button type="button" onclick="navigate('club')" class="w-full sm:w-auto border border-zinc-300 bg-white px-6 py-3 rounded-xl font-medium text-sm hover:bg-zinc-100 transition shadow-sm">Club Five Friends</button>
         </div>
       </div>
@@ -157,23 +157,22 @@
       </div>
     </section>
 
-    <!-- SECCIÓN 4: CATÁLOGO CLASIFICADO POR CATEGORÍAS -->
+    <!-- SECCIÓN 4: CATÁLOGO CLASIFICADO CON IMÁGENES -->
     <section id="sec-catalogo" class="hidden space-y-6">
       
-      <!-- Encabezado y Barra de Filtros -->
+      <!-- Encabezado y Filtros -->
       <div class="flex flex-col md:flex-row justify-between md:items-end gap-4 border-b border-zinc-200 pb-5">
         <div>
           <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-950">Catálogo & Soluciones</h2>
           <p class="text-xs sm:text-sm text-zinc-500">Explora por área especializada o busca un producto en particular.</p>
         </div>
 
-        <!-- Buscador -->
         <div class="w-full md:w-72">
           <input type="text" id="cat-search" oninput="filterCatalog()" placeholder="Buscar producto o servicio..." class="w-full px-3.5 py-2 bg-white border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
         </div>
       </div>
 
-      <!-- Selector de Categorías (Chips / Pestañas) -->
+      <!-- Selector de Categorías (Chips) -->
       <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
         <button type="button" onclick="setCatalogFilter('all')" id="btn-cat-all" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-zinc-950 text-white shadow-sm">Todos</button>
         <button type="button" onclick="setCatalogFilter('Impresión 3D')" id="btn-cat-3d" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Impresión 3D</button>
@@ -182,9 +181,7 @@
       </div>
 
       <!-- Contenedor Dinámico con Secciones Agrupadas -->
-      <div id="catalog-container" class="space-y-10">
-        <!-- Generado automáticamente por JavaScript -->
-      </div>
+      <div id="catalog-container" class="space-y-10"></div>
 
     </section>
 
@@ -323,6 +320,7 @@
           </div>
         </div>
 
+        <!-- Métricas y Balance -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           <div class="p-3.5 sm:p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
             <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Clientes Registrados</span>
@@ -342,6 +340,101 @@
           </div>
         </div>
 
+        <!-- FORMULARIO DE AÑADIR / EDITAR PRODUCTO CON IMAGEN -->
+        <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm">
+          <div class="flex justify-between items-center">
+            <div>
+              <h3 class="text-base sm:text-lg font-bold" id="product-form-title">Agregar Nuevo Producto al Catálogo</h3>
+              <p class="text-xs text-zinc-500">Configura nombre, costos de administración, precios públicos e imágenes.</p>
+            </div>
+            <button type="button" id="btn-cancel-edit" onclick="cancelProductEdit()" class="hidden text-xs text-rose-600 font-semibold hover:underline">Cancelar Edición</button>
+          </div>
+
+          <form id="product-form" onsubmit="handleProductFormSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5">
+            <!-- Campo oculto para ID de producto cuando se edita -->
+            <input type="hidden" id="adm-p-id" value="">
+
+            <div>
+              <label class="block text-xs font-semibold text-zinc-600 mb-1">Título del Producto</label>
+              <input type="text" id="adm-p-title" required placeholder="Ej. Soporte 3D articulado" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-zinc-600 mb-1">Precio Venta ($ Público)</label>
+              <input type="number" id="adm-p-price" step="0.5" required placeholder="Ej. 350.00" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-zinc-600 mb-1">Costo ($ Solo Administrador)</label>
+              <input type="number" id="adm-p-cost" step="0.5" required placeholder="Ej. 120.00" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-zinc-600 mb-1">Categoría</label>
+              <select id="adm-p-category" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+                <option value="Impresión 3D">Impresión 3D</option>
+                <option value="Coleccionables">Coleccionables</option>
+                <option value="Desarrollo Web">Desarrollo Web</option>
+              </select>
+            </div>
+
+            <!-- GESTIÓN DE IMAGEN -->
+            <div class="sm:col-span-2 md:col-span-3">
+              <label class="block text-xs font-semibold text-zinc-600 mb-1">Imagen del Producto (URL o Archivo)</label>
+              <div class="flex flex-col sm:flex-row gap-2">
+                <input type="url" id="adm-p-image-url" placeholder="https://ejemplo.com/imagen.jpg (Enlace directo)" oninput="updateImagePreview(this.value)" class="flex-1 px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+                <label class="cursor-pointer bg-zinc-100 hover:bg-zinc-200 border border-zinc-300 px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 whitespace-nowrap">
+                  <span>Subir Archivo</span>
+                  <input type="file" id="adm-p-file" accept="image/*" onchange="handleImageFileUpload(event)" class="hidden">
+                </label>
+              </div>
+            </div>
+
+            <!-- Vista Previa de Imagen -->
+            <div class="flex items-center justify-center border border-dashed border-zinc-300 rounded-xl p-2 bg-zinc-50 min-h-[70px]">
+              <div id="image-preview-container" class="text-center">
+                <span class="text-[11px] text-zinc-400">Sin vista previa</span>
+              </div>
+            </div>
+
+            <div class="sm:col-span-2 md:col-span-4">
+              <label class="block text-xs font-semibold text-zinc-600 mb-1">Descripción del Producto</label>
+              <input type="text" id="adm-p-desc" placeholder="Detalles de materiales, medidas, compatibilidad o tiempos..." class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+            </div>
+
+            <div class="sm:col-span-2 md:col-span-4 pt-1 flex gap-2">
+              <button type="submit" id="btn-save-product" class="w-full sm:w-auto bg-zinc-950 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition shadow-sm">Guardar Producto en Catálogo</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- LISTA Y GESTIÓN DE PRODUCTOS EXISTENTES (EDITAR / ELIMINAR) -->
+        <div class="bg-white border border-zinc-200 rounded-2xl p-5 space-y-4 shadow-sm">
+          <div class="flex justify-between items-center">
+            <h3 class="text-base sm:text-lg font-bold">Catálogo Actual (Gestión & Costos)</h3>
+            <span class="text-xs text-zinc-500" id="admin-product-count">0 productos</span>
+          </div>
+
+          <div class="overflow-x-auto -mx-2 sm:mx-0">
+            <table class="w-full text-left text-xs sm:text-sm min-w-[600px]">
+              <thead class="border-b border-zinc-200 text-[10px] text-zinc-400 uppercase">
+                <tr>
+                  <th class="py-2.5">Foto</th>
+                  <th class="py-2.5">Producto</th>
+                  <th class="py-2.5">Categoría</th>
+                  <th class="py-2.5">Precio ($ Público)</th>
+                  <th class="py-2.5">Costo ($ Admin)</th>
+                  <th class="py-2.5 text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-zinc-100" id="admin-products-table">
+                <!-- Inyección dinámica de productos -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Validación de Tickets & Validador de Cupones -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           <div class="bg-white border border-zinc-200 rounded-2xl p-5 space-y-3 shadow-sm">
             <h3 class="text-base sm:text-lg font-bold">Validación de Tickets</h3>
@@ -358,40 +451,6 @@
             </div>
             <div id="admin-coupon-result" class="text-xs font-semibold"></div>
           </div>
-        </div>
-
-        <!-- Carga de Productos -->
-        <div class="bg-white border border-zinc-200 rounded-2xl p-5 space-y-3 shadow-sm">
-          <h3 class="text-base sm:text-lg font-bold">Agregar Producto al Catálogo</h3>
-          <form onsubmit="handleAdminAddProduct(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-            <div>
-              <label class="block text-xs font-semibold text-zinc-600 mb-1">Título</label>
-              <input type="text" id="adm-p-title" required class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-zinc-600 mb-1">Precio ($ Público)</label>
-              <input type="number" id="adm-p-price" step="0.5" required class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-zinc-600 mb-1">Costo ($ Admin)</label>
-              <input type="number" id="adm-p-cost" step="0.5" required class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-zinc-600 mb-1">Categoría</label>
-              <select id="adm-p-category" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm">
-                <option value="Impresión 3D">Impresión 3D</option>
-                <option value="Coleccionables">Coleccionables</option>
-                <option value="Desarrollo Web">Desarrollo Web</option>
-              </select>
-            </div>
-            <div class="sm:col-span-2 md:col-span-4">
-              <label class="block text-xs font-semibold text-zinc-600 mb-1">Descripción</label>
-              <input type="text" id="adm-p-desc" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm">
-            </div>
-            <div class="sm:col-span-2 md:col-span-4 pt-1">
-              <button type="submit" class="w-full sm:w-auto bg-zinc-950 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition">Guardar Producto</button>
-            </div>
-          </form>
         </div>
 
         <!-- Directorio de Clientes -->
@@ -424,7 +483,7 @@
 
   </main>
 
-  <!-- MODAL / PORTAL PARA REALIZAR PEDIDO -->
+  <!-- MODAL PARA REALIZAR PEDIDO -->
   <div id="order-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-lg rounded-2xl p-6 space-y-5 shadow-2xl relative">
       <div class="flex justify-between items-start border-b border-zinc-200 pb-3">
@@ -437,7 +496,7 @@
       </div>
 
       <form onsubmit="submitOrder(event)" class="space-y-4">
-        <div id="order-field-specs">
+        <div>
           <label class="block text-xs font-semibold text-zinc-600 mb-1" id="order-spec-label">Especificaciones del Pedido</label>
           <input type="text" id="order-specs" required placeholder="Color, medidas o personalización requerida" class="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
         </div>
@@ -545,24 +604,34 @@
       if (form) form.classList.remove('hidden');
     };
 
-    // CATÁLOGO SEGMENTADO
+    // -------------------------------------------------------------
+    // GESTIÓN DE CATÁLOGO CON PERSISTENCIA, IMÁGENES Y EDICIÓN
+    // -------------------------------------------------------------
     let currentCategoryFilter = 'all';
-    let catalogItems = [
-      // Categoría: Impresión 3D
-      { title: "Soporte Articulado para Escritorio", description: "Impresión de alta densidad en PETG resistente a impactos.", price: 290, cost: 95, category: "Impresión 3D", badge: "Entrega Inmediata / Encomienda" },
-      { title: "Organizador Modular de Herramientas", description: "Bandejas encastrables con ranuras a medida para mesa de trabajo.", price: 340, cost: 110, category: "Impresión 3D", badge: "Personalizable" },
-      { title: "Pieza Técnica Bajo Plano", description: "Fabricación aditiva a partir de archivo STL/STEP del cliente.", price: 480, cost: 140, category: "Impresión 3D", badge: "Bajo Encargo" },
 
-      // Categoría: Coleccionables
-      { title: "Diorama Exhibidor Coleccionable", description: "Base modular con textura e iluminación para figuras a escala.", price: 420, cost: 180, category: "Coleccionables", badge: "Edición Limitada" },
-      { title: "Base Magnética para Miniaturas", description: "Soporte con imán de neodimio para juegos de mesa y miniaturas.", price: 180, cost: 50, category: "Coleccionables", badge: "Packs x4" },
-      { title: "Marco Exhibidor para Cartas TCG", description: "Caja protectora rígida con soporte de exhibición para cartas raras.", price: 260, cost: 80, category: "Coleccionables", badge: "Protección UV" },
+    function getStoredCatalog() {
+      const saved = localStorage.getItem('five_friends_catalog');
+      if (saved) {
+        try { return JSON.parse(saved); } catch(e){}
+      }
+      return [
+        { id: "p1", title: "Soporte Articulado para Escritorio", description: "Impresión de alta densidad en PETG resistente a impactos.", price: 290, cost: 95, category: "Impresión 3D", image_url: "", badge: "Entrega Inmediata" },
+        { id: "p2", title: "Organizador Modular de Herramientas", description: "Bandejas encastrables con ranuras a medida para mesa de trabajo.", price: 340, cost: 110, category: "Impresión 3D", image_url: "", badge: "Personalizable" },
+        { id: "p3", title: "Diorama Exhibidor Coleccionable", description: "Base modular con textura e iluminación para figuras a escala.", price: 420, cost: 180, category: "Coleccionables", image_url: "", badge: "Edición Limitada" },
+        { id: "p4", title: "Marco Exhibidor para Cartas TCG", description: "Caja protectora rígida con soporte de exhibición para cartas raras.", price: 260, cost: 80, category: "Coleccionables", image_url: "", badge: "Protección UV" },
+        { id: "p5", title: "Landing Page para Emprendedores", description: "Página de aterrizaje responsiva, ultra rápida y optimizada para móviles.", price: 3200, cost: 500, category: "Desarrollo Web", image_url: "", badge: "Entrega en 5 días" },
+        { id: "p6", title: "Tienda Online E-commerce", description: "Catálogo autogestionable, pasarela de cobros y panel de pedidos.", price: 6500, cost: 1200, category: "Desarrollo Web", image_url: "", badge: "Sistema Completo" }
+      ];
+    }
 
-      // Categoría: Desarrollo Web
-      { title: "Landing Page para Emprendedores", description: "Página de aterrizaje responsiva, ultra rápida, optimizada para SEO y móviles.", price: 3200, cost: 500, category: "Desarrollo Web", badge: "Entrega en 5 días" },
-      { title: "Tienda Online E-commerce", description: "Catálogo autogestionable, pasarela de cobros con Mercado Pago y panel de pedidos.", price: 6500, cost: 1200, category: "Desarrollo Web", badge: "Sistema Completo" },
-      { title: "Sitio Web Corporativo Multisección", description: "Diseño minimalista institucional, integración con base de datos y contacto.", price: 4800, cost: 900, category: "Desarrollo Web", badge: "Diseño Exclusivo" }
-    ];
+    let catalogItems = getStoredCatalog();
+
+    function saveCatalog(items) {
+      catalogItems = items;
+      localStorage.setItem('five_friends_catalog', JSON.stringify(catalogItems));
+      renderCatalog();
+      renderAdminProductsTable();
+    }
 
     window.filterCategoryFromHome = function(cat) {
       navigate('catalogo');
@@ -571,7 +640,6 @@
 
     window.setCatalogFilter = function(category) {
       currentCategoryFilter = category;
-
       const mapping = {
         'all': 'btn-cat-all',
         'Impresión 3D': 'btn-cat-3d',
@@ -585,9 +653,7 @@
       });
 
       const activeBtn = document.getElementById(mapping[category]);
-      if (activeBtn) {
-        activeBtn.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-zinc-950 text-white shadow-sm';
-      }
+      if (activeBtn) activeBtn.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-zinc-950 text-white shadow-sm';
 
       renderCatalog();
     };
@@ -596,13 +662,37 @@
       renderCatalog();
     };
 
+    // VISTA PREVIA DE IMAGEN
+    window.updateImagePreview = function(url) {
+      const container = document.getElementById('image-preview-container');
+      if (url && (url.startsWith('http') || url.startsWith('data:image'))) {
+        container.innerHTML = `<img src="${url}" alt="Preview" class="h-12 w-12 object-cover rounded-lg border border-zinc-200 mx-auto shadow-sm" onerror="this.parentElement.innerHTML='<span class=\'text-[10px] text-rose-500\'>URL inválida</span>'">`;
+      } else {
+        container.innerHTML = `<span class="text-[11px] text-zinc-400">Sin vista previa</span>`;
+      }
+    };
+
+    // SUBIR ARCHIVO LOCAL Y CONVERTIR A BASE64
+    window.handleImageFileUpload = function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const base64Data = e.target.result;
+        document.getElementById('adm-p-image-url').value = base64Data;
+        updateImagePreview(base64Data);
+      };
+      reader.readAsDataURL(file);
+    };
+
+    // RENDERIZAR CATÁLOGO PÚBLICO
     function renderCatalog() {
       const container = document.getElementById('catalog-container');
       if (!container) return;
 
       const searchQuery = (document.getElementById('cat-search')?.value || '').toLowerCase();
 
-      // Filtrar items
       let filtered = catalogItems.filter(item => {
         const matchesCategory = (currentCategoryFilter === 'all' || item.category === currentCategoryFilter);
         const matchesSearch = item.title.toLowerCase().includes(searchQuery) || item.description.toLowerCase().includes(searchQuery);
@@ -619,7 +709,6 @@
         return;
       }
 
-      // Agrupar por categoría para una visualización ordenada
       const categories = currentCategoryFilter === 'all' 
         ? ['Impresión 3D', 'Coleccionables', 'Desarrollo Web']
         : [currentCategoryFilter];
@@ -646,21 +735,30 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-              ${group.map(p => `
-                <div class="border border-zinc-200 bg-white p-5 rounded-2xl flex flex-col justify-between space-y-4 shadow-sm hover:border-zinc-400 transition">
-                  <div class="space-y-2">
-                    <div class="flex justify-between items-start gap-2">
-                      <span class="text-[10px] uppercase font-bold px-2 py-0.5 bg-zinc-100 rounded text-zinc-600">${p.badge || p.category}</span>
+              ${group.map(p => {
+                const imageSection = p.image_url 
+                  ? `<div class="w-full h-44 rounded-xl overflow-hidden bg-zinc-100 mb-3 border border-zinc-100">
+                       <img src="${p.image_url}" alt="${p.title}" class="w-full h-full object-cover hover:scale-105 transition duration-300">
+                     </div>`
+                  : `<div class="w-full h-24 rounded-xl bg-zinc-100/70 mb-3 border border-dashed border-zinc-200 flex items-center justify-center text-zinc-400 text-xs font-semibold">
+                       <span>${icon}${p.category}</span>
+                     </div>`;
+
+                return `
+                  <div class="border border-zinc-200 bg-white p-5 rounded-2xl flex flex-col justify-between space-y-3 shadow-sm hover:border-zinc-400 transition">
+                    <div>
+                      ${imageSection}
+                      <span class="text-[10px] uppercase font-bold px-2 py-0.5 bg-zinc-100 rounded text-zinc-600 inline-block mb-1.5">${p.badge || p.category}</span>
+                      <h4 class="font-bold text-base text-zinc-950 leading-snug">${p.title}</h4>
+                      <p class="text-xs text-zinc-500 leading-relaxed mt-1">${p.description}</p>                     </div>                     <div class="flex justify-between items-center pt-3 border-t border-zinc-100">                       <div>                         <span class="text-[10px] text-zinc-400 uppercase font-semibold block">Inversión</span>                         <span class="font-extrabold text-base sm:text-lg text-zinc-950">$${Number(p.price).toLocaleString()} MXN</span>
+                      </div>
+                      <button type="button" onclick="openOrderModal('${p.title}', ${p.price}, '${p.category}')" class="px-4 py-2 bg-zinc-950 text-white text-xs font-semibold rounded-xl hover:bg-zinc-800 transition shadow-sm">
+                        ${p.category === 'Desarrollo Web' ? 'Cotizar' : 'Ordenar'}
+                      </button>
                     </div>
-                    <h4 class="font-bold text-base text-zinc-950 leading-snug">${p.title}</h4>
-                    <p class="text-xs text-zinc-500 leading-relaxed">${p.description}</p>                   </div>                   <div class="flex justify-between items-center pt-3 border-t border-zinc-100">                     <div>                       <span class="text-[10px] text-zinc-400 uppercase font-semibold block">Inversión</span>                       <span class="font-extrabold text-base sm:text-lg text-zinc-950">$${p.price.toLocaleString()} MXN</span>
-                    </div>
-                    <button type="button" onclick="openOrderModal('${p.title}', ${p.price}, '${p.category}')" class="px-4 py-2 bg-zinc-950 text-white text-xs font-semibold rounded-xl hover:bg-zinc-800 transition shadow-sm">
-                      ${p.category === 'Desarrollo Web' ? 'Cotizar' : 'Ordenar'}
-                    </button>
                   </div>
-                </div>
-              `).join('')}
+                `;
+              }).join('')}
             </div>
           </div>
         `;
@@ -669,7 +767,154 @@
       container.innerHTML = html;
     }
 
-    // GESTIÓN DEL MODAL DE PEDIDO
+    // RENDERIZAR TABLA DE ADMINISTRACIÓN DE PRODUCTOS (EDITAR / ELIMINAR / COSTOS)
+    function renderAdminProductsTable() {
+      const table = document.getElementById('admin-products-table');
+      const countLabel = document.getElementById('admin-product-count');
+      if (!table) return;
+
+      if (countLabel) countLabel.innerText = `${catalogItems.length} productos`;
+
+      if (catalogItems.length === 0) {
+        table.innerHTML = `<tr><td colspan="6" class="py-4 text-center text-zinc-400">No hay productos en el catálogo. Añade uno arriba.</td></tr>`;
+        return;
+      }
+
+      table.innerHTML = catalogItems.map(p => {
+        const thumbnail = p.image_url 
+          ? `<img src="${p.image_url}" alt="Foto" class="w-9 h-9 object-cover rounded-lg border border-zinc-200">`
+          : `<div class="w-9 h-9 rounded-lg bg-zinc-100 border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-500">5F</div>`;
+
+        return `
+          <tr class="hover:bg-zinc-50 transition">
+            <td class="py-2.5">${thumbnail}</td>
+            <td class="py-2.5 font-semibold text-zinc-900">
+              ${p.title}
+              <div class="text-[11px] text-zinc-400 font-normal truncate max-w-xs">${p.description || 'Sin descripción'}</div>
+            </td>
+            <td class="py-2.5 text-zinc-600">${p.category}</td>
+            <td class="py-2.5 font-bold text-zinc-950">$${Number(p.price).toLocaleString()} MXN</td>
+            <td class="py-2.5 font-bold text-zinc-600">$${Number(p.cost || 0).toLocaleString()} MXN</td>
+            <td class="py-2.5 text-right whitespace-nowrap">
+              <button onclick="editProduct('${p.id}')" class="px-2.5 py-1 text-xs font-semibold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-lg mr-1 transition">Editar</button>
+              <button onclick="deleteProduct('${p.id}')" class="px-2.5 py-1 text-xs font-semibold bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg transition">Eliminar</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // MANEJO DE ENVÍO DE FORMULARIO (CREAR O ACTUALIZAR)
+    window.handleProductFormSubmit = async function(e) {
+      e.preventDefault();
+      const id = document.getElementById('adm-p-id').value;
+      const title = document.getElementById('adm-p-title').value.trim();
+      const price = parseFloat(document.getElementById('adm-p-price').value);
+      const cost = parseFloat(document.getElementById('adm-p-cost').value);
+      const category = document.getElementById('adm-p-category').value;
+      const imageUrl = document.getElementById('adm-p-image-url').value.trim();
+      const desc = document.getElementById('adm-p-desc').value.trim();
+
+      if (id) {
+        // ACTUALIZAR PRODUCTO EXISTENTE
+        const idx = catalogItems.findIndex(p => p.id === id);
+        if (idx >= 0) {
+          catalogItems[idx] = {
+            ...catalogItems[idx],
+            title: title,
+            price: price,
+            cost: cost,
+            category: category,
+            image_url: imageUrl,
+            description: desc
+          };
+          saveCatalog(catalogItems);
+          alert(`✓ Producto "${title}" actualizado con éxito.`);
+        }
+      } else {
+        // CREAR NUEVO PRODUCTO
+        const newProduct = {
+          id: 'prod_' + Date.now(),
+          title: title,
+          price: price,
+          cost: cost,
+          category: category,
+          image_url: imageUrl,
+          description: desc,
+          badge: 'Nuevo'
+        };
+        catalogItems.unshift(newProduct);
+        saveCatalog(catalogItems);
+        alert(`✓ Producto "${title}" agregado al catálogo.`);
+      }
+
+      // Sincronizar en Supabase si la tabla products existe
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from('products').upsert({
+            title: title,
+            price: price,
+            cost: cost,
+            category: category,
+            image_url: imageUrl,
+            description: desc
+          });
+        } catch(err) {
+          console.warn("Supabase products sync:", err);
+        }
+      }
+
+      cancelProductEdit();
+      loadAdminData();
+    };
+
+    // EDITAR PRODUCTO: LLENA EL FORMULARIO
+    window.editProduct = function(id) {
+      const prod = catalogItems.find(p => p.id === id);
+      if (!prod) return;
+
+      document.getElementById('adm-p-id').value = prod.id;
+      document.getElementById('adm-p-title').value = prod.title;
+      document.getElementById('adm-p-price').value = prod.price;
+      document.getElementById('adm-p-cost').value = prod.cost || 0;
+      document.getElementById('adm-p-category').value = prod.category;
+      document.getElementById('adm-p-image-url').value = prod.image_url || '';
+      document.getElementById('adm-p-desc').value = prod.description || '';
+
+      updateImagePreview(prod.image_url || '');
+
+      document.getElementById('product-form-title').innerText = `Editando: ${prod.title}`;
+      document.getElementById('btn-save-product').innerText = "Guardar Cambios del Producto";
+      document.getElementById('btn-cancel-edit').classList.remove('hidden');
+
+      // Desplazamiento suave al formulario
+      document.getElementById('product-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
+    // CANCELAR EDICIÓN Y LIMPIAR
+    window.cancelProductEdit = function() {
+      document.getElementById('adm-p-id').value = '';
+      document.getElementById('product-form').reset();
+      document.getElementById('image-preview-container').innerHTML = `<span class="text-[11px] text-zinc-400">Sin vista previa</span>`;
+      document.getElementById('product-form-title').innerText = "Agregar Nuevo Producto al Catálogo";
+      document.getElementById('btn-save-product').innerText = "Guardar Producto en Catálogo";
+      document.getElementById('btn-cancel-edit').classList.add('hidden');
+    };
+
+    // ELIMINAR PRODUCTO
+    window.deleteProduct = function(id) {
+      const prod = catalogItems.find(p => p.id === id);
+      if (!prod) return;
+
+      if (confirm(`¿Estás seguro de que deseas eliminar "${prod.title}" del catálogo?`)) {
+        const updated = catalogItems.filter(p => p.id !== id);
+        saveCatalog(updated);
+        alert(`✓ Producto "${prod.title}" eliminado.`);
+        loadAdminData();
+      }
+    };
+
+    // MODAL DE PEDIDO
     let selectedOrder = null;
 
     window.openOrderModal = function(title, price, category) {
@@ -682,10 +927,10 @@
       const input = document.getElementById('order-specs');
       if (category === 'Desarrollo Web') {
         label.innerText = '¿De qué trata tu negocio o proyecto web?';
-        input.placeholder = 'Ej. Tienda para ropa deportiva con 20 productos y pasarela de pago';
+        input.placeholder = 'Ej. Tienda con 20 productos y pasarela de pago';
       } else {
         label.innerText = 'Color o detalles de tu pieza 3D / coleccionable';
-        input.placeholder = 'Ej. Color negro mate, medidas estándar, grabado de iniciales';
+        input.placeholder = 'Ej. Color negro mate, medidas estándar, iniciales grabadas';
       }
 
       document.getElementById('order-modal').classList.remove('hidden');
@@ -770,12 +1015,10 @@
 
       let foundUser = null;
 
-      // 1. Local
       const localClients = getStoredClients();
       const localMatch = localClients.find(c => (c.email?.toLowerCase() === identifier.toLowerCase() || c.phone === identifier) && c.raw_pass === password);
       if (localMatch) foundUser = localMatch;
 
-      // 2. Supabase
       if (!foundUser && supabaseClient) {
         try {
           const isEmail = identifier.includes('@');
@@ -840,7 +1083,7 @@
       }
     };
 
-    // OLVIDÉ MI CONTRASEÑA
+    // OLVIDÉ CONTRASEÑA
     window.sendPasswordToEmail = async function(type) {
       let identifier = prompt("Ingresa el correo o teléfono registrado:");
       if (!identifier) return;
@@ -914,6 +1157,7 @@
       document.getElementById('club-user-portal').classList.add('hidden');
       document.getElementById('club-admin-portal').classList.remove('hidden');
       loadAdminData();
+      renderAdminProductsTable();
     }
 
     window.handleLogout = function() {
@@ -1017,8 +1261,9 @@
         clientTable.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-zinc-400 text-xs">No hay clientes registrados en la base de datos todavía.</td></tr>`;
       }
 
+      // Balance general en base a productos y clientes
       let totalSales = finalClients.reduce((sum, u) => sum + Number(u.total_spent || 0), 0) + 12000;
-      let totalCost = Math.round(totalSales * 0.38);
+      let totalCost = catalogItems.reduce((acc, i) => acc + (Number(i.cost) || 0), 0) + 4000;
       let profit = totalSales - totalCost;
 
       document.getElementById('stat-sales').innerText = `$${totalSales.toLocaleString()} MXN`;
@@ -1036,21 +1281,6 @@
         res.className = 'text-xs font-semibold text-rose-600';
         res.innerText = '✕ Código de cupón inválido o expirado.';
       }
-    };
-
-    window.handleAdminAddProduct = function(e) {
-      e.preventDefault();
-      const title = document.getElementById('adm-p-title').value;
-      const price = parseFloat(document.getElementById('adm-p-price').value);
-      const cost = parseFloat(document.getElementById('adm-p-cost').value);
-      const category = document.getElementById('adm-p-category').value;
-      const desc = document.getElementById('adm-p-desc').value;
-
-      catalogItems.push({ title, price, cost, category, description: desc, badge: "Nuevo" });
-      renderCatalog();
-      alert(`Producto "${title}" agregado al catálogo en la categoría "${category}".`);
-      e.target.reset();
-      loadAdminData();
     };
 
     window.addEventListener('DOMContentLoaded', () => {
