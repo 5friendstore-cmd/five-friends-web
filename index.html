@@ -93,7 +93,7 @@
           <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed">Figuras, dioramas temáticos, bases exhibidoras y accesorios detallados para coleccionistas.</p>
         </div>
         <div class="p-6 border border-zinc-200 rounded-2xl bg-white shadow-sm space-y-3">
-          <div class="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center font-bold text-sm">&lt;/&gt;</div>
+          <div class="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center font-bold">&lt;/&gt;</div>
           <h3 class="text-lg font-bold">Páginas & Tiendas Web</h3>
           <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed">Sitios web modernos, rápidos y tiendas virtuales optimizadas para impulsar la presencia y ventas de tu negocio.</p>
         </div>
@@ -216,7 +216,7 @@
           <button type="submit" class="w-full bg-zinc-950 text-white py-3 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition mt-2">Crear Cuenta</button>
         </form>
 
-        <!-- FORMULARIO ADMIN LOGIN (VACÍO POR DEFECTO) -->
+        <!-- FORMULARIO ADMIN LOGIN -->
         <form id="form-admin" class="space-y-3.5 hidden" onsubmit="handleAdminLogin(event)">
           <div class="bg-zinc-100 p-2.5 rounded-xl text-xs text-zinc-600">Acceso restringido a administradores de Five Friends.</div>
           <div>
@@ -244,7 +244,6 @@
           <button type="button" onclick="handleLogout()" class="self-start sm:self-auto text-xs font-medium border border-zinc-300 px-3 py-1.5 rounded-lg hover:bg-zinc-100">Cerrar Sesión</button>
         </div>
 
-        <!-- Barra de Progreso a $1,500 MXN -->
         <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-3.5 shadow-sm">
           <div class="flex justify-between items-end gap-2">
             <div>
@@ -259,7 +258,6 @@
           <p class="text-xs text-zinc-500 leading-relaxed">Acumula compras registrando tus tickets en bazares o compras web para desbloquear tu QR con 10% de descuento.</p>
         </div>
 
-        <!-- Módulos de Tickets y QR -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-3.5 shadow-sm">
             <h3 class="text-base sm:text-lg font-bold">Registrar Ticket Físico</h3>
@@ -393,15 +391,15 @@
   </main>
 
   <script>
-    // CONFIGURACIÓN DE SUPABASE
+    // SUPABASE CONFIG
     const SUPABASE_BASE_URL = "https://vqsuycquoeqakhttibao.supabase.co";
     const SUPABASE_KEY = "sb_publishable_iglMJnYPy3iFulCFv3j_qw_s3An5vme";
     let supabaseClient = null;
 
-    // CONFIGURACIÓN DE EMAILJS CON TUS CLAVES OFICIALES
+    // EMAILJS CONFIG OFICIAL CON TUS CLAVES EXACTAS
     const EMAILJS_PUBLIC_KEY = "k2u203TouhD3PPrZU";
     const EMAILJS_TEMPLATE_ID = "template_f9qsdal";
-    const EMAILJS_SERVICE_ID = "service_default"; // O el Service ID que creaste en EmailJS
+    const EMAILJS_SERVICE_ID = "service_k329g2o"; 
 
     try {
       if (window.supabase && typeof window.supabase.createClient === 'function') {
@@ -411,7 +409,7 @@
         emailjs.init(EMAILJS_PUBLIC_KEY);
       }
     } catch (err) {
-      console.warn("Error inicializando librerías:", err);
+      console.warn("Init error:", err);
     }
 
     // MENU MÓVIL
@@ -446,7 +444,7 @@
       }
     };
 
-    // TABS EN CLUB FIVE FRIENDS
+    // TABS
     window.toggleAuthTab = function(tab) {
       document.getElementById('form-login').classList.add('hidden');
       document.getElementById('form-register').classList.add('hidden');
@@ -488,7 +486,7 @@
       `).join('');
     }
 
-    // REGISTRO CLIENTE (ALMACENA LA CLAVE EN SUPABASE)
+    // REGISTRO
     window.handleRegister = async function(e) {
       e.preventDefault();
       const name = document.getElementById('reg-name').value;
@@ -499,7 +497,7 @@
 
       if (supabaseClient) {
         try {
-          const { data, error } = await supabaseClient.auth.signUp({
+          const { data } = await supabaseClient.auth.signUp({
             email: email,
             password: password,
             options: { data: { full_name: name, phone, birthday } }
@@ -522,7 +520,7 @@
       showUserView(name, 0);
     };
 
-    // LOGIN CLIENTE
+    // LOGIN
     window.handleLogin = async function(e) {
       e.preventDefault();
       const identifier = document.getElementById('login-identifier').value.trim();
@@ -554,7 +552,7 @@
       showUserView(identifier, 650);
     };
 
-    // LOGIN ADMINISTRADOR
+    // LOGIN ADMIN
     window.handleAdminLogin = function(e) {
       e.preventDefault();
       const email = document.getElementById('admin-email').value.trim();
@@ -567,72 +565,65 @@
       }
     };
 
-    // ENVÍO DE CONTRASEÑA DIRECTA AL CORREO MEDIANTE EMAILJS
+    // ENVÍO DE CONTRASEÑA DIRECTO AL CORREO VÍA EMAILJS
     window.sendPasswordToEmail = async function(type) {
-      let identifier = prompt("Ingresa el correo electrónico o número telefónico con el que te registraste:");
+      let identifier = prompt("Ingresa el correo electrónico con el que te registraste:");
       if (!identifier) return;
       identifier = identifier.trim();
 
-      // Caso 1: Administrador
-      if (type === 'admin' || identifier === '5friendstore@gmail.com') {
-        const adminEmail = '5friendstore@gmail.com';
-        const adminPass = 'Five.Friends@2025';
+      let targetEmail = identifier;
+      let userName = "Cliente Five Friends";
+      let userPass = "";
 
-        if (window.emailjs) {
+      // Administrador
+      if (type === 'admin' || identifier.toLowerCase() === '5friendstore@gmail.com') {
+        targetEmail = '5friendstore@gmail.com';
+        userName = 'Administrador Five Friends';
+        userPass = 'Five.Friends@2025';
+      } else {
+        // Cliente registrado en Supabase
+        if (supabaseClient) {
           try {
-            await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-              to_name: "Administrador Five Friends",
-              to_email: adminEmail,
-              user_password: adminPass,
-              message: `Tu clave de administrador para Five Friends es: ${adminPass}`
-            });
-          } catch(e) {
-            console.warn("Aviso EmailJS:", e);
+            const isPhone = !identifier.includes('@');
+            let query = supabaseClient.from('profiles').select('full_name, phone, raw_pass');
+            const { data } = isPhone ? await query.eq('phone', identifier).single() : await query.eq('id', identifier).single();
+            if (data && data.raw_pass) {
+              userPass = data.raw_pass;
+              userName = data.full_name || userName;
+            }
+          } catch(err) {
+            console.warn(err);
           }
         }
-        alert("✓ Tu contraseña ha sido enviada al correo registrado: " + adminEmail);
+        if (!userPass) {
+          userPass = "FivePass" + Math.floor(1000 + Math.random() * 9000);
+        }
+      }
+
+      // Parámetros de la plantilla de EmailJS
+      const templateParams = {
+        to_email: targetEmail,
+        to_name: userName,
+        user_password: userPass,
+        message: `Hola ${userName}, tu contraseña registrada en Five Friends es: ${userPass}`
+      };
+
+      if (!window.emailjs) {
+        alert("La librería de correo no ha cargado. Verifica tu conexión a internet.");
         return;
       }
 
-      // Caso 2: Cliente
-      let foundPass = null;
-      let targetEmail = identifier;
-      let userName = "Cliente Five Friends";
-
-      if (supabaseClient) {
-        try {
-          const isPhone = !identifier.includes('@');
-          let query = supabaseClient.from('profiles').select('full_name, phone, raw_pass, id');
-          const { data } = isPhone ? await query.eq('phone', identifier).single() : await query.eq('id', identifier).single();
-
-          if (data && data.raw_pass) {
-            foundPass = data.raw_pass;
-            userName = data.full_name || userName;
-          }
-        } catch(err) {
-          console.warn(err);
+      try {
+        const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY);
+        if (response.status === 200) {
+          alert(`✓ ¡Correo enviado con éxito a ${targetEmail}!\nRevisa tu bandeja de entrada o la carpeta de spam.`);
+        } else {
+          alert(`Respuesta del servidor: ${response.text}`);
         }
+      } catch (error) {
+        console.error("Error al enviar con EmailJS:", error);
+        alert(`No se pudo enviar el correo.\nDetalle: ${error.text || error.message || JSON.stringify(error)}`);
       }
-
-      if (!foundPass) {
-        foundPass = "FivePass" + Math.floor(1000 + Math.random() * 9000);
-      }
-
-      // Disparo real con EmailJS usando tu Template y Public Key
-      if (window.emailjs) {
-        try {
-          await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-            to_name: userName,
-            to_email: targetEmail,
-            user_password: foundPass,
-            message: `Hola ${userName}, tu contraseña registrada en Five Friends es: ${foundPass}`
-          });
-        } catch(e) {
-          console.warn("Aviso EmailJS:", e);
-        }
-      }
-
-      alert("✓ ¡Listo! Hemos enviado tu contraseña registrada a tu correo electrónico (" + targetEmail + ").");
     };
 
     function showUserView(displayName, spent) {
