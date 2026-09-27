@@ -188,7 +188,7 @@
           <div class="flex justify-end">
             <button type="button" onclick="sendPasswordToEmail('cliente')" class="text-xs text-zinc-500 hover:underline">¿Olvidaste tu contraseña?</button>
           </div>
-          <button type="submit" class="w-full bg-zinc-950 text-white py-3 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition">Ingresar al Club</button>
+          <button type="submit" id="btn-login" class="w-full bg-zinc-950 text-white py-3 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition">Ingresar al Club</button>
         </form>
 
         <!-- FORMULARIO CLIENTE REGISTRO -->
@@ -213,7 +213,7 @@
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Contraseña</label>
             <input type="password" id="reg-password" required minlength="6" placeholder="Mínimo 6 caracteres" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm">
           </div>
-          <button type="submit" class="w-full bg-zinc-950 text-white py-3 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition mt-2">Crear Cuenta</button>
+          <button type="submit" id="btn-register" class="w-full bg-zinc-950 text-white py-3 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition mt-2">Crear Cuenta</button>
         </form>
 
         <!-- FORMULARIO ADMIN LOGIN -->
@@ -396,10 +396,10 @@
     const SUPABASE_KEY = "sb_publishable_iglMJnYPy3iFulCFv3j_qw_s3An5vme";
     let supabaseClient = null;
 
-    // EMAILJS CONFIG OFICIAL CON TUS CLAVES EXACTAS
+    // EMAILJS CONFIG OFICIAL
     const EMAILJS_PUBLIC_KEY = "k2u203TouhD3PPrZU";
     const EMAILJS_TEMPLATE_ID = "template_f9qsdal";
-    const EMAILJS_SERVICE_ID = "service_k329g2o"; 
+    const EMAILJS_SERVICE_ID = "service_k329g2o";
 
     try {
       if (window.supabase && typeof window.supabase.createClient === 'function') {
@@ -486,152 +486,191 @@
       `).join('');
     }
 
-    // REGISTRO
+    // REGISTRO ROBUSTO: SUPABASE AUTH + TABLA PROFILES
     window.handleRegister = async function(e) {
       e.preventDefault();
-      const name = document.getElementById('reg-name').value;
-      const email = document.getElementById('reg-email').value.trim();
+      const btn = document.getElementById('btn-register');
+      btn.innerText = "Registrando...";
+      btn.disabled = true;
+
+      const name = document.getElementById('reg-name').value.trim();
+      const email = document.getElementById('reg-email').value.trim().toLowerCase();
       const phone = document.getElementById('reg-phone').value.trim();
       const birthday = document.getElementById('reg-birthday').value;
       const password = document.getElementById('reg-password').value;
 
+      let userId = 'usr_' + Date.now();
+
       if (supabaseClient) {
         try {
-          const { data } = await supabaseClient.auth.signUp({
+          const { data: authData, error: authErr } = await supabaseClient.auth.signUp({
             email: email,
             password: password,
-            options: { data: { full_name: name, phone, birthday } }
+            options: { data: { full_name: name, phone: phone, birthday: birthday } }
           });
+          if (authData?.user) userId = authData.user.id;
+        } catch (err) {
+          console.warn("Auth signup error:", err);
+        }
 
-          await supabaseClient.from('profiles').upsert({
-            id: data?.user?.id || 'usr_' + Date.now(),
+        try {
+          // Guardar directamente en la tabla profiles
+          const { error: dbErr } = await supabaseClient.from('profiles').upsert({
+            id: userId,
             full_name: name,
+            email: email,
             phone: phone,
             birthday: birthday,
             raw_pass: password,
             total_spent: 0
           });
-        } catch (err) {
-          console.warn(err);
+          if (dbErr) console.error("Error guardando en profiles:", dbErr);
+        } catch(dbEx) {
+          console.warn(dbEx);
         }
       }
 
+      const sessionObj = { type: 'client', id: userId, name: name, email: email, phone: phone, birthday: birthday, total_spent: 0 };
+      localStorage.setItem('five_friends_session', JSON.stringify(sessionObj));
+
+      btn.innerText = "Crear Cuenta";
+      btn.disabled = false;
       alert("¡Cuenta creada exitosamente para " + name + "!");
       showUserView(name, 0);
     };
 
-    // LOGIN
+    // LOGIN CLIENTE (CON TELEFONO O CORREO)
     window.handleLogin = async function(e) {
       e.preventDefault();
+      const btn = document.getElementById('btn-login');
+      btn.innerText = "Entrando...";
+      btn.disabled = true;
+
       const identifier = document.getElementById('login-identifier').value.trim();
       const password = document.getElementById('login-password').value;
 
+      let foundUser = null;
+
       if (supabaseClient) {
         try {
-          let emailToAuth = identifier;
-          if (!identifier.includes('@')) {
-            const { data: p } = await supabaseClient.from('profiles').select('raw_pass, full_name').eq('phone', identifier).single();
-            if (p && p.raw_pass === password) {
-              showUserView(p.full_name, 650);
-              return;
+          // Buscar primero en la base de datos de perfiles por correo o por teléfono
+          const isEmail = identifier.includes('@');
+          const col = isEmail ? 'email' : 'phone';
+          const { data: profile } = await supabaseClient.from('profiles').select('*').ilike(col, identifier).maybeSingle();
+
+          if (profile && profile.raw_pass === password) {
+            foundUser = profile;
+          } else {
+            // Intentar también con el auth nativo
+            const { data: authRes } = await supabaseClient.auth.signInWithPassword({
+              email: isEmail ? identifier : `${identifier}@fivefriends.local`,
+              password: password
+            });
+            if (authRes?.user) {
+              const { data: p } = await supabaseClient.from('profiles').select('*').eq('id', authRes.user.id).maybeSingle();
+              foundUser = p || { full_name: authRes.user.user_metadata?.full_name || authRes.user.email, total_spent: 0 };
             }
           }
-
-          const { data, error } = await supabaseClient.auth.signInWithPassword({
-            email: emailToAuth,
-            password: password
-          });
-          if (!error && data?.user) {
-            showUserView(data.user.user_metadata?.full_name || data.user.email, 650);
-            return;
-          }
         } catch (err) {
-          console.warn(err);
+          console.warn("Login search error:", err);
         }
       }
-      showUserView(identifier, 650);
+
+      btn.innerText = "Ingresar al Club";
+      btn.disabled = false;
+
+      if (foundUser) {
+        const sessionObj = {
+          type: 'client',
+          id: foundUser.id,
+          name: foundUser.full_name || identifier,
+          email: foundUser.email,
+          phone: foundUser.phone,
+          total_spent: foundUser.total_spent || 0
+        };
+        localStorage.setItem('five_friends_session', JSON.stringify(sessionObj));
+        showUserView(sessionObj.name, sessionObj.total_spent);
+      } else {
+        alert("Usuario no encontrado o contraseña incorrecta.\nVerifica que los datos coincidan con tu registro.");
+      }
     };
 
     // LOGIN ADMIN
     window.handleAdminLogin = function(e) {
       e.preventDefault();
-      const email = document.getElementById('admin-email').value.trim();
+      const email = document.getElementById('admin-email').value.trim().toLowerCase();
       const pass = document.getElementById('admin-password').value;
 
       if (email === '5friendstore@gmail.com' && pass === 'Five.Friends@2025') {
+        const sessionObj = { type: 'admin', email: email };
+        localStorage.setItem('five_friends_session', JSON.stringify(sessionObj));
         showAdminView();
       } else {
         alert("Acceso denegado: Correo o clave de administrador incorrectos.");
       }
     };
 
-    // ENVÍO DE CONTRASEÑA DIRECTO AL CORREO VÍA EMAILJS
+    // OLVIDÉ MI CONTRASEÑA
     window.sendPasswordToEmail = async function(type) {
-      let identifier = prompt("Ingresa el correo electrónico con el que te registraste:");
+      let identifier = prompt("Ingresa el correo electrónico o teléfono con el que te registraste:");
       if (!identifier) return;
       identifier = identifier.trim();
 
       let targetEmail = identifier;
-      let userName = "Cliente Five Friends";
+      let userName = "Cliente";
       let userPass = "";
 
-      // Administrador
       if (type === 'admin' || identifier.toLowerCase() === '5friendstore@gmail.com') {
         targetEmail = '5friendstore@gmail.com';
         userName = 'Administrador Five Friends';
         userPass = 'Five.Friends@2025';
       } else {
-        // Cliente registrado en Supabase
         if (supabaseClient) {
           try {
-            const isPhone = !identifier.includes('@');
-            let query = supabaseClient.from('profiles').select('full_name, phone, raw_pass');
-            const { data } = isPhone ? await query.eq('phone', identifier).single() : await query.eq('id', identifier).single();
-            if (data && data.raw_pass) {
+            const isEmail = identifier.includes('@');
+            const col = isEmail ? 'email' : 'phone';
+            const { data } = await supabaseClient.from('profiles').select('*').ilike(col, identifier).maybeSingle();
+            if (data) {
               userPass = data.raw_pass;
               userName = data.full_name || userName;
+              targetEmail = data.email || targetEmail;
             }
-          } catch(err) {
-            console.warn(err);
+          } catch(e) {
+            console.warn(e);
           }
-        }
-        if (!userPass) {
-          userPass = "FivePass" + Math.floor(1000 + Math.random() * 9000);
         }
       }
 
-      // Parámetros de la plantilla de EmailJS
-      const templateParams = {
-        to_email: targetEmail,
-        to_name: userName,
-        user_password: userPass,
-        message: `Hola ${userName}, tu contraseña registrada en Five Friends es: ${userPass}`
-      };
-
-      if (!window.emailjs) {
-        alert("La librería de correo no ha cargado. Verifica tu conexión a internet.");
+      if (!userPass) {
+        alert("No se encontró ninguna cuenta registrada con ese correo o teléfono.");
         return;
       }
 
-      try {
-        const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY);
-        if (response.status === 200) {
-          alert(`✓ ¡Correo enviado con éxito a ${targetEmail}!\nRevisa tu bandeja de entrada o la carpeta de spam.`);
-        } else {
-          alert(`Respuesta del servidor: ${response.text}`);
+      if (window.emailjs) {
+        try {
+          const res = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+            to_email: targetEmail,
+            to_name: userName,
+            user_password: userPass,
+            message: `Hola ${userName}, tu contraseña registrada en Five Friends es: ${userPass}`
+          }, EMAILJS_PUBLIC_KEY);
+
+          if (res.status === 200) {
+            alert(`✓ ¡Correo enviado con éxito a ${targetEmail}!\nRevisa tu bandeja de entrada o spam.`);
+          }
+        } catch (error) {
+          alert(`Error enviando correo: ${error.text || error.message}`);
         }
-      } catch (error) {
-        console.error("Error al enviar con EmailJS:", error);
-        alert(`No se pudo enviar el correo.\nDetalle: ${error.text || error.message || JSON.stringify(error)}`);
       }
     };
 
+    // VISTAS Y PERSISTENCIA
     function showUserView(displayName, spent) {
       document.getElementById('club-auth').classList.add('hidden');
       document.getElementById('club-admin-portal').classList.add('hidden');
       document.getElementById('club-user-portal').classList.remove('hidden');
       document.getElementById('user-display-name').innerText = `Cliente: ${displayName}`;
-      updateUserProgress(spent);
+      updateUserProgress(spent || 0);
     }
 
     function showAdminView() {
@@ -641,14 +680,34 @@
       loadAdminData();
     }
 
-    window.handleLogout = async function() {
+    window.handleLogout = function() {
+      localStorage.removeItem('five_friends_session');
       if (supabaseClient) {
-        try { await supabaseClient.auth.signOut(); } catch(e){}
+        try { supabaseClient.auth.signOut(); } catch(e){}
       }
       document.getElementById('club-user-portal').classList.add('hidden');
       document.getElementById('club-admin-portal').classList.add('hidden');
       document.getElementById('club-auth').classList.remove('hidden');
     };
+
+    // RESTAURAR SESIÓN DESPUÉS DE REFRESH (F5)
+    function restoreSession() {
+      const saved = localStorage.getItem('five_friends_session');
+      if (saved) {
+        try {
+          const session = JSON.parse(saved);
+          if (session.type === 'admin') {
+            showAdminView();
+            return;
+          } else if (session.type === 'client') {
+            showUserView(session.name, session.total_spent || 0);
+            return;
+          }
+        } catch(e) {
+          localStorage.removeItem('five_friends_session');
+        }
+      }
+    }
 
     function updateUserProgress(spent) {
       const target = 1500;
@@ -683,24 +742,42 @@
       document.getElementById('ticket-url').value = '';
     };
 
-    function loadAdminData() {
-      let totalSales = catalogItems.reduce((acc, i) => acc + i.price, 0) + 12000;
-      let totalCost = catalogItems.reduce((acc, i) => acc + i.cost, 0) + 4300;
+    // CARGAR CLIENTES Y BALANCE EN ADMIN DESDE SUPABASE EN TIEMPO REAL
+    async function loadAdminData() {
+      let registeredUsers = [];
+
+      if (supabaseClient) {
+        try {
+          const { data, error } = await supabaseClient.from('profiles').select('*').order('created_at', { ascending: false });
+          if (!error && data) {
+            registeredUsers = data;
+          }
+        } catch (err) {
+          console.warn("Error cargando profiles:", err);
+        }
+      }
+
+      const clientTable = document.getElementById('admin-client-table');
+      if (registeredUsers.length > 0) {
+        clientTable.innerHTML = registeredUsers.map(p => `
+          <tr>
+            <td class="py-2 font-medium">${p.full_name || 'Sin nombre'}</td>
+            <td class="py-2 text-zinc-500">${p.phone || ''} ${p.email ? '(' + p.email + ')' : ''}</td>
+            <td class="py-2 text-zinc-500">${p.birthday || '-'}</td>
+            <td class="py-2 font-semibold">$${p.total_spent || 0} MXN</td>
+          </tr>
+        `).join('');
+      } else {
+        clientTable.innerHTML = `<tr><td colspan="4" class="py-3 text-center text-zinc-400">No hay clientes registrados aún.</td></tr>`;
+      }
+
+      let totalSales = registeredUsers.reduce((sum, u) => sum + Number(u.total_spent || 0), 0) + 12000;
+      let totalCost = Math.round(totalSales * 0.38);
       let profit = totalSales - totalCost;
 
       document.getElementById('stat-sales').innerText = `$${totalSales.toLocaleString()} MXN`;
       document.getElementById('stat-costs').innerText = `$${totalCost.toLocaleString()} MXN`;
       document.getElementById('stat-profit').innerText = `$${profit.toLocaleString()} MXN`;
-
-      const clientTable = document.getElementById('admin-client-table');
-      clientTable.innerHTML = `
-        <tr>
-          <td class="py-2 font-medium">Cliente Ejemplo</td>
-          <td class="py-2 text-zinc-500">5512345678 / cliente@ejemplo.com</td>
-          <td class="py-2 text-zinc-500">1998-04-12</td>
-          <td class="py-2 font-semibold">$1,650 MXN</td>
-        </tr>
-      `;
     }
 
     window.handleAdminValidateCoupon = function() {
@@ -732,6 +809,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       renderCatalog();
+      restoreSession();
     });
   </script>
 </body>
