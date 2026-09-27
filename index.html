@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Five Friends | Impresión 3D, Coleccionables & Desarrollo Web</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -11,351 +11,377 @@
   <!-- QRCode.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
     .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); }
   </style>
 </head>
 <body class="bg-zinc-50 text-zinc-900 min-h-screen flex flex-col antialiased selection:bg-zinc-900 selection:text-white">
 
-  <!-- Header / Barra de Navegación -->
+  <!-- Header / Barra de Navegación Responsiva -->
   <header class="sticky top-0 z-50 glass border-b border-zinc-200">
-    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      
+      <!-- Logotipo -->
       <button onclick="navigate('inicio')" class="flex items-center gap-2 cursor-pointer focus:outline-none">
-        <div class="w-8 h-8 bg-zinc-950 text-white rounded flex items-center justify-center font-bold tracking-tighter">5F</div>
-        <span class="font-bold tracking-tight text-lg">FIVE FRIENDS</span>
+        <div class="w-8 h-8 bg-zinc-950 text-white rounded-lg flex items-center justify-center font-bold text-sm tracking-tighter">5F</div>
+        <span class="font-bold tracking-tight text-base sm:text-lg">FIVE FRIENDS</span>
       </button>
-      <nav class="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm font-medium text-zinc-600">
+
+      <!-- Menú en Pantallas Grandes (Desktop) -->
+      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-600">
         <button type="button" onclick="navigate('inicio')" class="hover:text-zinc-950 transition">Inicio</button>
         <button type="button" onclick="navigate('catalogo')" class="hover:text-zinc-950 transition">Catálogo</button>
         <button type="button" onclick="navigate('puntos')" class="hover:text-zinc-950 transition">Puntos de Venta</button>
         <button type="button" onclick="navigate('contacto')" class="hover:text-zinc-950 transition">Contacto</button>
-        <button type="button" onclick="navigate('club')" class="bg-zinc-950 text-white px-3 sm:px-4 py-2 rounded-full hover:bg-zinc-800 transition">Club Five Friends</button>
+        <button type="button" onclick="navigate('club')" class="bg-zinc-950 text-white px-4 py-2 rounded-full hover:bg-zinc-800 transition">Club Five Friends</button>
       </nav>
+
+      <!-- Botón Menú Hamburguesa (Móvil) -->
+      <div class="flex items-center gap-2 md:hidden">
+        <button type="button" onclick="navigate('club')" class="bg-zinc-950 text-white text-xs font-semibold px-3 py-1.5 rounded-full">Club</button>
+        <button type="button" onclick="toggleMobileMenu()" class="p-2 text-zinc-700 hover:text-zinc-950 focus:outline-none" aria-label="Abrir menú">
+          <svg id="menu-icon-bars" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+          <svg id="menu-icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Menú Desplegable Móvil -->
+    <div id="mobile-menu" class="hidden md:hidden border-b border-zinc-200 bg-white px-5 py-4 space-y-3 text-sm font-medium text-zinc-700 shadow-lg">
+      <button type="button" onclick="navigate('inicio'); toggleMobileMenu()" class="block w-full text-left py-2 hover:text-zinc-950 border-b border-zinc-100">Inicio</button>
+      <button type="button" onclick="navigate('catalogo'); toggleMobileMenu()" class="block w-full text-left py-2 hover:text-zinc-950 border-b border-zinc-100">Catálogo & Tienda</button>
+      <button type="button" onclick="navigate('puntos'); toggleMobileMenu()" class="block w-full text-left py-2 hover:text-zinc-950 border-b border-zinc-100">Puntos de Venta</button>
+      <button type="button" onclick="navigate('contacto'); toggleMobileMenu()" class="block w-full text-left py-2 hover:text-zinc-950 border-b border-zinc-100">Contacto</button>
+      <button type="button" onclick="navigate('club'); toggleMobileMenu()" class="block w-full text-center py-2.5 bg-zinc-950 text-white rounded-xl mt-2 font-semibold">Club Five Friends</button>
     </div>
   </header>
 
   <!-- CONTENIDO PRINCIPAL -->
-  <main class="flex-1 max-w-7xl w-full mx-auto p-6">
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
 
     <!-- SECCIÓN 1: INICIO -->
-    <section id="sec-inicio" class="space-y-16 py-8">
-      <div class="text-center max-w-3xl mx-auto space-y-6 py-12">
-        <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight text-zinc-950 leading-tight">
+    <section id="sec-inicio" class="space-y-12 sm:space-y-16">
+      
+      <!-- Hero Adaptado -->
+      <div class="text-center max-w-2xl mx-auto space-y-4 pt-6 sm:pt-12">
+        <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-zinc-950 leading-tight">
           Diseño, Fabricación 3D y Soluciones Digitales
         </h1>
-        <p class="text-lg text-zinc-600 font-normal">
+        <p class="text-sm sm:text-base md:text-lg text-zinc-600 px-2 font-normal leading-relaxed">
           Desde piezas a medida y figuras con manufactura aditiva hasta desarrollo de páginas web y tiendas en línea profesionales.
         </p>
-        <div class="flex justify-center gap-4 pt-4">
-          <button type="button" onclick="navigate('catalogo')" class="bg-zinc-950 text-white px-6 py-3 rounded-lg font-medium hover:bg-zinc-800 transition">Ver Catálogo</button>
-          <button type="button" onclick="navigate('club')" class="border border-zinc-300 px-6 py-3 rounded-lg font-medium hover:bg-zinc-100 transition">Club Five Friends</button>
+        <div class="flex flex-col sm:flex-row justify-center gap-3 pt-3 px-4 sm:px-0">
+          <button type="button" onclick="navigate('catalogo')" class="w-full sm:w-auto bg-zinc-950 text-white px-6 py-3 rounded-xl font-medium text-sm hover:bg-zinc-800 transition shadow-sm">Ver Catálogo</button>
+          <button type="button" onclick="navigate('club')" class="w-full sm:w-auto border border-zinc-300 bg-white px-6 py-3 rounded-xl font-medium text-sm hover:bg-zinc-100 transition shadow-sm">Club Five Friends</button>
         </div>
       </div>
 
-      <!-- Pilares del Negocio -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="p-8 border border-zinc-200 rounded-2xl bg-white shadow-sm space-y-4">
-          <div class="w-10 h-10 rounded-lg bg-zinc-100 flex items-center justify-center font-bold">3D</div>
-          <h3 class="text-xl font-bold">Impresión 3D</h3>
-          <p class="text-sm text-zinc-500">Fabricación aditiva con acabado de precisión, prototipado rápido y piezas personalizadas.</p>
+      <!-- Tarjetas de Pilares -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+        <div class="p-6 border border-zinc-200 rounded-2xl bg-white shadow-sm space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center font-bold text-sm">3D</div>
+          <h3 class="text-lg font-bold">Impresión 3D</h3>
+          <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed">Fabricación aditiva con acabado de precisión, prototipado rápido y piezas personalizadas en filamentos técnicos.</p>
         </div>
-        <div class="p-8 border border-zinc-200 rounded-2xl bg-white shadow-sm space-y-4">
-          <div class="w-10 h-10 rounded-lg bg-zinc-100 flex items-center justify-center font-bold">★</div>
-          <h3 class="text-xl font-bold">Coleccionables</h3>
-          <p class="text-sm text-zinc-500">Figuras, dioramas temáticos, bases exhibidoras y artículos detallados para coleccionistas.</p>
+        <div class="p-6 border border-zinc-200 rounded-2xl bg-white shadow-sm space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center font-bold text-sm">★</div>
+          <h3 class="text-lg font-bold">Coleccionables</h3>
+          <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed">Figuras, dioramas temáticos, bases exhibidoras y accesorios detallados para coleccionistas.</p>
         </div>
-        <div class="p-8 border border-zinc-200 rounded-2xl bg-white shadow-sm space-y-4">
-          <div class="w-10 h-10 rounded-lg bg-zinc-100 flex items-center justify-center font-bold">&lt;/&gt;</div>
-          <h3 class="text-xl font-bold">Páginas & Tiendas Web</h3>
-          <p class="text-sm text-zinc-500">Sitios web modernos, responsivos y tiendas virtuales completas para tu marca o proyecto.</p>
+        <div class="p-6 border border-zinc-200 rounded-2xl bg-white shadow-sm space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center font-bold text-sm">&lt;/&gt;</div>
+          <h3 class="text-lg font-bold">Páginas & Tiendas Web</h3>
+          <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed">Sitios web modernos, rápidos y tiendas virtuales optimizadas para impulsar la presencia y ventas de tu negocio.</p>
         </div>
       </div>
     </section>
 
     <!-- SECCIÓN 2: PUNTOS DE VENTA -->
-    <section id="sec-puntos" class="hidden space-y-8 py-8">
+    <section id="sec-puntos" class="hidden space-y-6">
       <div>
-        <h2 class="text-3xl font-bold tracking-tight">Puntos de Venta & Bazares</h2>
-        <p class="text-zinc-500">Encuéntranos en nuestras sedes y bazares autorizados.</p>
+        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">Puntos de Venta & Bazares</h2>
+        <p class="text-xs sm:text-sm text-zinc-500">Encuéntranos en nuestras sedes y bazares autorizados.</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="border border-zinc-200 rounded-xl p-6 bg-white space-y-3">
-          <span class="text-xs font-semibold px-2 py-1 bg-zinc-100 rounded text-zinc-700">Google Maps</span>
-          <h3 class="text-lg font-bold">Ruta & Puntos Activos</h3>
-          <p class="text-sm text-zinc-500">Ubicaciones y paradas actualizadas en Maps.</p>
-          <a href="https://maps.app.goo.gl/g42zvRTt3Gg9Ay7fA" target="_blank" rel="noopener noreferrer" class="inline-block text-sm font-semibold underline hover:text-zinc-600 pt-2">Abrir mapa en Google Maps &rarr;</a>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+        <div class="border border-zinc-200 rounded-2xl p-5 sm:p-6 bg-white space-y-3 shadow-sm">
+          <span class="text-[11px] font-semibold px-2 py-0.5 bg-zinc-100 rounded text-zinc-700 uppercase">Google Maps</span>
+          <h3 class="text-base sm:text-lg font-bold">Ruta & Puntos Activos</h3>
+          <p class="text-xs sm:text-sm text-zinc-500">Ubicaciones y paradas actualizadas en tiempo real en Maps.</p>
+          <a href="https://maps.app.goo.gl/g42zvRTt3Gg9Ay7fA" target="_blank" rel="noopener noreferrer" class="inline-block text-xs sm:text-sm font-semibold underline hover:text-zinc-600 pt-1">Abrir mapa en Google Maps &rarr;</a>
         </div>
 
-        <div class="border border-zinc-200 rounded-xl p-6 bg-white space-y-3">
-          <span class="text-xs font-semibold px-2 py-1 bg-zinc-100 rounded text-zinc-700">Bazar Físico</span>
-          <h3 class="text-lg font-bold">Bazar Revolución</h3>
-          <p class="text-sm text-zinc-500">Encuéntranos en <strong>Plaza Centella</strong> con catálogo físico y muestras de filamentos.</p>
+        <div class="border border-zinc-200 rounded-2xl p-5 sm:p-6 bg-white space-y-3 shadow-sm">
+          <span class="text-[11px] font-semibold px-2 py-0.5 bg-zinc-100 rounded text-zinc-700 uppercase">Bazar Físico</span>
+          <h3 class="text-base sm:text-lg font-bold">Bazar Revolución</h3>
+          <p class="text-xs sm:text-sm text-zinc-500">Encuéntranos en <strong>Plaza Centella</strong> con catálogo físico y piezas en exhibición.</p>
         </div>
 
-        <div class="border border-zinc-200 rounded-xl p-6 bg-white space-y-3">
-          <span class="text-xs font-semibold px-2 py-1 bg-zinc-100 rounded text-zinc-700">Networking & Venta</span>
-          <h3 class="text-lg font-bold">Bazar EE Networking</h3>
-          <p class="text-sm text-zinc-500">Ubicado en <strong>Plaza San Miguel</strong>. Espacio de exposición y cotizaciones de desarrollo web y 3D.</p>
+        <div class="border border-zinc-200 rounded-2xl p-5 sm:p-6 bg-white space-y-3 shadow-sm">
+          <span class="text-[11px] font-semibold px-2 py-0.5 bg-zinc-100 rounded text-zinc-700 uppercase">Networking</span>
+          <h3 class="text-base sm:text-lg font-bold">Bazar EE Networking</h3>
+          <p class="text-xs sm:text-sm text-zinc-500">Ubicado en <strong>Plaza San Miguel</strong>. Espacio de exposición y pedidos de desarrollo web y 3D.</p>
         </div>
       </div>
     </section>
 
     <!-- SECCIÓN 3: CONTACTO -->
-    <section id="sec-contacto" class="hidden space-y-8 py-8">
-      <div class="max-w-xl mx-auto border border-zinc-200 p-8 rounded-2xl bg-white space-y-6">
+    <section id="sec-contacto" class="hidden space-y-6">
+      <div class="max-w-xl mx-auto border border-zinc-200 p-6 sm:p-8 rounded-2xl bg-white space-y-5 shadow-sm">
         <div>
-          <h2 class="text-2xl font-bold">Contáctanos</h2>
-          <p class="text-sm text-zinc-500">Envíanos tu consulta sobre cotizaciones 3D o diseño de tu tienda web.</p>
+          <h2 class="text-xl sm:text-2xl font-bold">Contáctanos</h2>
+          <p class="text-xs sm:text-sm text-zinc-500">Envíanos tu consulta sobre cotizaciones 3D o diseño de tu tienda web.</p>
         </div>
         <form class="space-y-4" onsubmit="event.preventDefault(); alert('Mensaje recibido. Nos pondremos en contacto contigo.'); this.reset();">
           <div>
             <label class="block text-xs font-semibold uppercase tracking-wider text-zinc-600 mb-1">Nombre Completo</label>
-            <input type="text" required class="w-full px-4 py-2 border border-zinc-300 rounded-lg text-sm outline-none focus:border-zinc-950">
+            <input type="text" required class="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
           </div>
           <div>
             <label class="block text-xs font-semibold uppercase tracking-wider text-zinc-600 mb-1">Correo Electrónico</label>
-            <input type="email" required class="w-full px-4 py-2 border border-zinc-300 rounded-lg text-sm outline-none focus:border-zinc-950">
+            <input type="email" required class="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
           </div>
           <div>
             <label class="block text-xs font-semibold uppercase tracking-wider text-zinc-600 mb-1">Detalle del Pedido o Consulta</label>
-            <textarea rows="4" required class="w-full px-4 py-2 border border-zinc-300 rounded-lg text-sm outline-none focus:border-zinc-950"></textarea>
+            <textarea rows="4" required class="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950"></textarea>
           </div>
-          <button type="submit" class="w-full bg-zinc-950 text-white py-3 rounded-lg text-sm font-medium hover:bg-zinc-800 transition">Enviar Mensaje</button>
+          <button type="submit" class="w-full bg-zinc-950 text-white py-3 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition">Enviar Mensaje</button>
         </form>
       </div>
     </section>
 
     <!-- SECCIÓN 4: CATÁLOGO -->
-    <section id="sec-catalogo" class="hidden space-y-8 py-8">
-      <div class="flex justify-between items-center">
-        <div>
-          <h2 class="text-3xl font-bold tracking-tight">Catálogo Disponible</h2>
-          <p class="text-zinc-500">Servicios digitales y productos de fabricación aditiva.</p>
-        </div>
+    <section id="sec-catalogo" class="hidden space-y-6">
+      <div>
+        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">Catálogo Disponible</h2>
+        <p class="text-xs sm:text-sm text-zinc-500">Servicios digitales y productos de fabricación aditiva.</p>
       </div>
-      <div id="grid-productos" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+      <div id="grid-productos" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6"></div>
     </section>
 
     <!-- SECCIÓN 5: CLUB FIVE FRIENDS -->
-    <section id="sec-club" class="space-y-8 py-8">
+    <section id="sec-club" class="space-y-6">
 
       <!-- PANTALLA: LOGIN / REGISTRO / ACCESO ADMIN -->
-      <div id="club-auth" class="max-w-md mx-auto border border-zinc-200 rounded-2xl bg-white p-8 space-y-6 shadow-sm">
-        <div class="flex justify-center border-b border-zinc-200 pb-4 gap-4 text-sm font-medium">
-          <button type="button" id="tab-login" onclick="toggleAuthTab('login')" class="text-zinc-950 border-b-2 border-zinc-950 pb-2">Iniciar Sesión</button>
-          <button type="button" id="tab-register" onclick="toggleAuthTab('register')" class="text-zinc-400 hover:text-zinc-700 pb-2">Registro</button>
-          <button type="button" id="tab-admin" onclick="toggleAuthTab('admin')" class="text-zinc-400 hover:text-zinc-700 pb-2">Administrador</button>
+      <div id="club-auth" class="max-w-md mx-auto border border-zinc-200 rounded-2xl bg-white p-5 sm:p-8 space-y-5 shadow-sm">
+        
+        <!-- Pestañas Móviles -->
+        <div class="grid grid-cols-3 border-b border-zinc-200 text-center text-xs sm:text-sm font-semibold">
+          <button type="button" id="tab-login" onclick="toggleAuthTab('login')" class="text-zinc-950 border-b-2 border-zinc-950 pb-2.5">Acceso</button>
+          <button type="button" id="tab-register" onclick="toggleAuthTab('register')" class="text-zinc-400 hover:text-zinc-700 pb-2.5">Registro</button>
+          <button type="button" id="tab-admin" onclick="toggleAuthTab('admin')" class="text-zinc-400 hover:text-zinc-700 pb-2.5">Admin</button>
         </div>
 
         <!-- FORMULARIO CLIENTE LOGIN -->
-        <form id="form-login" class="space-y-4" onsubmit="handleLogin(event)">
+        <form id="form-login" class="space-y-3.5" onsubmit="handleLogin(event)">
           <div>
-            <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Correo Electrónico o Teléfono</label>
-            <input type="text" id="login-identifier" required placeholder="correo@ejemplo.com o 5512345678" class="w-full px-4 py-2 border border-zinc-300 rounded-lg text-sm">
+            <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Correo o Teléfono</label>
+            <input type="text" id="login-identifier" required placeholder="correo@ejemplo.com o 5512345678" class="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-sm">
           </div>
           <div>
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Contraseña</label>
-            <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-4 py-2 border border-zinc-300 rounded-lg text-sm">
+            <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-sm">
           </div>
           <div class="flex justify-end">
             <button type="button" onclick="forgotPassword('cliente')" class="text-xs text-zinc-500 hover:underline">¿Olvidaste tu contraseña?</button>
           </div>
-          <button type="submit" class="w-full bg-zinc-950 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-zinc-800 transition">Ingresar al Club</button>
+          <button type="submit" class="w-full bg-zinc-950 text-white py-3 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition">Ingresar al Club</button>
         </form>
 
         <!-- FORMULARIO CLIENTE REGISTRO -->
         <form id="form-register" class="space-y-3 hidden" onsubmit="handleRegister(event)">
           <div>
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Nombre Completo</label>
-            <input type="text" id="reg-name" required placeholder="Tu nombre y apellido" class="w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm">
+            <input type="text" id="reg-name" required placeholder="Tu nombre" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm">
           </div>
           <div>
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Correo Electrónico</label>
-            <input type="email" id="reg-email" required placeholder="tu@correo.com" class="w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm">
+            <input type="email" id="reg-email" required placeholder="tu@correo.com" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm">
           </div>
           <div>
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Número Telefónico</label>
-            <input type="tel" id="reg-phone" required placeholder="10 dígitos" class="w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm">
+            <input type="tel" id="reg-phone" required placeholder="10 dígitos" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm">
           </div>
           <div>
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Fecha de Cumpleaños</label>
-            <input type="date" id="reg-birthday" required class="w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm">
+            <input type="date" id="reg-birthday" required class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm">
           </div>
           <div>
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Contraseña</label>
-            <input type="password" id="reg-password" required minlength="6" placeholder="Mínimo 6 caracteres" class="w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm">
+            <input type="password" id="reg-password" required minlength="6" placeholder="Mínimo 6 caracteres" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm">
           </div>
-          <button type="submit" class="w-full bg-zinc-950 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-zinc-800 transition mt-2">Crear Cuenta</button>
+          <button type="submit" class="w-full bg-zinc-950 text-white py-3 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition mt-2">Crear Cuenta</button>
         </form>
 
-        <!-- FORMULARIO ADMIN LOGIN (VACÍO POR DEFECTO) -->
-        <form id="form-admin" class="space-y-4 hidden" onsubmit="handleAdminLogin(event)">
-          <div class="bg-zinc-100 p-3 rounded-lg text-xs text-zinc-600">Acceso restringido a administradores de Five Friends.</div>
+        <!-- FORMULARIO ADMIN LOGIN (VACÍO) -->
+        <form id="form-admin" class="space-y-3.5 hidden" onsubmit="handleAdminLogin(event)">
+          <div class="bg-zinc-100 p-2.5 rounded-xl text-xs text-zinc-600">Acceso restringido a administradores de Five Friends.</div>
           <div>
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Correo de Administrador</label>
-            <!-- Campo completamente vacío por defecto -->
-            <input type="email" id="admin-email" required placeholder="Ingresa tu correo institucional" class="w-full px-4 py-2 border border-zinc-300 rounded-lg text-sm">
+            <input type="email" id="admin-email" required placeholder="Ingresa tu correo institucional" class="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-sm">
           </div>
           <div>
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Clave de Seguridad</label>
-            <input type="password" id="admin-password" required placeholder="••••••••" class="w-full px-4 py-2 border border-zinc-300 rounded-lg text-sm">
+            <input type="password" id="admin-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-sm">
           </div>
           <div class="flex justify-end">
             <button type="button" onclick="forgotPassword('admin')" class="text-xs text-zinc-500 hover:underline">¿Olvidaste tu contraseña?</button>
           </div>
-          <button type="submit" class="w-full bg-zinc-950 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-zinc-800 transition">Entrar al Panel de Control</button>
+          <button type="submit" class="w-full bg-zinc-950 text-white py-3 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition">Entrar al Panel</button>
         </form>
       </div>
 
       <!-- PORTAL DEL CLIENTE -->
-      <div id="club-user-portal" class="hidden space-y-8">
-        <div class="flex justify-between items-center border-b border-zinc-200 pb-4">
+      <div id="club-user-portal" class="hidden space-y-6">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-b border-zinc-200 pb-4">
           <div>
-            <h2 class="text-2xl font-bold">Mi Perfil Club Five Friends</h2>
-            <p id="user-display-name" class="text-sm text-zinc-500">Bienvenido de vuelta</p>
+            <h2 class="text-xl sm:text-2xl font-bold">Mi Perfil Club Five Friends</h2>
+            <p id="user-display-name" class="text-xs sm:text-sm text-zinc-500">Bienvenido de vuelta</p>
           </div>
-          <button type="button" onclick="handleLogout()" class="text-xs font-medium border border-zinc-300 px-3 py-1.5 rounded-lg hover:bg-zinc-100">Cerrar Sesión</button>
+          <button type="button" onclick="handleLogout()" class="self-start sm:self-auto text-xs font-medium border border-zinc-300 px-3 py-1.5 rounded-lg hover:bg-zinc-100">Cerrar Sesión</button>
         </div>
 
         <!-- Barra de Progreso a $1,500 MXN -->
-        <div class="bg-white border border-zinc-200 rounded-2xl p-6 space-y-4">
-          <div class="flex justify-between items-end">
+        <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-3.5 shadow-sm">
+          <div class="flex justify-between items-end gap-2">
             <div>
-              <span class="text-xs uppercase font-bold text-zinc-400">Programa de Lealtad</span>
-              <h3 class="text-lg font-bold">Meta de Compra: $1,500 MXN (10% OFF en tu cuponera)</h3>
+              <span class="text-[11px] uppercase font-bold text-zinc-400">Programa de Lealtad</span>
+              <h3 class="text-base sm:text-lg font-bold">Meta: $1,500 MXN (10% OFF en QR)</h3>
             </div>
-            <span id="user-progress-text" class="text-sm font-semibold">$0 / $1,500 MXN</span>
+            <span id="user-progress-text" class="text-xs sm:text-sm font-semibold whitespace-nowrap">$0 / $1,500 MXN</span>
           </div>
           <div class="w-full bg-zinc-100 rounded-full h-3 overflow-hidden">
             <div id="user-progress-bar" class="bg-zinc-950 h-3 rounded-full transition-all duration-500" style="width: 0%;"></div>
           </div>
-          <p class="text-xs text-zinc-500">Acumula compras registrando tus comprobantes de bazares o tienda web para desbloquear tu QR con 10% de descuento.</p>
+          <p class="text-xs text-zinc-500 leading-relaxed">Acumula compras registrando tus tickets en bazares o compras web para desbloquear tu QR con 10% de descuento.</p>
         </div>
 
         <!-- Módulos de Tickets y QR -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div class="bg-white border border-zinc-200 rounded-2xl p-6 space-y-4">
-            <h3 class="text-lg font-bold">Registrar Ticket Físico</h3>
-            <p class="text-xs text-zinc-500">¿Compraste en Plaza Centella o Plaza San Miguel? Ingresa los datos para validar tu compra.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+          <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-3.5 shadow-sm">
+            <h3 class="text-base sm:text-lg font-bold">Registrar Ticket Físico</h3>
+            <p class="text-xs text-zinc-500">¿Compraste en Plaza Centella o Plaza San Miguel? Registra tu ticket.</p>
             <form onsubmit="handleTicketUpload(event)" class="space-y-3">
               <div>
                 <label class="block text-xs font-semibold text-zinc-600 mb-1">Monto del Ticket ($ MXN)</label>
-                <input type="number" id="ticket-amount" required step="0.5" class="w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm" placeholder="Ej. 350.00">
+                <input type="number" id="ticket-amount" required step="0.5" class="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-sm" placeholder="Ej. 350.00">
               </div>
               <div>
-                <label class="block text-xs font-semibold text-zinc-600 mb-1">Folio o URL de Comprobante</label>
-                <input type="text" id="ticket-url" required class="w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm" placeholder="Número de folio o foto">
+                <label class="block text-xs font-semibold text-zinc-600 mb-1">Folio o Comprobante</label>
+                <input type="text" id="ticket-url" required class="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-sm" placeholder="Número de ticket o URL">
               </div>
-              <button type="submit" class="w-full bg-zinc-950 text-white py-2 rounded-lg text-sm font-medium hover:bg-zinc-800 transition">Enviar Ticket a Revisión</button>
+              <button type="submit" class="w-full bg-zinc-950 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition">Enviar Ticket</button>
             </form>
           </div>
 
-          <div class="bg-white border border-zinc-200 rounded-2xl p-6 space-y-4 flex flex-col items-center justify-center text-center">
-            <h3 class="text-lg font-bold">Tu Cuponera Digital</h3>
-            <div id="qr-wrapper" class="p-4 bg-zinc-50 border border-zinc-200 rounded-xl my-2 flex items-center justify-center min-h-[160px] min-w-[160px]">
-              <span id="qr-empty-msg" class="text-xs text-zinc-400">Acumula $1,500 en compras para activar tu código QR</span>
+          <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-3 shadow-sm flex flex-col items-center justify-center text-center">
+            <h3 class="text-base sm:text-lg font-bold">Tu Cuponera Digital</h3>
+            <div id="qr-wrapper" class="p-4 bg-zinc-50 border border-zinc-200 rounded-2xl my-1 flex items-center justify-center min-h-[150px] min-w-[150px]">
+              <span id="qr-empty-msg" class="text-xs text-zinc-400">Acumula $1,500 para activar tu QR</span>
             </div>
-            <div id="qr-coupon-label" class="text-sm font-mono font-bold tracking-wider hidden text-zinc-900"></div>
+            <div id="qr-coupon-label" class="text-xs sm:text-sm font-mono font-bold tracking-wider hidden text-zinc-900"></div>
           </div>
         </div>
       </div>
 
       <!-- PORTAL ADMINISTRADOR -->
-      <div id="club-admin-portal" class="hidden space-y-8">
-        <div class="flex justify-between items-center border-b border-zinc-200 pb-4">
+      <div id="club-admin-portal" class="hidden space-y-6">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-b border-zinc-200 pb-4">
           <div>
-            <h2 class="text-2xl font-bold">Panel de Control de Administrador</h2>
-            <p class="text-sm text-zinc-500">Sesión activa verificada</p>
+            <h2 class="text-xl sm:text-2xl font-bold">Panel de Administrador</h2>
+            <p class="text-xs sm:text-sm text-zinc-500">Sesión activa verificada</p>
           </div>
-          <button type="button" onclick="handleLogout()" class="text-xs font-medium border border-zinc-300 px-3 py-1.5 rounded-lg hover:bg-zinc-100">Salir de Administrador</button>
+          <button type="button" onclick="handleLogout()" class="self-start sm:self-auto text-xs font-medium border border-zinc-300 px-3 py-1.5 rounded-lg hover:bg-zinc-100">Salir</button>
         </div>
 
-        <!-- Balance General: Costos, Ganancias e Interacciones -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div class="p-4 bg-white border border-zinc-200 rounded-xl">
-            <span class="text-xs font-semibold text-zinc-400 uppercase">Ventas Totales</span>
-            <div class="text-2xl font-bold" id="stat-sales">$0 MXN</div>
+        <!-- Métricas Móviles -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+          <div class="p-3.5 sm:p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
+            <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Ventas Totales</span>
+            <div class="text-lg sm:text-2xl font-bold" id="stat-sales">$0 MXN</div>
           </div>
-          <div class="p-4 bg-white border border-zinc-200 rounded-xl">
-            <span class="text-xs font-semibold text-zinc-400 uppercase">Costo Total</span>
-            <div class="text-2xl font-bold text-zinc-500" id="stat-costs">$0 MXN</div>
+          <div class="p-3.5 sm:p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
+            <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Costo Total</span>
+            <div class="text-lg sm:text-2xl font-bold text-zinc-500" id="stat-costs">$0 MXN</div>
           </div>
-          <div class="p-4 bg-white border border-zinc-200 rounded-xl">
-            <span class="text-xs font-semibold text-zinc-400 uppercase">Ganancia Neta</span>
-            <div class="text-2xl font-bold text-emerald-600" id="stat-profit">$0 MXN</div>
+          <div class="p-3.5 sm:p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
+            <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Ganancia Neta</span>
+            <div class="text-lg sm:text-2xl font-bold text-emerald-600" id="stat-profit">$0 MXN</div>
           </div>
-          <div class="p-4 bg-white border border-zinc-200 rounded-xl">
-            <span class="text-xs font-semibold text-zinc-400 uppercase">Interacciones</span>
-            <div class="text-2xl font-bold" id="stat-views">1,520</div>
+          <div class="p-3.5 sm:p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
+            <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Visitas</span>
+            <div class="text-lg sm:text-2xl font-bold" id="stat-views">1,520</div>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <!-- Validación de Tickets -->
-          <div class="bg-white border border-zinc-200 rounded-2xl p-6 space-y-4">
-            <h3 class="text-lg font-bold">Tickets Pendientes de Validación</h3>
-            <div id="admin-tickets-container" class="space-y-3">
-              <div class="text-xs text-zinc-400">No hay tickets pendientes por el momento.</div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+          <div class="bg-white border border-zinc-200 rounded-2xl p-5 space-y-3 shadow-sm">
+            <h3 class="text-base sm:text-lg font-bold">Validación de Tickets</h3>
+            <div id="admin-tickets-container" class="space-y-2.5">
+              <div class="text-xs text-zinc-400">No hay tickets pendientes.</div>
             </div>
           </div>
 
-          <!-- Validador de Cupones -->
-          <div class="bg-white border border-zinc-200 rounded-2xl p-6 space-y-4">
-            <h3 class="text-lg font-bold">Validador de Cupones QR</h3>
+          <div class="bg-white border border-zinc-200 rounded-2xl p-5 space-y-3 shadow-sm">
+            <h3 class="text-base sm:text-lg font-bold">Validador de Cupones QR</h3>
             <div class="flex gap-2">
-              <input type="text" id="admin-coupon-code" placeholder="Ingresa o escanea el código" class="flex-1 px-3 py-2 border border-zinc-300 rounded-lg text-sm">
-              <button type="button" onclick="handleAdminValidateCoupon()" class="bg-zinc-950 text-white px-4 py-2 rounded-lg text-sm font-medium">Validar</button>
+              <input type="text" id="admin-coupon-code" placeholder="Código QR" class="flex-1 px-3 py-2 border border-zinc-300 rounded-xl text-sm">
+              <button type="button" onclick="handleAdminValidateCoupon()" class="bg-zinc-950 text-white px-4 py-2 rounded-xl text-sm font-semibold">Validar</button>
             </div>
             <div id="admin-coupon-result" class="text-xs font-semibold"></div>
           </div>
         </div>
 
-        <!-- Carga de Productos con Costo (Admin) y Precio (Público) -->
-        <div class="bg-white border border-zinc-200 rounded-2xl p-6 space-y-4">
-          <h3 class="text-lg font-bold">Subir / Editar Producto en Catálogo</h3>
-          <form onsubmit="handleAdminAddProduct(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Carga de Productos -->
+        <div class="bg-white border border-zinc-200 rounded-2xl p-5 space-y-3 shadow-sm">
+          <h3 class="text-base sm:text-lg font-bold">Agregar Producto al Catálogo</h3>
+          <form onsubmit="handleAdminAddProduct(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
             <div>
-              <label class="block text-xs font-semibold text-zinc-600 mb-1">Título del Producto</label>
-              <input type="text" id="adm-p-title" required class="w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm">
+              <label class="block text-xs font-semibold text-zinc-600 mb-1">Título</label>
+              <input type="text" id="adm-p-title" required class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm">
             </div>
             <div>
-              <label class="block text-xs font-semibold text-zinc-600 mb-1">Precio Venta (Público)</label>
-              <input type="number" id="adm-p-price" step="0.5" required class="w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm">
+              <label class="block text-xs font-semibold text-zinc-600 mb-1">Precio ($ Público)</label>
+              <input type="number" id="adm-p-price" step="0.5" required class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm">
             </div>
             <div>
-              <label class="block text-xs font-semibold text-zinc-600 mb-1">Costo Producción (Solo Admin)</label>
-              <input type="number" id="adm-p-cost" step="0.5" required class="w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm">
+              <label class="block text-xs font-semibold text-zinc-600 mb-1">Costo ($ Admin)</label>
+              <input type="number" id="adm-p-cost" step="0.5" required class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm">
             </div>
             <div>
               <label class="block text-xs font-semibold text-zinc-600 mb-1">Categoría</label>
-              <select id="adm-p-category" class="w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm">
+              <select id="adm-p-category" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm">
                 <option value="Impresión 3D">Impresión 3D</option>
                 <option value="Coleccionables">Coleccionables</option>
                 <option value="Desarrollo Web">Desarrollo Web</option>
               </select>
             </div>
-            <div class="md:col-span-4">
+            <div class="sm:col-span-2 md:col-span-4">
               <label class="block text-xs font-semibold text-zinc-600 mb-1">Descripción</label>
-              <input type="text" id="adm-p-desc" class="w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm">
+              <input type="text" id="adm-p-desc" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm">
             </div>
-            <div class="md:col-span-4">
-              <button type="submit" class="bg-zinc-950 text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-zinc-800 transition">Guardar en Base de Datos</button>
+            <div class="sm:col-span-2 md:col-span-4 pt-1">
+              <button type="submit" class="w-full sm:w-auto bg-zinc-950 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition">Guardar Producto</button>
             </div>
           </form>
         </div>
 
         <!-- Directorio de Clientes -->
-        <div class="bg-white border border-zinc-200 rounded-2xl p-6 space-y-4">
-          <h3 class="text-lg font-bold">Listado de Clientes Registrados</h3>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
-              <thead class="border-b border-zinc-200 text-xs text-zinc-400 uppercase">
+        <div class="bg-white border border-zinc-200 rounded-2xl p-5 space-y-3 shadow-sm">
+          <h3 class="text-base sm:text-lg font-bold">Listado de Clientes Registrados</h3>
+          <div class="overflow-x-auto -mx-2 sm:mx-0">
+            <table class="w-full text-left text-xs sm:text-sm min-w-[420px]">
+              <thead class="border-b border-zinc-200 text-[10px] text-zinc-400 uppercase">
                 <tr>
                   <th class="py-2">Nombre</th>
                   <th class="py-2">Teléfono / Correo</th>
                   <th class="py-2">Cumpleaños</th>
-                  <th class="py-2">Gasto Acumulado</th>
+                  <th class="py-2">Total</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-zinc-100" id="admin-client-table"></tbody>
@@ -370,9 +396,28 @@
   </main>
 
   <script>
-    // 1. NAVEGACIÓN
+    // CONTROL DEL MENÚ MÓVIL
+    window.toggleMobileMenu = function() {
+      const menu = document.getElementById('mobile-menu');
+      const bars = document.getElementById('menu-icon-bars');
+      const close = document.getElementById('menu-icon-close');
+      const isHidden = menu.classList.contains('hidden');
+
+      if (isHidden) {
+        menu.classList.remove('hidden');
+        bars.classList.add('hidden');
+        close.classList.remove('hidden');
+      } else {
+        menu.classList.add('hidden');
+        bars.classList.remove('hidden');
+        close.classList.add('hidden');
+      }
+    };
+
+    // NAVEGACIÓN INDEPENDIENTE
     window.navigate = function(section) {
-      ['inicio', 'puntos', 'contacto', 'catalogo', 'club'].forEach(s => {
+      const sections = ['inicio', 'puntos', 'contacto', 'catalogo', 'club'];
+      sections.forEach(s => {
         const el = document.getElementById('sec-' + s);
         if (el) el.classList.add('hidden');
       });
@@ -383,7 +428,7 @@
       }
     };
 
-    // 2. TABS EN CLUB FIVE FRIENDS
+    // TABS EN CLUB FIVE FRIENDS
     window.toggleAuthTab = function(tab) {
       document.getElementById('form-login').classList.add('hidden');
       document.getElementById('form-register').classList.add('hidden');
@@ -391,16 +436,16 @@
 
       ['login', 'register', 'admin'].forEach(t => {
         const el = document.getElementById('tab-' + t);
-        if (el) el.className = 'text-zinc-400 hover:text-zinc-700 pb-2';
+        if (el) el.className = 'text-zinc-400 hover:text-zinc-700 pb-2.5';
       });
 
       const activeTab = document.getElementById('tab-' + tab);
-      if (activeTab) activeTab.className = 'text-zinc-950 border-b-2 border-zinc-950 pb-2';
+      if (activeTab) activeTab.className = 'text-zinc-950 border-b-2 border-zinc-950 pb-2.5';
       const form = document.getElementById('form-' + tab);
       if (form) form.classList.remove('hidden');
     };
 
-    // 3. CONEXIÓN SUPABASE
+    // SUPABASE CLIENT
     const SUPABASE_BASE_URL = "https://vqsuycquoeqakhttibao.supabase.co";
     const SUPABASE_KEY = "sb_publishable_iglMJnYPy3iFulCFv3j_qw_s3An5vme";
     let supabaseClient = null;
@@ -414,25 +459,25 @@
     }
 
     let catalogItems = [
-      { title: "Diorama Exhibidor Coleccionable", description: "Base rígida modular para figuras.", price: 420, cost: 180, category: "Coleccionables" },
-      { title: "Soporte Articulado para Escritorio", description: "Impresión en PETG de alta resistencia.", price: 290, cost: 95, category: "Impresión 3D" },
-      { title: "Landing Page para Negocios", description: "Diseño minimalista y optimizado para móviles.", price: 3200, cost: 500, category: "Desarrollo Web" },
-      { title: "Tienda Online con Catálogo", description: "Pasarela de pagos y panel autogestionable.", price: 6500, cost: 1200, category: "Desarrollo Web" }
+      { title: "Diorama Exhibidor Coleccionable", description: "Base modular para figuras.", price: 420, cost: 180, category: "Coleccionables" },
+      { title: "Soporte Articulado para Escritorio", description: "Impresión en PETG reforzado.", price: 290, cost: 95, category: "Impresión 3D" },
+      { title: "Landing Page para Negocios", description: "Diseño minimalista optimizado.", price: 3200, cost: 500, category: "Desarrollo Web" },
+      { title: "Tienda Online con Catálogo", description: "Pasarela de pagos autogestionable.", price: 6500, cost: 1200, category: "Desarrollo Web" }
     ];
 
     function renderCatalog() {
       const grid = document.getElementById('grid-productos');
       if (!grid) return;
       grid.innerHTML = catalogItems.map(p => `
-        <div class="border border-zinc-200 bg-white p-6 rounded-2xl flex flex-col justify-between space-y-4 shadow-sm">
+        <div class="border border-zinc-200 bg-white p-5 rounded-2xl flex flex-col justify-between space-y-4 shadow-sm">
           <div>
-            <span class="text-xs uppercase font-bold text-zinc-400">${p.category}</span>
-            <h4 class="font-bold text-lg text-zinc-950 mt-1">${p.title}</h4>
-            <p class="text-xs text-zinc-500 mt-1">${p.description || ''}</p>
+            <span class="text-[11px] uppercase font-bold text-zinc-400">${p.category}</span>
+            <h4 class="font-bold text-base sm:text-lg text-zinc-950 mt-1">${p.title}</h4>
+            <p class="text-xs text-zinc-500 mt-1 leading-relaxed">${p.description || ''}</p>
           </div>
-          <div class="flex justify-between items-center pt-4 border-t border-zinc-100">
-            <span class="font-bold text-lg">$${p.price} MXN</span>
-            <button type="button" onclick="alert('Solicitud enviada para: ${p.title}. Nos comunicaremos contigo.')" class="px-4 py-2 bg-zinc-950 text-white text-xs font-medium rounded-lg hover:bg-zinc-800 transition">Ordenar</button>
+          <div class="flex justify-between items-center pt-3 border-t border-zinc-100">
+            <span class="font-bold text-base sm:text-lg">$${p.price} MXN</span>
+            <button type="button" onclick="alert('Solicitud enviada para: ${p.title}. Nos comunicaremos contigo.')" class="px-3.5 py-1.5 bg-zinc-950 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition">Ordenar</button>
           </div>
         </div>
       `).join('');
@@ -472,14 +517,11 @@
 
       if (supabaseClient) {
         try {
-          const { error } = await supabaseClient.auth.signUp({
+          await supabaseClient.auth.signUp({
             email: email,
             password: password,
             options: { data: { full_name: name, phone, birthday } }
           });
-          if (error) {
-            alert("Aviso: " + error.message);
-          }
         } catch (err) {
           console.warn(err);
         }
@@ -489,30 +531,23 @@
       showUserView(name, 0);
     };
 
-    // LOGIN ADMINISTRADOR (Exige correo y contraseña correctos)
+    // LOGIN ADMINISTRADOR
     window.handleAdminLogin = async function(e) {
       e.preventDefault();
       const email = document.getElementById('admin-email').value.trim();
       const pass = document.getElementById('admin-password').value;
 
       if (email === '5friendstore@gmail.com' && pass === 'Five.Friends@2025') {
-        if (supabaseClient) {
-          try {
-            await supabaseClient.auth.signInWithPassword({ email, password: pass });
-          } catch (err) {
-            console.warn(err);
-          }
-        }
         showAdminView();
       } else {
-        alert("Acceso denegado: El correo o la contraseña de administrador son incorrectos.");
+        alert("Acceso denegado: Correo o clave de administrador incorrectos.");
       }
     };
 
-    // RECUPERACIÓN AUTOMÁTICA DE CONTRASEÑA VÍA CORREO ELECTRÓNICO
+    // OLVIDÉ CONTRASEÑA VÍA SUPABASE
     window.forgotPassword = async function(type) {
       let defaultEmail = type === 'admin' ? '5friendstore@gmail.com' : '';
-      const email = prompt("Ingresa el correo electrónico asociado a la cuenta para enviarte las instrucciones de restablecimiento:", defaultEmail);
+      const email = prompt("Ingresa el correo electrónico para enviarte las instrucciones de restablecimiento:", defaultEmail);
 
       if (!email) return;
 
@@ -521,18 +556,16 @@
           const { error } = await supabaseClient.auth.resetPasswordForEmail(email.trim(), {
             redirectTo: window.location.origin
           });
-
           if (error) {
             alert("Nota: " + error.message);
           } else {
-            alert("✓ Te hemos enviado un correo automático a " + email + " con el enlace seguro para restablecer tu contraseña. Revisa tu bandeja de entrada o spam.");
+            alert("✓ Te hemos enviado un correo a " + email + " con el enlace seguro para restablecer tu contraseña.");
           }
           return;
         } catch (err) {
           console.warn(err);
         }
       }
-
       alert("✓ Se ha enviado la solicitud de recuperación a " + email + ".");
     };
 
@@ -573,14 +606,14 @@
         qrWrapper.innerHTML = '';
         const code = 'FF10-VIP-REWARD';
         if (window.QRCode) {
-          new QRCode(qrWrapper, { text: code, width: 140, height: 140 });
+          new QRCode(qrWrapper, { text: code, width: 130, height: 130 });
         } else {
           qrWrapper.innerText = code;
         }
         label.innerText = `CÓDIGO: ${code}`;
         label.classList.remove('hidden');
       } else {
-        qrWrapper.innerHTML = `<span class="text-xs text-zinc-400">Te faltan $${target - spent} MXN para desbloquear tu QR</span>`;
+        qrWrapper.innerHTML = `<span class="text-xs text-zinc-400">Te faltan $${target - spent} MXN para activar tu QR</span>`;
         label.classList.add('hidden');
       }
     }
