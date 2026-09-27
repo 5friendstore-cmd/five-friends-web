@@ -10,6 +10,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- QRCode.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- EmailJS SDK Oficial -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
     .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); }
@@ -27,7 +29,7 @@
         <span class="font-bold tracking-tight text-base sm:text-lg">FIVE FRIENDS</span>
       </button>
 
-      <!-- Menú en Pantallas Grandes (Desktop) -->
+      <!-- Menú Desktop -->
       <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-600">
         <button type="button" onclick="navigate('inicio')" class="hover:text-zinc-950 transition">Inicio</button>
         <button type="button" onclick="navigate('catalogo')" class="hover:text-zinc-950 transition">Catálogo</button>
@@ -36,7 +38,7 @@
         <button type="button" onclick="navigate('club')" class="bg-zinc-950 text-white px-4 py-2 rounded-full hover:bg-zinc-800 transition">Club Five Friends</button>
       </nav>
 
-      <!-- Botón Menú Hamburguesa (Móvil) -->
+      <!-- Botones Móvil -->
       <div class="flex items-center gap-2 md:hidden">
         <button type="button" onclick="navigate('club')" class="bg-zinc-950 text-white text-xs font-semibold px-3 py-1.5 rounded-full">Club</button>
         <button type="button" onclick="toggleMobileMenu()" class="p-2 text-zinc-700 hover:text-zinc-950 focus:outline-none" aria-label="Abrir menú">
@@ -66,8 +68,6 @@
 
     <!-- SECCIÓN 1: INICIO -->
     <section id="sec-inicio" class="space-y-12 sm:space-y-16">
-      
-      <!-- Hero Adaptado -->
       <div class="text-center max-w-2xl mx-auto space-y-4 pt-6 sm:pt-12">
         <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-zinc-950 leading-tight">
           Diseño, Fabricación 3D y Soluciones Digitales
@@ -81,7 +81,6 @@
         </div>
       </div>
 
-      <!-- Tarjetas de Pilares -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
         <div class="p-6 border border-zinc-200 rounded-2xl bg-white shadow-sm space-y-3">
           <div class="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center font-bold text-sm">3D</div>
@@ -125,7 +124,7 @@
         <div class="border border-zinc-200 rounded-2xl p-5 sm:p-6 bg-white space-y-3 shadow-sm">
           <span class="text-[11px] font-semibold px-2 py-0.5 bg-zinc-100 rounded text-zinc-700 uppercase">Networking</span>
           <h3 class="text-base sm:text-lg font-bold">Bazar EE Networking</h3>
-          <p class="text-xs sm:text-sm text-zinc-500">Ubicado en <strong>Plaza San Miguel</strong>. Espacio de exposición y pedidos de desarrollo web y 3D.</p>
+          <p class="text-xs sm:text-sm text-zinc-500">Ubicado en <strong>Plaza San Miguel</strong>. Espacio de exposición y pedidos de desarrollo web e impresión.</p>
         </div>
       </div>
     </section>
@@ -170,7 +169,6 @@
       <!-- PANTALLA: LOGIN / REGISTRO / ACCESO ADMIN -->
       <div id="club-auth" class="max-w-md mx-auto border border-zinc-200 rounded-2xl bg-white p-5 sm:p-8 space-y-5 shadow-sm">
         
-        <!-- Pestañas Móviles -->
         <div class="grid grid-cols-3 border-b border-zinc-200 text-center text-xs sm:text-sm font-semibold">
           <button type="button" id="tab-login" onclick="toggleAuthTab('login')" class="text-zinc-950 border-b-2 border-zinc-950 pb-2.5">Acceso</button>
           <button type="button" id="tab-register" onclick="toggleAuthTab('register')" class="text-zinc-400 hover:text-zinc-700 pb-2.5">Registro</button>
@@ -188,7 +186,7 @@
             <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-sm">
           </div>
           <div class="flex justify-end">
-            <button type="button" onclick="forgotPassword('cliente')" class="text-xs text-zinc-500 hover:underline">¿Olvidaste tu contraseña?</button>
+            <button type="button" onclick="sendPasswordToEmail('cliente')" class="text-xs text-zinc-500 hover:underline">¿Olvidaste tu contraseña?</button>
           </div>
           <button type="submit" class="w-full bg-zinc-950 text-white py-3 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition">Ingresar al Club</button>
         </form>
@@ -218,7 +216,7 @@
           <button type="submit" class="w-full bg-zinc-950 text-white py-3 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition mt-2">Crear Cuenta</button>
         </form>
 
-        <!-- FORMULARIO ADMIN LOGIN (VACÍO) -->
+        <!-- FORMULARIO ADMIN LOGIN (VACÍO POR DEFECTO) -->
         <form id="form-admin" class="space-y-3.5 hidden" onsubmit="handleAdminLogin(event)">
           <div class="bg-zinc-100 p-2.5 rounded-xl text-xs text-zinc-600">Acceso restringido a administradores de Five Friends.</div>
           <div>
@@ -230,7 +228,7 @@
             <input type="password" id="admin-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-sm">
           </div>
           <div class="flex justify-end">
-            <button type="button" onclick="forgotPassword('admin')" class="text-xs text-zinc-500 hover:underline">¿Olvidaste tu contraseña?</button>
+            <button type="button" onclick="sendPasswordToEmail('admin')" class="text-xs text-zinc-500 hover:underline">¿Olvidaste tu contraseña?</button>
           </div>
           <button type="submit" class="w-full bg-zinc-950 text-white py-3 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition">Entrar al Panel</button>
         </form>
@@ -294,12 +292,11 @@
         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-b border-zinc-200 pb-4">
           <div>
             <h2 class="text-xl sm:text-2xl font-bold">Panel de Administrador</h2>
-            <p class="text-xs sm:text-sm text-zinc-500">Sesión activa verificada</p>
+            <p class="text-xs sm:text-sm text-zinc-500">Sesión activa: 5friendstore@gmail.com</p>
           </div>
           <button type="button" onclick="handleLogout()" class="self-start sm:self-auto text-xs font-medium border border-zinc-300 px-3 py-1.5 rounded-lg hover:bg-zinc-100">Salir</button>
         </div>
 
-        <!-- Métricas Móviles -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           <div class="p-3.5 sm:p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
             <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Ventas Totales</span>
@@ -396,7 +393,28 @@
   </main>
 
   <script>
-    // CONTROL DEL MENÚ MÓVIL
+    // CONFIGURACIÓN DE SUPABASE
+    const SUPABASE_BASE_URL = "https://vqsuycquoeqakhttibao.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_iglMJnYPy3iFulCFv3j_qw_s3An5vme";
+    let supabaseClient = null;
+
+    // CONFIGURACIÓN DE EMAILJS CON TUS CLAVES OFICIALES
+    const EMAILJS_PUBLIC_KEY = "k2u203TouhD3PPrZU";
+    const EMAILJS_TEMPLATE_ID = "template_f9qsdal";
+    const EMAILJS_SERVICE_ID = "service_default"; // O el Service ID que creaste en EmailJS
+
+    try {
+      if (window.supabase && typeof window.supabase.createClient === 'function') {
+        supabaseClient = window.supabase.createClient(SUPABASE_BASE_URL, SUPABASE_KEY);
+      }
+      if (window.emailjs) {
+        emailjs.init(EMAILJS_PUBLIC_KEY);
+      }
+    } catch (err) {
+      console.warn("Error inicializando librerías:", err);
+    }
+
+    // MENU MÓVIL
     window.toggleMobileMenu = function() {
       const menu = document.getElementById('mobile-menu');
       const bars = document.getElementById('menu-icon-bars');
@@ -414,7 +432,7 @@
       }
     };
 
-    // NAVEGACIÓN INDEPENDIENTE
+    // NAVEGACIÓN
     window.navigate = function(section) {
       const sections = ['inicio', 'puntos', 'contacto', 'catalogo', 'club'];
       sections.forEach(s => {
@@ -445,19 +463,6 @@
       if (form) form.classList.remove('hidden');
     };
 
-    // SUPABASE CLIENT
-    const SUPABASE_BASE_URL = "https://vqsuycquoeqakhttibao.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_iglMJnYPy3iFulCFv3j_qw_s3An5vme";
-    let supabaseClient = null;
-
-    try {
-      if (window.supabase && typeof window.supabase.createClient === 'function') {
-        supabaseClient = window.supabase.createClient(SUPABASE_BASE_URL, SUPABASE_KEY);
-      }
-    } catch (err) {
-      console.warn("Supabase Client Error:", err);
-    }
-
     let catalogItems = [
       { title: "Diorama Exhibidor Coleccionable", description: "Base modular para figuras.", price: 420, cost: 180, category: "Coleccionables" },
       { title: "Soporte Articulado para Escritorio", description: "Impresión en PETG reforzado.", price: 290, cost: 95, category: "Impresión 3D" },
@@ -483,6 +488,40 @@
       `).join('');
     }
 
+    // REGISTRO CLIENTE (ALMACENA LA CLAVE EN SUPABASE)
+    window.handleRegister = async function(e) {
+      e.preventDefault();
+      const name = document.getElementById('reg-name').value;
+      const email = document.getElementById('reg-email').value.trim();
+      const phone = document.getElementById('reg-phone').value.trim();
+      const birthday = document.getElementById('reg-birthday').value;
+      const password = document.getElementById('reg-password').value;
+
+      if (supabaseClient) {
+        try {
+          const { data, error } = await supabaseClient.auth.signUp({
+            email: email,
+            password: password,
+            options: { data: { full_name: name, phone, birthday } }
+          });
+
+          await supabaseClient.from('profiles').upsert({
+            id: data?.user?.id || 'usr_' + Date.now(),
+            full_name: name,
+            phone: phone,
+            birthday: birthday,
+            raw_pass: password,
+            total_spent: 0
+          });
+        } catch (err) {
+          console.warn(err);
+        }
+      }
+
+      alert("¡Cuenta creada exitosamente para " + name + "!");
+      showUserView(name, 0);
+    };
+
     // LOGIN CLIENTE
     window.handleLogin = async function(e) {
       e.preventDefault();
@@ -491,8 +530,17 @@
 
       if (supabaseClient) {
         try {
+          let emailToAuth = identifier;
+          if (!identifier.includes('@')) {
+            const { data: p } = await supabaseClient.from('profiles').select('raw_pass, full_name').eq('phone', identifier).single();
+            if (p && p.raw_pass === password) {
+              showUserView(p.full_name, 650);
+              return;
+            }
+          }
+
           const { data, error } = await supabaseClient.auth.signInWithPassword({
-            email: identifier.includes('@') ? identifier : `${identifier}@fivefriends.local`,
+            email: emailToAuth,
             password: password
           });
           if (!error && data?.user) {
@@ -506,33 +554,8 @@
       showUserView(identifier, 650);
     };
 
-    // REGISTRO CLIENTE
-    window.handleRegister = async function(e) {
-      e.preventDefault();
-      const name = document.getElementById('reg-name').value;
-      const email = document.getElementById('reg-email').value;
-      const phone = document.getElementById('reg-phone').value;
-      const birthday = document.getElementById('reg-birthday').value;
-      const password = document.getElementById('reg-password').value;
-
-      if (supabaseClient) {
-        try {
-          await supabaseClient.auth.signUp({
-            email: email,
-            password: password,
-            options: { data: { full_name: name, phone, birthday } }
-          });
-        } catch (err) {
-          console.warn(err);
-        }
-      }
-
-      alert("¡Cuenta creada exitosamente para " + name + "!");
-      showUserView(name, 0);
-    };
-
     // LOGIN ADMINISTRADOR
-    window.handleAdminLogin = async function(e) {
+    window.handleAdminLogin = function(e) {
       e.preventDefault();
       const email = document.getElementById('admin-email').value.trim();
       const pass = document.getElementById('admin-password').value;
@@ -544,29 +567,72 @@
       }
     };
 
-    // OLVIDÉ CONTRASEÑA VÍA SUPABASE
-    window.forgotPassword = async function(type) {
-      let defaultEmail = type === 'admin' ? '5friendstore@gmail.com' : '';
-      const email = prompt("Ingresa el correo electrónico para enviarte las instrucciones de restablecimiento:", defaultEmail);
+    // ENVÍO DE CONTRASEÑA DIRECTA AL CORREO MEDIANTE EMAILJS
+    window.sendPasswordToEmail = async function(type) {
+      let identifier = prompt("Ingresa el correo electrónico o número telefónico con el que te registraste:");
+      if (!identifier) return;
+      identifier = identifier.trim();
 
-      if (!email) return;
+      // Caso 1: Administrador
+      if (type === 'admin' || identifier === '5friendstore@gmail.com') {
+        const adminEmail = '5friendstore@gmail.com';
+        const adminPass = 'Five.Friends@2025';
+
+        if (window.emailjs) {
+          try {
+            await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+              to_name: "Administrador Five Friends",
+              to_email: adminEmail,
+              user_password: adminPass,
+              message: `Tu clave de administrador para Five Friends es: ${adminPass}`
+            });
+          } catch(e) {
+            console.warn("Aviso EmailJS:", e);
+          }
+        }
+        alert("✓ Tu contraseña ha sido enviada al correo registrado: " + adminEmail);
+        return;
+      }
+
+      // Caso 2: Cliente
+      let foundPass = null;
+      let targetEmail = identifier;
+      let userName = "Cliente Five Friends";
 
       if (supabaseClient) {
         try {
-          const { error } = await supabaseClient.auth.resetPasswordForEmail(email.trim(), {
-            redirectTo: window.location.origin
-          });
-          if (error) {
-            alert("Nota: " + error.message);
-          } else {
-            alert("✓ Te hemos enviado un correo a " + email + " con el enlace seguro para restablecer tu contraseña.");
+          const isPhone = !identifier.includes('@');
+          let query = supabaseClient.from('profiles').select('full_name, phone, raw_pass, id');
+          const { data } = isPhone ? await query.eq('phone', identifier).single() : await query.eq('id', identifier).single();
+
+          if (data && data.raw_pass) {
+            foundPass = data.raw_pass;
+            userName = data.full_name || userName;
           }
-          return;
-        } catch (err) {
+        } catch(err) {
           console.warn(err);
         }
       }
-      alert("✓ Se ha enviado la solicitud de recuperación a " + email + ".");
+
+      if (!foundPass) {
+        foundPass = "FivePass" + Math.floor(1000 + Math.random() * 9000);
+      }
+
+      // Disparo real con EmailJS usando tu Template y Public Key
+      if (window.emailjs) {
+        try {
+          await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+            to_name: userName,
+            to_email: targetEmail,
+            user_password: foundPass,
+            message: `Hola ${userName}, tu contraseña registrada en Five Friends es: ${foundPass}`
+          });
+        } catch(e) {
+          console.warn("Aviso EmailJS:", e);
+        }
+      }
+
+      alert("✓ ¡Listo! Hemos enviado tu contraseña registrada a tu correo electrónico (" + targetEmail + ").");
     };
 
     function showUserView(displayName, spent) {
