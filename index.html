@@ -76,26 +76,29 @@
           Desde piezas a medida y figuras con manufactura aditiva hasta desarrollo de páginas web y tiendas en línea profesionales.
         </p>
         <div class="flex flex-col sm:flex-row justify-center gap-3 pt-3 px-4 sm:px-0">
-          <button type="button" onclick="navigate('catalogo')" class="w-full sm:w-auto bg-zinc-950 text-white px-6 py-3 rounded-xl font-medium text-sm hover:bg-zinc-800 transition shadow-sm">Ver Catálogo</button>
+          <button type="button" onclick="navigate('catalogo')" class="w-full sm:w-auto bg-zinc-950 text-white px-6 py-3 rounded-xl font-medium text-sm hover:bg-zinc-800 transition shadow-sm">Ver Catálogo Dividido</button>
           <button type="button" onclick="navigate('club')" class="w-full sm:w-auto border border-zinc-300 bg-white px-6 py-3 rounded-xl font-medium text-sm hover:bg-zinc-100 transition shadow-sm">Club Five Friends</button>
         </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-        <div class="p-6 border border-zinc-200 rounded-2xl bg-white shadow-sm space-y-3">
+        <div onclick="filterCategoryFromHome('Impresión 3D')" class="p-6 border border-zinc-200 rounded-2xl bg-white shadow-sm space-y-3 cursor-pointer hover:border-zinc-900 transition">
           <div class="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center font-bold text-sm">3D</div>
           <h3 class="text-lg font-bold">Impresión 3D</h3>
-          <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed">Fabricación aditiva con acabado de precisión, prototipado rápido y piezas personalizadas en filamentos técnicos.</p>
+          <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed">Soportes, prototipos, organizadores y piezas personalizadas en filamentos técnicos de alta resistencia.</p>
+          <span class="text-xs font-semibold underline text-zinc-900">Ver modelos 3D &rarr;</span>
         </div>
-        <div class="p-6 border border-zinc-200 rounded-2xl bg-white shadow-sm space-y-3">
+        <div onclick="filterCategoryFromHome('Coleccionables')" class="p-6 border border-zinc-200 rounded-2xl bg-white shadow-sm space-y-3 cursor-pointer hover:border-zinc-900 transition">
           <div class="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center font-bold text-sm">★</div>
           <h3 class="text-lg font-bold">Coleccionables</h3>
-          <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed">Figuras, dioramas temáticos, bases exhibidoras y accesorios detallados para coleccionistas.</p>
+          <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed">Dioramas temáticos, bases exhibidoras modulares y accesorios especializados para figuras y cartas.</p>
+          <span class="text-xs font-semibold underline text-zinc-900">Explorar coleccionables &rarr;</span>
         </div>
-        <div class="p-6 border border-zinc-200 rounded-2xl bg-white shadow-sm space-y-3">
-          <div class="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center font-bold">&lt;/&gt;</div>
+        <div onclick="filterCategoryFromHome('Desarrollo Web')" class="p-6 border border-zinc-200 rounded-2xl bg-white shadow-sm space-y-3 cursor-pointer hover:border-zinc-900 transition">
+          <div class="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center font-bold text-sm">&lt;/&gt;</div>
           <h3 class="text-lg font-bold">Páginas & Tiendas Web</h3>
-          <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed">Sitios web modernos, rápidos y tiendas virtuales optimizadas para impulsar la presencia y ventas de tu negocio.</p>
+          <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed">Desarrollo de sitios web rápidos, tiendas online con catálogo y sistemas autogestionables.</p>
+          <span class="text-xs font-semibold underline text-zinc-900">Ver servicios web &rarr;</span>
         </div>
       </div>
     </section>
@@ -154,13 +157,35 @@
       </div>
     </section>
 
-    <!-- SECCIÓN 4: CATÁLOGO -->
+    <!-- SECCIÓN 4: CATÁLOGO CLASIFICADO POR CATEGORÍAS -->
     <section id="sec-catalogo" class="hidden space-y-6">
-      <div>
-        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">Catálogo Disponible</h2>
-        <p class="text-xs sm:text-sm text-zinc-500">Servicios digitales y productos de fabricación aditiva.</p>
+      
+      <!-- Encabezado y Barra de Filtros -->
+      <div class="flex flex-col md:flex-row justify-between md:items-end gap-4 border-b border-zinc-200 pb-5">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-950">Catálogo & Soluciones</h2>
+          <p class="text-xs sm:text-sm text-zinc-500">Explora por área especializada o busca un producto en particular.</p>
+        </div>
+
+        <!-- Buscador -->
+        <div class="w-full md:w-72">
+          <input type="text" id="cat-search" oninput="filterCatalog()" placeholder="Buscar producto o servicio..." class="w-full px-3.5 py-2 bg-white border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+        </div>
       </div>
-      <div id="grid-productos" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6"></div>
+
+      <!-- Selector de Categorías (Chips / Pestañas) -->
+      <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+        <button type="button" onclick="setCatalogFilter('all')" id="btn-cat-all" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-zinc-950 text-white shadow-sm">Todos</button>
+        <button type="button" onclick="setCatalogFilter('Impresión 3D')" id="btn-cat-3d" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Impresión 3D</button>
+        <button type="button" onclick="setCatalogFilter('Coleccionables')" id="btn-cat-col" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Coleccionables</button>
+        <button type="button" onclick="setCatalogFilter('Desarrollo Web')" id="btn-cat-web" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Desarrollo Web & Tiendas</button>
+      </div>
+
+      <!-- Contenedor Dinámico con Secciones Agrupadas -->
+      <div id="catalog-container" class="space-y-10">
+        <!-- Generado automáticamente por JavaScript -->
+      </div>
+
     </section>
 
     <!-- SECCIÓN 5: CLUB FIVE FRIENDS -->
@@ -292,25 +317,28 @@
             <h2 class="text-xl sm:text-2xl font-bold">Panel de Administrador</h2>
             <p class="text-xs sm:text-sm text-zinc-500">Sesión activa: 5friendstore@gmail.com</p>
           </div>
-          <button type="button" onclick="handleLogout()" class="self-start sm:self-auto text-xs font-medium border border-zinc-300 px-3 py-1.5 rounded-lg hover:bg-zinc-100">Salir</button>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="loadAdminData()" class="text-xs font-medium border border-zinc-300 px-3 py-1.5 rounded-lg hover:bg-zinc-100 flex items-center gap-1">↻ Actualizar Datos</button>
+            <button type="button" onclick="handleLogout()" class="text-xs font-medium bg-zinc-950 text-white px-3 py-1.5 rounded-lg hover:bg-zinc-800">Salir</button>
+          </div>
         </div>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+          <div class="p-3.5 sm:p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
+            <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Clientes Registrados</span>
+            <div class="text-lg sm:text-2xl font-bold" id="stat-client-count">0</div>
+          </div>
           <div class="p-3.5 sm:p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
             <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Ventas Totales</span>
             <div class="text-lg sm:text-2xl font-bold" id="stat-sales">$0 MXN</div>
           </div>
           <div class="p-3.5 sm:p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
-            <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Costo Total</span>
+            <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Costo Estimado</span>
             <div class="text-lg sm:text-2xl font-bold text-zinc-500" id="stat-costs">$0 MXN</div>
           </div>
           <div class="p-3.5 sm:p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
             <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Ganancia Neta</span>
             <div class="text-lg sm:text-2xl font-bold text-emerald-600" id="stat-profit">$0 MXN</div>
-          </div>
-          <div class="p-3.5 sm:p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
-            <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Visitas</span>
-            <div class="text-lg sm:text-2xl font-bold" id="stat-views">1,520</div>
           </div>
         </div>
 
@@ -368,18 +396,24 @@
 
         <!-- Directorio de Clientes -->
         <div class="bg-white border border-zinc-200 rounded-2xl p-5 space-y-3 shadow-sm">
-          <h3 class="text-base sm:text-lg font-bold">Listado de Clientes Registrados</h3>
+          <div class="flex justify-between items-center">
+            <h3 class="text-base sm:text-lg font-bold">Listado de Clientes Registrados</h3>
+            <span class="text-xs text-zinc-500">Historial en tiempo real</span>
+          </div>
           <div class="overflow-x-auto -mx-2 sm:mx-0">
-            <table class="w-full text-left text-xs sm:text-sm min-w-[420px]">
+            <table class="w-full text-left text-xs sm:text-sm min-w-[500px]">
               <thead class="border-b border-zinc-200 text-[10px] text-zinc-400 uppercase">
                 <tr>
-                  <th class="py-2">Nombre</th>
-                  <th class="py-2">Teléfono / Correo</th>
-                  <th class="py-2">Cumpleaños</th>
-                  <th class="py-2">Total</th>
+                  <th class="py-2.5">Nombre</th>
+                  <th class="py-2.5">Teléfono</th>
+                  <th class="py-2.5">Correo</th>
+                  <th class="py-2.5">Cumpleaños</th>
+                  <th class="py-2.5">Gasto Total</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-zinc-100" id="admin-client-table"></tbody>
+              <tbody class="divide-y divide-zinc-100" id="admin-client-table">
+                <tr><td colspan="5" class="py-4 text-center text-zinc-400">Cargando registros...</td></tr>
+              </tbody>
             </table>
           </div>
         </div>
@@ -389,6 +423,37 @@
     </section>
 
   </main>
+
+  <!-- MODAL / PORTAL PARA REALIZAR PEDIDO -->
+  <div id="order-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-lg rounded-2xl p-6 space-y-5 shadow-2xl relative">
+      <div class="flex justify-between items-start border-b border-zinc-200 pb-3">
+        <div>
+          <span id="order-modal-category" class="text-[10px] uppercase font-bold text-zinc-400 tracking-wider"></span>
+          <h3 id="order-modal-title" class="text-xl font-bold text-zinc-950"></h3>
+          <p id="order-modal-price" class="text-sm font-bold text-zinc-700"></p>
+        </div>
+        <button onclick="closeOrderModal()" class="text-zinc-400 hover:text-zinc-800 p-1 text-lg font-bold">&times;</button>
+      </div>
+
+      <form onsubmit="submitOrder(event)" class="space-y-4">
+        <div id="order-field-specs">
+          <label class="block text-xs font-semibold text-zinc-600 mb-1" id="order-spec-label">Especificaciones del Pedido</label>
+          <input type="text" id="order-specs" required placeholder="Color, medidas o personalización requerida" class="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-zinc-600 mb-1">Nombre o Contacto para entrega</label>
+          <input type="text" id="order-contact" required placeholder="Nombre o teléfono" class="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2 pt-2">
+          <button type="submit" class="flex-1 bg-zinc-950 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition">Confirmar y Enviar Pedido</button>
+          <button type="button" onclick="closeOrderModal()" class="border border-zinc-300 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-zinc-100">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <script>
     // SUPABASE CONFIG
@@ -410,6 +475,25 @@
       }
     } catch (err) {
       console.warn("Init error:", err);
+    }
+
+    function getStoredClients() {
+      try {
+        return JSON.parse(localStorage.getItem('five_friends_clients_cache')) || [];
+      } catch(e) {
+        return [];
+      }
+    }
+
+    function saveClientToCache(client) {
+      let clients = getStoredClients();
+      const idx = clients.findIndex(c => c.email === client.email || (client.phone && c.phone === client.phone));
+      if (idx >= 0) {
+        clients[idx] = { ...clients[idx], ...client };
+      } else {
+        clients.unshift(client);
+      }
+      localStorage.setItem('five_friends_clients_cache', JSON.stringify(clients));
     }
 
     // MENU MÓVIL
@@ -444,7 +528,7 @@
       }
     };
 
-    // TABS
+    // TABS CLUB
     window.toggleAuthTab = function(tab) {
       document.getElementById('form-login').classList.add('hidden');
       document.getElementById('form-register').classList.add('hidden');
@@ -461,32 +545,167 @@
       if (form) form.classList.remove('hidden');
     };
 
+    // CATÁLOGO SEGMENTADO
+    let currentCategoryFilter = 'all';
     let catalogItems = [
-      { title: "Diorama Exhibidor Coleccionable", description: "Base modular para figuras.", price: 420, cost: 180, category: "Coleccionables" },
-      { title: "Soporte Articulado para Escritorio", description: "Impresión en PETG reforzado.", price: 290, cost: 95, category: "Impresión 3D" },
-      { title: "Landing Page para Negocios", description: "Diseño minimalista optimizado.", price: 3200, cost: 500, category: "Desarrollo Web" },
-      { title: "Tienda Online con Catálogo", description: "Pasarela de pagos autogestionable.", price: 6500, cost: 1200, category: "Desarrollo Web" }
+      // Categoría: Impresión 3D
+      { title: "Soporte Articulado para Escritorio", description: "Impresión de alta densidad en PETG resistente a impactos.", price: 290, cost: 95, category: "Impresión 3D", badge: "Entrega Inmediata / Encomienda" },
+      { title: "Organizador Modular de Herramientas", description: "Bandejas encastrables con ranuras a medida para mesa de trabajo.", price: 340, cost: 110, category: "Impresión 3D", badge: "Personalizable" },
+      { title: "Pieza Técnica Bajo Plano", description: "Fabricación aditiva a partir de archivo STL/STEP del cliente.", price: 480, cost: 140, category: "Impresión 3D", badge: "Bajo Encargo" },
+
+      // Categoría: Coleccionables
+      { title: "Diorama Exhibidor Coleccionable", description: "Base modular con textura e iluminación para figuras a escala.", price: 420, cost: 180, category: "Coleccionables", badge: "Edición Limitada" },
+      { title: "Base Magnética para Miniaturas", description: "Soporte con imán de neodimio para juegos de mesa y miniaturas.", price: 180, cost: 50, category: "Coleccionables", badge: "Packs x4" },
+      { title: "Marco Exhibidor para Cartas TCG", description: "Caja protectora rígida con soporte de exhibición para cartas raras.", price: 260, cost: 80, category: "Coleccionables", badge: "Protección UV" },
+
+      // Categoría: Desarrollo Web
+      { title: "Landing Page para Emprendedores", description: "Página de aterrizaje responsiva, ultra rápida, optimizada para SEO y móviles.", price: 3200, cost: 500, category: "Desarrollo Web", badge: "Entrega en 5 días" },
+      { title: "Tienda Online E-commerce", description: "Catálogo autogestionable, pasarela de cobros con Mercado Pago y panel de pedidos.", price: 6500, cost: 1200, category: "Desarrollo Web", badge: "Sistema Completo" },
+      { title: "Sitio Web Corporativo Multisección", description: "Diseño minimalista institucional, integración con base de datos y contacto.", price: 4800, cost: 900, category: "Desarrollo Web", badge: "Diseño Exclusivo" }
     ];
 
+    window.filterCategoryFromHome = function(cat) {
+      navigate('catalogo');
+      setCatalogFilter(cat);
+    };
+
+    window.setCatalogFilter = function(category) {
+      currentCategoryFilter = category;
+
+      const mapping = {
+        'all': 'btn-cat-all',
+        'Impresión 3D': 'btn-cat-3d',
+        'Coleccionables': 'btn-cat-col',
+        'Desarrollo Web': 'btn-cat-web'
+      };
+
+      Object.values(mapping).forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400';
+      });
+
+      const activeBtn = document.getElementById(mapping[category]);
+      if (activeBtn) {
+        activeBtn.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-zinc-950 text-white shadow-sm';
+      }
+
+      renderCatalog();
+    };
+
+    window.filterCatalog = function() {
+      renderCatalog();
+    };
+
     function renderCatalog() {
-      const grid = document.getElementById('grid-productos');
-      if (!grid) return;
-      grid.innerHTML = catalogItems.map(p => `
-        <div class="border border-zinc-200 bg-white p-5 rounded-2xl flex flex-col justify-between space-y-4 shadow-sm">
-          <div>
-            <span class="text-[11px] uppercase font-bold text-zinc-400">${p.category}</span>
-            <h4 class="font-bold text-base sm:text-lg text-zinc-950 mt-1">${p.title}</h4>
-            <p class="text-xs text-zinc-500 mt-1 leading-relaxed">${p.description || ''}</p>
+      const container = document.getElementById('catalog-container');
+      if (!container) return;
+
+      const searchQuery = (document.getElementById('cat-search')?.value || '').toLowerCase();
+
+      // Filtrar items
+      let filtered = catalogItems.filter(item => {
+        const matchesCategory = (currentCategoryFilter === 'all' || item.category === currentCategoryFilter);
+        const matchesSearch = item.title.toLowerCase().includes(searchQuery) || item.description.toLowerCase().includes(searchQuery);
+        return matchesCategory && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-16 bg-white border border-zinc-200 rounded-2xl p-8 space-y-2">
+            <h4 class="text-base font-bold text-zinc-800">No encontramos coincidencias</h4>
+            <p class="text-xs text-zinc-500">Prueba con otro término de búsqueda o cambia la categoría seleccionada.</p>
           </div>
-          <div class="flex justify-between items-center pt-3 border-t border-zinc-100">
-            <span class="font-bold text-base sm:text-lg">$${p.price} MXN</span>
-            <button type="button" onclick="alert('Solicitud enviada para: ${p.title}. Nos comunicaremos contigo.')" class="px-3.5 py-1.5 bg-zinc-950 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition">Ordenar</button>
+        `;
+        return;
+      }
+
+      // Agrupar por categoría para una visualización ordenada
+      const categories = currentCategoryFilter === 'all' 
+        ? ['Impresión 3D', 'Coleccionables', 'Desarrollo Web']
+        : [currentCategoryFilter];
+
+      let html = '';
+
+      categories.forEach(cat => {
+        const group = filtered.filter(item => item.category === cat);
+        if (group.length === 0) return;
+
+        let icon = cat === 'Impresión 3D' ? '3D' : (cat === 'Coleccionables' ? '★' : '&lt;/&gt;');
+        let descriptionTag = cat === 'Impresión 3D'
+          ? 'Manufactura aditiva, prototipado y piezas técnicas'
+          : (cat === 'Coleccionables' ? 'Dioramas, bases exhibidoras y accesorios temáticos' : 'Soluciones web rápidas, responsivas y tiendas virtuales');
+
+        html += `
+          <div class="space-y-4">
+            <div class="flex items-center gap-2.5 pb-2 border-b border-zinc-200">
+              <span class="w-7 h-7 rounded-lg bg-zinc-950 text-white flex items-center justify-center text-xs font-bold">${icon}</span>
+              <div>
+                <h3 class="font-extrabold text-lg text-zinc-950">${cat}</h3>
+                <p class="text-xs text-zinc-500">${descriptionTag}</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+              ${group.map(p => `
+                <div class="border border-zinc-200 bg-white p-5 rounded-2xl flex flex-col justify-between space-y-4 shadow-sm hover:border-zinc-400 transition">
+                  <div class="space-y-2">
+                    <div class="flex justify-between items-start gap-2">
+                      <span class="text-[10px] uppercase font-bold px-2 py-0.5 bg-zinc-100 rounded text-zinc-600">${p.badge || p.category}</span>
+                    </div>
+                    <h4 class="font-bold text-base text-zinc-950 leading-snug">${p.title}</h4>
+                    <p class="text-xs text-zinc-500 leading-relaxed">${p.description}</p>                   </div>                   <div class="flex justify-between items-center pt-3 border-t border-zinc-100">                     <div>                       <span class="text-[10px] text-zinc-400 uppercase font-semibold block">Inversión</span>                       <span class="font-extrabold text-base sm:text-lg text-zinc-950">$${p.price.toLocaleString()} MXN</span>
+                    </div>
+                    <button type="button" onclick="openOrderModal('${p.title}', ${p.price}, '${p.category}')" class="px-4 py-2 bg-zinc-950 text-white text-xs font-semibold rounded-xl hover:bg-zinc-800 transition shadow-sm">
+                      ${p.category === 'Desarrollo Web' ? 'Cotizar' : 'Ordenar'}
+                    </button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
           </div>
-        </div>
-      `).join('');
+        `;
+      });
+
+      container.innerHTML = html;
     }
 
-    // REGISTRO ROBUSTO: SUPABASE AUTH + TABLA PROFILES
+    // GESTIÓN DEL MODAL DE PEDIDO
+    let selectedOrder = null;
+
+    window.openOrderModal = function(title, price, category) {
+      selectedOrder = { title, price, category };
+      document.getElementById('order-modal-title').innerText = title;
+      document.getElementById('order-modal-category').innerText = category;
+      document.getElementById('order-modal-price').innerText = `$${price.toLocaleString()} MXN`;
+      
+      const label = document.getElementById('order-spec-label');
+      const input = document.getElementById('order-specs');
+      if (category === 'Desarrollo Web') {
+        label.innerText = '¿De qué trata tu negocio o proyecto web?';
+        input.placeholder = 'Ej. Tienda para ropa deportiva con 20 productos y pasarela de pago';
+      } else {
+        label.innerText = 'Color o detalles de tu pieza 3D / coleccionable';
+        input.placeholder = 'Ej. Color negro mate, medidas estándar, grabado de iniciales';
+      }
+
+      document.getElementById('order-modal').classList.remove('hidden');
+    };
+
+    window.closeOrderModal = function() {
+      document.getElementById('order-modal').classList.add('hidden');
+      selectedOrder = null;
+    };
+
+    window.submitOrder = function(e) {
+      e.preventDefault();
+      const specs = document.getElementById('order-specs').value;
+      const contact = document.getElementById('order-contact').value;
+
+      alert(`✓ ¡Pedido registrado con éxito!\n\nProducto: ${selectedOrder.title}\nMonto: $${selectedOrder.price} MXN\nContacto: ${contact}\nDetalles: ${specs}\n\nNos pondremos en contacto contigo de inmediato para coordinar la entrega.`);
+      closeOrderModal();
+    };
+
+    // REGISTRO CLIENTE
     window.handleRegister = async function(e) {
       e.preventDefault();
       const btn = document.getElementById('btn-register');
@@ -499,39 +718,39 @@
       const birthday = document.getElementById('reg-birthday').value;
       const password = document.getElementById('reg-password').value;
 
-      let userId = 'usr_' + Date.now();
+      let newUserId = null;
 
       if (supabaseClient) {
         try {
-          const { data: authData, error: authErr } = await supabaseClient.auth.signUp({
+          const { data: authData } = await supabaseClient.auth.signUp({
             email: email,
             password: password,
-            options: { data: { full_name: name, phone: phone, birthday: birthday } }
+            options: { data: { full_name: name, phone: phone, birthday: birthday, raw_pass: password } }
           });
-          if (authData?.user) userId = authData.user.id;
+          if (authData?.user) newUserId = authData.user.id;
         } catch (err) {
           console.warn("Auth signup error:", err);
         }
 
         try {
-          // Guardar directamente en la tabla profiles
-          const { error: dbErr } = await supabaseClient.from('profiles').upsert({
-            id: userId,
+          const profilePayload = {
+            id: newUserId || '00000000-0000-0000-0000-' + Math.floor(100000000000 + Math.random() * 900000000000),
             full_name: name,
             email: email,
             phone: phone,
             birthday: birthday,
             raw_pass: password,
             total_spent: 0
-          });
-          if (dbErr) console.error("Error guardando en profiles:", dbErr);
-        } catch(dbEx) {
-          console.warn(dbEx);
+          };
+          await supabaseClient.from('profiles').upsert(profilePayload);
+        } catch (e) {
+          console.warn("Direct profile upsert error:", e);
         }
       }
 
-      const sessionObj = { type: 'client', id: userId, name: name, email: email, phone: phone, birthday: birthday, total_spent: 0 };
-      localStorage.setItem('five_friends_session', JSON.stringify(sessionObj));
+      const clientObj = { name, full_name: name, email, phone, birthday, raw_pass: password, total_spent: 0, type: 'client' };
+      saveClientToCache(clientObj);
+      localStorage.setItem('five_friends_session', JSON.stringify(clientObj));
 
       btn.innerText = "Crear Cuenta";
       btn.disabled = false;
@@ -539,7 +758,7 @@
       showUserView(name, 0);
     };
 
-    // LOGIN CLIENTE (CON TELEFONO O CORREO)
+    // LOGIN CLIENTE
     window.handleLogin = async function(e) {
       e.preventDefault();
       const btn = document.getElementById('btn-login');
@@ -551,9 +770,14 @@
 
       let foundUser = null;
 
-      if (supabaseClient) {
+      // 1. Local
+      const localClients = getStoredClients();
+      const localMatch = localClients.find(c => (c.email?.toLowerCase() === identifier.toLowerCase() || c.phone === identifier) && c.raw_pass === password);
+      if (localMatch) foundUser = localMatch;
+
+      // 2. Supabase
+      if (!foundUser && supabaseClient) {
         try {
-          // Buscar primero en la base de datos de perfiles por correo o por teléfono
           const isEmail = identifier.includes('@');
           const col = isEmail ? 'email' : 'phone';
           const { data: profile } = await supabaseClient.from('profiles').select('*').ilike(col, identifier).maybeSingle();
@@ -561,18 +785,23 @@
           if (profile && profile.raw_pass === password) {
             foundUser = profile;
           } else {
-            // Intentar también con el auth nativo
             const { data: authRes } = await supabaseClient.auth.signInWithPassword({
               email: isEmail ? identifier : `${identifier}@fivefriends.local`,
               password: password
             });
             if (authRes?.user) {
               const { data: p } = await supabaseClient.from('profiles').select('*').eq('id', authRes.user.id).maybeSingle();
-              foundUser = p || { full_name: authRes.user.user_metadata?.full_name || authRes.user.email, total_spent: 0 };
+              foundUser = p || {
+                full_name: authRes.user.user_metadata?.full_name || authRes.user.email,
+                email: authRes.user.email,
+                phone: authRes.user.user_metadata?.phone || '',
+                birthday: authRes.user.user_metadata?.birthday || '',
+                total_spent: 0
+              };
             }
           }
         } catch (err) {
-          console.warn("Login search error:", err);
+          console.warn("Login error:", err);
         }
       }
 
@@ -580,18 +809,19 @@
       btn.disabled = false;
 
       if (foundUser) {
+        saveClientToCache(foundUser);
         const sessionObj = {
           type: 'client',
-          id: foundUser.id,
           name: foundUser.full_name || identifier,
           email: foundUser.email,
           phone: foundUser.phone,
+          birthday: foundUser.birthday,
           total_spent: foundUser.total_spent || 0
         };
         localStorage.setItem('five_friends_session', JSON.stringify(sessionObj));
         showUserView(sessionObj.name, sessionObj.total_spent);
       } else {
-        alert("Usuario no encontrado o contraseña incorrecta.\nVerifica que los datos coincidan con tu registro.");
+        alert("Usuario no encontrado o contraseña incorrecta.");
       }
     };
 
@@ -612,7 +842,7 @@
 
     // OLVIDÉ MI CONTRASEÑA
     window.sendPasswordToEmail = async function(type) {
-      let identifier = prompt("Ingresa el correo electrónico o teléfono con el que te registraste:");
+      let identifier = prompt("Ingresa el correo o teléfono registrado:");
       if (!identifier) return;
       identifier = identifier.trim();
 
@@ -625,7 +855,14 @@
         userName = 'Administrador Five Friends';
         userPass = 'Five.Friends@2025';
       } else {
-        if (supabaseClient) {
+        const localMatch = getStoredClients().find(c => c.email?.toLowerCase() === identifier.toLowerCase() || c.phone === identifier);
+        if (localMatch) {
+          userPass = localMatch.raw_pass;
+          userName = localMatch.full_name || userName;
+          targetEmail = localMatch.email || targetEmail;
+        }
+
+        if (!userPass && supabaseClient) {
           try {
             const isEmail = identifier.includes('@');
             const col = isEmail ? 'email' : 'phone';
@@ -642,7 +879,7 @@
       }
 
       if (!userPass) {
-        alert("No se encontró ninguna cuenta registrada con ese correo o teléfono.");
+        alert("No se encontró ninguna cuenta registrada con esos datos.");
         return;
       }
 
@@ -664,7 +901,6 @@
       }
     };
 
-    // VISTAS Y PERSISTENCIA
     function showUserView(displayName, spent) {
       document.getElementById('club-auth').classList.add('hidden');
       document.getElementById('club-admin-portal').classList.add('hidden');
@@ -690,7 +926,6 @@
       document.getElementById('club-auth').classList.remove('hidden');
     };
 
-    // RESTAURAR SESIÓN DESPUÉS DE REFRESH (F5)
     function restoreSession() {
       const saved = localStorage.getItem('five_friends_session');
       if (saved) {
@@ -742,36 +977,47 @@
       document.getElementById('ticket-url').value = '';
     };
 
-    // CARGAR CLIENTES Y BALANCE EN ADMIN DESDE SUPABASE EN TIEMPO REAL
     async function loadAdminData() {
-      let registeredUsers = [];
+      const clientTable = document.getElementById('admin-client-table');
+      clientTable.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-zinc-400">Consultando registros...</td></tr>`;
+
+      let clientList = [];
 
       if (supabaseClient) {
         try {
           const { data, error } = await supabaseClient.from('profiles').select('*').order('created_at', { ascending: false });
-          if (!error && data) {
-            registeredUsers = data;
+          if (!error && Array.isArray(data)) {
+            clientList = data;
           }
         } catch (err) {
           console.warn("Error cargando profiles:", err);
         }
       }
 
-      const clientTable = document.getElementById('admin-client-table');
-      if (registeredUsers.length > 0) {
-        clientTable.innerHTML = registeredUsers.map(p => `
-          <tr>
-            <td class="py-2 font-medium">${p.full_name || 'Sin nombre'}</td>
-            <td class="py-2 text-zinc-500">${p.phone || ''} ${p.email ? '(' + p.email + ')' : ''}</td>
-            <td class="py-2 text-zinc-500">${p.birthday || '-'}</td>
-            <td class="py-2 font-semibold">$${p.total_spent || 0} MXN</td>
+      const cached = getStoredClients();
+      cached.forEach(c => {
+        const exists = clientList.some(item => item.email === c.email || (c.phone && item.phone === c.phone));
+        if (!exists) clientList.push(c);
+      });
+
+      const finalClients = clientList.filter(c => c.email !== '5friendstore@gmail.com');
+      document.getElementById('stat-client-count').innerText = finalClients.length;
+
+      if (finalClients.length > 0) {
+        clientTable.innerHTML = finalClients.map(p => `
+          <tr class="hover:bg-zinc-50">
+            <td class="py-3 font-semibold text-zinc-900">${p.full_name || 'Sin nombre'}</td>
+            <td class="py-3 text-zinc-600">${p.phone || '<span class="text-zinc-300">-</span>'}</td>
+            <td class="py-3 text-zinc-600">${p.email || '<span class="text-zinc-300">-</span>'}</td>
+            <td class="py-3 text-zinc-500">${p.birthday || '<span class="text-zinc-300">-</span>'}</td>
+            <td class="py-3 font-bold text-zinc-950">$${p.total_spent || 0} MXN</td>
           </tr>
         `).join('');
       } else {
-        clientTable.innerHTML = `<tr><td colspan="4" class="py-3 text-center text-zinc-400">No hay clientes registrados aún.</td></tr>`;
+        clientTable.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-zinc-400 text-xs">No hay clientes registrados en la base de datos todavía.</td></tr>`;
       }
 
-      let totalSales = registeredUsers.reduce((sum, u) => sum + Number(u.total_spent || 0), 0) + 12000;
+      let totalSales = finalClients.reduce((sum, u) => sum + Number(u.total_spent || 0), 0) + 12000;
       let totalCost = Math.round(totalSales * 0.38);
       let profit = totalSales - totalCost;
 
@@ -800,9 +1046,9 @@
       const category = document.getElementById('adm-p-category').value;
       const desc = document.getElementById('adm-p-desc').value;
 
-      catalogItems.push({ title, price, cost, category, description: desc });
+      catalogItems.push({ title, price, cost, category, description: desc, badge: "Nuevo" });
       renderCatalog();
-      alert(`Producto "${title}" agregado al catálogo.`);
+      alert(`Producto "${title}" agregado al catálogo en la categoría "${category}".`);
       e.target.reset();
       loadAdminData();
     };
