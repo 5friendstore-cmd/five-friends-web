@@ -87,7 +87,6 @@
   <header class="sticky top-0 z-40 glass border-b border-zinc-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
       
-      <!-- Logotipo -->
       <button onclick="navigate('inicio')" class="flex items-center gap-2 cursor-pointer focus:outline-none">
         <div class="w-8 h-8 bg-zinc-950 text-white rounded-lg flex items-center justify-center font-bold text-sm tracking-tighter">5F</div>
         <span class="font-bold tracking-tight text-base sm:text-lg">FIVE FRIENDS</span>
@@ -101,7 +100,6 @@
         <button type="button" onclick="navigate('contacto')" class="hover:text-zinc-950 transition">Contacto</button>
         <button type="button" onclick="navigate('club')" class="bg-zinc-950 text-white px-4 py-2 rounded-full hover:bg-zinc-800 transition">Club Five Friends</button>
         
-        <!-- Botón Carrito Desktop -->
         <button type="button" onclick="toggleCartDrawer()" class="relative p-2 text-zinc-800 hover:text-zinc-950 focus:outline-none" title="Ver Carrito">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
@@ -144,7 +142,7 @@
   <!-- CONTENIDO PRINCIPAL -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
 
-    <!-- SECCIÓN 1: INICIO (LOS 3 PILARES) -->
+    <!-- SECCIÓN 1: INICIO -->
     <section id="sec-inicio" class="space-y-12 sm:space-y-16">
       <div class="text-center max-w-2xl mx-auto space-y-4 pt-6 sm:pt-12">
         <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-zinc-950 leading-tight">
@@ -244,7 +242,7 @@
       </div>
     </section>
 
-    <!-- SECCIÓN 4: CATÁLOGO Y TIENDA (LOS 3 PILARES Y SUBCATEGORÍAS) -->
+    <!-- SECCIÓN 4: CATÁLOGO Y TIENDA -->
     <section id="sec-catalogo" class="hidden space-y-6">
       
       <!-- Encabezado y Buscador -->
@@ -259,7 +257,7 @@
         </div>
       </div>
 
-      <!-- NIVEL 1: FILTROS PRINCIPALES (LOS 3 PILARES) -->
+      <!-- NIVEL 1: FILTROS PRINCIPALES -->
       <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
         <button type="button" onclick="setMacroFilter('all')" id="btn-macro-all" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap bg-zinc-950 text-white shadow-sm">Todos los Productos</button>
         <button type="button" onclick="setMacroFilter('3D')" id="btn-macro-3d" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Impresión 3D</button>
@@ -267,7 +265,7 @@
         <button type="button" onclick="setMacroFilter('Web')" id="btn-macro-web" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Desarrollo Web & Tiendas</button>
       </div>
 
-      <!-- NIVEL 2: SUBCATEGORÍAS DINÁMICAS (CHIPS DESLIZABLES) -->
+      <!-- NIVEL 2: SUBCATEGORÍAS DINÁMICAS -->
       <div class="flex items-center gap-2 overflow-x-auto pb-2 pt-1 border-t border-zinc-100 scrollbar-none" id="subcategories-bar"></div>
 
       <!-- Contenedor Dinámico con Productos Agrupados -->
@@ -715,7 +713,6 @@
             </div>
           </div>
 
-          <!-- Formulario Dirección de Entrega (SOLO SI HAY PRODUCTOS FÍSICOS) -->
           <div id="checkout-address-section" class="bg-zinc-50 border border-zinc-200 rounded-xl p-3.5 space-y-3 text-xs">
             <span class="font-bold text-zinc-900 uppercase block border-b border-zinc-200 pb-2">Dirección Completa de Entrega (Paquetería)</span>
             <div>
@@ -752,7 +749,6 @@
         <!-- Footer / Checkout y Acciones -->
         <div class="p-5 border-t border-zinc-200 bg-zinc-50 space-y-3">
           
-          <!-- Cotizador Skydropx (SOLO VISIBLE SI HAY PRODUCTOS FÍSICOS) -->
           <div id="shipping-calculator-box" class="space-y-2">
             <div class="flex justify-between items-center">
               <label class="text-xs font-bold text-zinc-700 uppercase">Cotizar Envío (Skydropx)</label>
@@ -765,7 +761,6 @@
             <div id="shipping-options-list" class="space-y-1.5 pt-1 hidden"></div>
           </div>
 
-          <!-- Resumen de Costos -->
           <div class="space-y-1.5 text-xs text-zinc-600 border-t border-zinc-200 pt-3">
             <div class="flex justify-between">
               <span>Subtotal Productos / Servicios</span>
@@ -834,7 +829,6 @@
       }
     } catch(e){}
 
-    // MAPEO OFICIAL DE MACRO-CATEGORÍAS Y PILARES
     function getMacroCategory(category) {
       if (category === 'Desarrollo Web') return 'Web';
       if (category === 'Coleccionables' || category === 'Dioramas y Bases' || category === 'TCG y Cartas' || category === 'Figuras y Mas') return 'Coleccionables';
@@ -842,13 +836,10 @@
     }
 
     var defaultInitialCatalog = [
-      // 1. Impresión 3D
       { id: "p1", title: "Soporte Articulado para Escritorio", description: "Impresión en PETG de alta resistencia.", price: 290, cost: 95, category: "Llaveros y Portallaveros", weight: 0.4, length: 15, width: 15, height: 10, image_url: "", badge: "Impresión 3D" },
       { id: "p2", title: "Organizador Modular de Herramientas", description: "Bandejas encastrables con ranuras.", price: 340, cost: 110, category: "Estuches y Alcancias", weight: 0.6, length: 20, width: 15, height: 12, image_url: "", badge: "Impresión 3D" },
-      // 2. Coleccionables
       { id: "p3", title: "Diorama Exhibidor Edición Especial", description: "Base modular temática para figuras coleccionables.", price: 420, cost: 180, category: "Coleccionables", weight: 1.2, length: 25, width: 25, height: 20, image_url: "", badge: "Coleccionables" },
       { id: "p4", title: "Marco Exhibidor para Cartas TCG", description: "Caja rígida con protección UV para coleccionistas.", price: 260, cost: 80, category: "Coleccionables", weight: 0.3, length: 15, width: 10, height: 5, image_url: "", badge: "Coleccionables" },
-      // 3. Desarrollo Web
       { id: "p5", title: "Landing Page para Emprendedores", description: "Diseño minimalista ultra rápido responsivo y optimizado.", price: 3200, cost: 500, category: "Desarrollo Web", weight: 0, length: 0, width: 0, height: 0, image_url: "", badge: "Servicio Digital" },
       { id: "p6", title: "Tienda Online E-commerce", description: "Catálogo autogestionable y cobros con Mercado Pago.", price: 6500, cost: 1200, category: "Desarrollo Web", weight: 0, length: 0, width: 0, height: 0, image_url: "", badge: "Servicio Digital" }
     ];
@@ -877,56 +868,25 @@
       }
     }
 
-    // -------------------------------------------------------------
-    // SINCRONIZACIÓN AUTOMÁTICA DESDE SUPABASE PARA CLIENTES Y ADMIN
-    // -------------------------------------------------------------
+    // CARGA DE PRODUCTOS DESDE SUPABASE SIN PERDER LOCALSTORAGE
     window.fetchCatalogFromDatabase = async function() {
-      if (!supabaseClient) {
-        renderSubcategoriesBar();
-        renderCatalog();
-        renderAdminProductsTable();
-        return;
-      }
-
-      try {
-        var res = await supabaseClient.from('products').select('*').order('created_at', { ascending: false });
-        if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
-          // Fusionar con los productos locales asegurando que todos existan
-          var dbProducts = res.data;
-          
-          // Preservar en local y sincronizar
-          catalogItems = dbProducts;
-          localStorage.setItem('five_friends_catalog', JSON.stringify(catalogItems));
-        } else if (catalogItems.length > 0) {
-          // Si la base de datos está vacía, subir los productos existentes para inicializarla
-          for (var i = 0; i < Math.min(catalogItems.length, 30); i++) {
-            var item = catalogItems[i];
-            await supabaseClient.from('products').upsert({
-              id: item.id || ('prod_' + Date.now() + '_' + i),
-              title: item.title,
-              description: item.description || '',
-              price: item.price,
-              cost: item.cost || 0,
-              category: item.category,
-              badge: item.badge || '',
-              weight: item.weight || 0.5,
-              length: item.length || 15,
-              width: item.width || 15,
-              height: item.height || 10,
-              image_url: item.image_url || ''
-            });
+      if (supabaseClient) {
+        try {
+          var res = await supabaseClient.from('products').select('*').order('created_at', { ascending: false });
+          if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+            catalogItems = res.data;
+            try { localStorage.setItem('five_friends_catalog', JSON.stringify(catalogItems)); } catch(e){}
           }
+        } catch(err) {
+          console.warn("Consulta Supabase fallback a local:", err);
         }
-      } catch(err) {
-        console.warn("Error cargando productos de Supabase:", err);
       }
-
       renderSubcategoriesBar();
       renderCatalog();
       renderAdminProductsTable();
     };
 
-    async function saveCatalog(items) {
+    function saveCatalog(items) {
       catalogItems = items;
       try { localStorage.setItem('five_friends_catalog', JSON.stringify(catalogItems)); } catch(e){}
       renderSubcategoriesBar();
@@ -1539,7 +1499,6 @@
       reader.readAsDataURL(file);
     };
 
-    // RENDERIZADO DEL CATÁLOGO
     function renderCatalog() {
       var container = document.getElementById('catalog-container');
       if (!container) return;
@@ -1628,7 +1587,7 @@
     }
 
     // -------------------------------------------------------------
-    // IMPORTACIÓN MASIVA COMPATIBLE CON MERCADO PAGO PUNTO DE VENTA
+    // IMPORTACIÓN MASIVA ROBUSTA EN BLOQUES PARA SUPABASE
     // -------------------------------------------------------------
     window.downloadCSVTemplate = function() {
       var csvContent = "data:text/csv;charset=utf-8,Titulo,Precio,Costo,Categoria,Descripcion,Imagen\n" +
@@ -1708,6 +1667,7 @@
 
         var importedCount = 0;
         var newCatalog = [];
+        var timestamp = Date.now();
 
         for (var i = headerRowIndex + 1; i < lines.length; i++) {
           var rawLine = lines[i].trim();
@@ -1727,7 +1687,7 @@
           var rawCat = (colCatIdx !== -1 && cols[colCatIdx]) ? cols[colCatIdx].trim() : 'Impresión 3D';
 
           var pObj = {
-            id: 'prod_mp_' + Date.now() + '_' + i,
+            id: 'prod_mp_' + timestamp + '_' + i,
             title: title,
             price: price,
             cost: cost,
@@ -1738,43 +1698,49 @@
             height: 10,
             image_url: '',
             description: 'Producto registrado desde Mercado Pago.',
-            badge: 'Disponible'
+            badge: (rawCat === 'Coleccionables' ? 'Coleccionables' : 'Impresión 3D')
           };
           newCatalog.push(pObj);
           importedCount++;
         }
 
         if (importedCount > 0) {
-          var webAndCustom = catalogItems.filter(function(i){ return i.category === 'Desarrollo Web' || i.category === 'Coleccionables'; });
+          var webAndCustom = catalogItems.filter(function(i){ return i.category === 'Desarrollo Web'; });
           catalogItems = newCatalog.concat(webAndCustom);
           saveCatalog(catalogItems);
 
-          // Subir a Supabase en bloques para que queden disponibles para todos
+          // Subir a Supabase en bloques pequeños de 40 para evitar timeouts
           if (supabaseClient) {
             try {
-              var payload = catalogItems.map(function(item) {
-                return {
-                  id: item.id,
-                  title: item.title,
-                  description: item.description || '',
-                  price: item.price,
-                  cost: item.cost || 0,
-                  category: item.category,
-                  badge: item.badge || '',
-                  weight: item.weight || 0.5,
-                  length: item.length || 15,
-                  width: item.width || 15,
-                  height: item.height || 10,
-                  image_url: item.image_url || ''
-                };
-              });
-              await supabaseClient.from('products').upsert(payload);
+              var chunkSize = 40;
+              for (var k = 0; k < catalogItems.length; k += chunkSize) {
+                var chunk = catalogItems.slice(k, k + chunkSize).map(function(item) {
+                  return {
+                    id: String(item.id),
+                    title: item.title,
+                    description: item.description || '',
+                    price: Number(item.price),
+                    cost: Number(item.cost || 0),
+                    category: item.category,
+                    badge: item.badge || '',
+                    weight: Number(item.weight || 0.5),
+                    length: Number(item.length || 15),
+                    width: Number(item.width || 15),
+                    height: Number(item.height || 10),
+                    image_url: item.image_url || ''
+                  };
+                });
+                var dbRes = await supabaseClient.from('products').upsert(chunk);
+                if (dbRes?.error) {
+                  console.error("Error guardando bloque en Supabase:", dbRes.error);
+                }
+              }
             } catch(dbErr) {
-              console.warn("Error sincronizando catálogo con Supabase:", dbErr);
+              console.warn("Excepción al guardar en Supabase:", dbErr);
             }
           }
 
-          alert('✓ ¡Éxito! Se han importado ' + importedCount + ' productos a Supabase y al catálogo público.');
+          alert('✓ ¡Éxito! Se han importado ' + importedCount + ' productos y se han guardado permanentemente en la base de datos de Supabase.');
         } else {
           alert('No se detectaron productos válidos en las filas del archivo.');
         }
@@ -1873,15 +1839,15 @@
       var finalId = id || ('prod_' + Date.now());
 
       var productRecord = { 
-        id: finalId, 
+        id: String(finalId), 
         title: title, 
-        price: price, 
-        cost: cost, 
+        price: Number(price), 
+        cost: Number(cost), 
         category: category, 
-        weight: weight, 
-        length: length, 
-        width: width, 
-        height: height, 
+        weight: Number(weight), 
+        length: Number(length), 
+        width: Number(width), 
+        height: Number(height), 
         image_url: imageUrl, 
         description: desc, 
         badge: badgeText 
@@ -1896,16 +1862,18 @@
 
       saveCatalog(catalogItems);
 
-      // Guardar en Supabase para que todos los clientes lo vean
       if (supabaseClient) {
         try {
-          await supabaseClient.from('products').upsert(productRecord);
+          var dbRes = await supabaseClient.from('products').upsert(productRecord);
+          if (dbRes?.error) {
+            console.error("Error guardando producto en Supabase:", dbRes.error);
+          }
         } catch(dbErr) {
           console.warn("Supabase upsert error:", dbErr);
         }
       }
 
-      alert('✓ Producto guardado y sincronizado con éxito para todos los usuarios.');
+      alert('✓ Producto guardado y sincronizado con la base de datos.');
       cancelProductEdit();
     };
 
@@ -1947,7 +1915,7 @@
         saveCatalog(catalogItems.filter(function(p){ return p.id !== id; }));
         if (supabaseClient) {
           try {
-            await supabaseClient.from('products').delete().eq('id', id);
+            await supabaseClient.from('products').delete().eq('id', String(id));
           } catch(e){}
         }
       }
@@ -2126,7 +2094,6 @@
       document.getElementById('ticket-url').value = '';
     };
 
-    // OLVIDÉ CONTRASEÑA
     window.sendPasswordToEmail = async function(type) {
       var id = prompt("Ingresa tu correo o teléfono registrado:");
       if (!id) return;
