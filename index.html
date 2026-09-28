@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Five Friends | Impresión 3D & Desarrollo Web</title>
+  <title>Five Friends | Impresión 3D, Coleccionables & Desarrollo Web</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Supabase JS Client -->
@@ -141,37 +141,46 @@
   <!-- CONTENIDO PRINCIPAL -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
 
-    <!-- SECCIÓN 1: INICIO -->
+    <!-- SECCIÓN 1: INICIO (LOS 3 PILARES DE NEGOCIO) -->
     <section id="sec-inicio" class="space-y-12 sm:space-y-16">
       <div class="text-center max-w-2xl mx-auto space-y-4 pt-6 sm:pt-12">
         <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-zinc-950 leading-tight">
-          Diseño, Fabricación 3D y Soluciones Digitales
+          Diseño, Fabricación 3D, Coleccionables y Soluciones Digitales
         </h1>
         <p class="text-sm sm:text-base md:text-lg text-zinc-600 px-2 font-normal leading-relaxed">
-          Taller de manufactura aditiva y soluciones de desarrollo web profesional. Compra en línea con Mercado Pago, envíos por paquetería a todo México o retiro en bazares.
+          Manufactura aditiva, artículos para coleccionistas y desarrollo web profesional. Compra en línea con Mercado Pago, envíos a todo México o entrega en bazares físicos.
         </p>
         <div class="flex flex-col sm:flex-row justify-center gap-3 pt-3 px-4 sm:px-0">
-          <button type="button" onclick="navigate('catalogo')" class="w-full sm:w-auto bg-zinc-950 text-white px-6 py-3 rounded-xl font-medium text-sm hover:bg-zinc-800 transition shadow-sm">Explorar Catálogo 3D</button>
+          <button type="button" onclick="navigate('catalogo')" class="w-full sm:w-auto bg-zinc-950 text-white px-6 py-3 rounded-xl font-medium text-sm hover:bg-zinc-800 transition shadow-sm">Explorar Catálogo</button>
           <button type="button" onclick="navigate('club')" class="w-full sm:w-auto border border-zinc-300 bg-white px-6 py-3 rounded-xl font-medium text-sm hover:bg-zinc-100 transition shadow-sm">Club Five Friends</button>
         </div>
       </div>
 
-      <!-- Los 2 Pilares Reales de Five Friends -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-        <div onclick="filterCategoryFromHome('3D')" class="p-8 border border-zinc-200 rounded-3xl bg-white shadow-sm space-y-4 cursor-pointer hover:border-zinc-950 hover:shadow-md transition">
+      <!-- Tarjetas de los 3 Pilares -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div onclick="filterCategoryFromHome('3D')" class="p-6 sm:p-8 border border-zinc-200 rounded-3xl bg-white shadow-sm space-y-4 cursor-pointer hover:border-zinc-950 hover:shadow-md transition">
           <div class="w-12 h-12 rounded-2xl bg-zinc-100 flex items-center justify-center font-bold text-base">3D</div>
           <div>
-            <h3 class="text-xl font-bold text-zinc-950">Fabricación & Piezas en Impresión 3D</h3>
-            <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed mt-1">Todas nuestras piezas físicas: figuras, organizadores, lámparas, macetas, llaveros, portalatas y accesorios en filamentos de alto rendimiento.</p>
+            <h3 class="text-xl font-bold text-zinc-950">Impresión 3D</h3>
+            <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed mt-1">Soportes, llaveros, lámparas, organizadores, macetas, portalatas y piezas técnicas en filamentos de alto rendimiento.</p>
           </div>
-          <span class="text-xs font-bold text-zinc-950 underline flex items-center gap-1">Ver catálogo de piezas 3D &rarr;</span>
+          <span class="text-xs font-bold text-zinc-950 underline flex items-center gap-1">Ver piezas 3D &rarr;</span>
         </div>
 
-        <div onclick="filterCategoryFromHome('Web')" class="p-8 border border-zinc-200 rounded-3xl bg-white shadow-sm space-y-4 cursor-pointer hover:border-zinc-950 hover:shadow-md transition">
+        <div onclick="filterCategoryFromHome('Coleccionables')" class="p-6 sm:p-8 border border-zinc-200 rounded-3xl bg-white shadow-sm space-y-4 cursor-pointer hover:border-zinc-950 hover:shadow-md transition">
+          <div class="w-12 h-12 rounded-2xl bg-zinc-100 flex items-center justify-center font-bold text-base">★</div>
+          <div>
+            <h3 class="text-xl font-bold text-zinc-950">Coleccionables</h3>
+            <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed mt-1">Figuras coleccionables, bases exhibidoras, dioramas temáticos y artículos de cultura pop para fanáticos y coleccionistas.</p>
+          </div>
+          <span class="text-xs font-bold text-zinc-950 underline flex items-center gap-1">Ver coleccionables &rarr;</span>
+        </div>
+
+        <div onclick="filterCategoryFromHome('Web')" class="p-6 sm:p-8 border border-zinc-200 rounded-3xl bg-white shadow-sm space-y-4 cursor-pointer hover:border-zinc-950 hover:shadow-md transition">
           <div class="w-12 h-12 rounded-2xl bg-zinc-100 flex items-center justify-center font-bold text-base">&lt;/&gt;</div>
           <div>
-            <h3 class="text-xl font-bold text-zinc-950">Desarrollo Web & Tiendas Online</h3>
-            <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed mt-1">Sitios web rápidos, tiendas virtuales autogestionables, integración con pasarelas de pago y presencia digital para tu negocio.</p>
+            <h3 class="text-xl font-bold text-zinc-950">Desarrollo Web & Tiendas</h3>
+            <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed mt-1">Sitios web rápidos, landing pages y tiendas virtuales con catálogo autogestionable y pasarelas de pago (sin costo de envío).</p>
           </div>
           <span class="text-xs font-bold text-zinc-950 underline flex items-center gap-1">Ver soluciones web &rarr;</span>
         </div>
@@ -212,7 +221,7 @@
       <div class="max-w-xl mx-auto border border-zinc-200 p-6 sm:p-8 rounded-2xl bg-white space-y-5 shadow-sm">
         <div>
           <h2 class="text-xl sm:text-2xl font-bold">Contáctanos</h2>
-          <p class="text-xs sm:text-sm text-zinc-500">Envíanos tu consulta sobre cotizaciones 3D o diseño de tu tienda web.</p>
+          <p class="text-xs sm:text-sm text-zinc-500">Envíanos tu consulta sobre cotizaciones 3D, coleccionables o diseño web.</p>
         </div>
         <form class="space-y-4" onsubmit="event.preventDefault(); alert('Mensaje recibido. Nos pondremos en contacto contigo.'); this.reset();">
           <div>
@@ -232,32 +241,31 @@
       </div>
     </section>
 
-    <!-- SECCIÓN 4: CATÁLOGO Y TIENDA (TODO EN IMPRESIÓN 3D + WEB) -->
+    <!-- SECCIÓN 4: CATÁLOGO Y TIENDA (LOS 3 PILARES Y SUBCATEGORÍAS) -->
     <section id="sec-catalogo" class="hidden space-y-6">
       
       <!-- Encabezado y Buscador -->
       <div class="flex flex-col md:flex-row justify-between md:items-end gap-4 border-b border-zinc-200 pb-5">
         <div>
           <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-950">Tienda & Catálogo Oficial</h2>
-          <p class="text-xs sm:text-sm text-zinc-500">Catálogo de piezas de fabricación 3D y servicios web. Compra con Mercado Pago y envíos por paquetería.</p>
+          <p class="text-xs sm:text-sm text-zinc-500">Piezas de Impresión 3D, Coleccionables y Servicios Web. Compra directa con Mercado Pago.</p>
         </div>
 
         <div class="w-full md:w-72">
-          <input type="text" id="cat-search" oninput="filterCatalog()" placeholder="Buscar producto o categoría..." class="w-full px-3.5 py-2 bg-white border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+          <input type="text" id="cat-search" oninput="filterCatalog()" placeholder="Buscar en el catálogo..." class="w-full px-3.5 py-2 bg-white border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
         </div>
       </div>
 
-      <!-- NIVEL 1: FILTROS PRINCIPALES -->
+      <!-- NIVEL 1: FILTROS PRINCIPALES (LOS 3 PILARES) -->
       <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
         <button type="button" onclick="setMacroFilter('all')" id="btn-macro-all" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap bg-zinc-950 text-white shadow-sm">Todos los Productos</button>
-        <button type="button" onclick="setMacroFilter('3D')" id="btn-macro-3d" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Piezas Impresión 3D</button>
+        <button type="button" onclick="setMacroFilter('3D')" id="btn-macro-3d" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Impresión 3D</button>
+        <button type="button" onclick="setMacroFilter('Coleccionables')" id="btn-macro-col" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Coleccionables</button>
         <button type="button" onclick="setMacroFilter('Web')" id="btn-macro-web" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Desarrollo Web & Tiendas</button>
       </div>
 
-      <!-- NIVEL 2: CATEGORÍAS REALES DE IMPRESIÓN 3D (CHIPS DESLIZABLES) -->
-      <div class="flex items-center gap-2 overflow-x-auto pb-2 pt-1 border-t border-zinc-100 scrollbar-none" id="subcategories-bar">
-        <!-- Renderizado dinámico de las 12 categorías reales de Impresión 3D -->
-      </div>
+      <!-- NIVEL 2: SUBCATEGORÍAS DINÁMICAS (CHIPS DESLIZABLES) -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 pt-1 border-t border-zinc-100 scrollbar-none" id="subcategories-bar"></div>
 
       <!-- Contenedor Dinámico con Productos Agrupados -->
       <div id="catalog-container" class="space-y-10"></div>
@@ -509,13 +517,19 @@
             </div>
 
             <div>
-              <label class="block text-xs font-semibold text-zinc-600 mb-1">Categoría de Impresión 3D</label>
+              <label class="block text-xs font-semibold text-zinc-600 mb-1">Categoría / Pilar</label>
               <select id="adm-p-category" onchange="toggleShippingFields(this.value)" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
-                <optgroup label="Piezas de Impresión 3D">
-                  <option value="Figuras y Mas">Figuras y Mas</option>
-                  <option value="Videojuegos y Juegos de Mesa">Videojuegos y Juegos de Mesa</option>
+                <optgroup label="Pilar: Coleccionables">
+                  <option value="Coleccionables">Coleccionables (General)</option>
+                  <option value="Figuras y Mas">Figuras y Mas (Coleccionables)</option>
+                  <option value="Dioramas y Bases">Dioramas y Bases</option>
+                  <option value="TCG y Cartas">TCG y Cartas</option>
+                </optgroup>
+                <optgroup label="Pilar: Impresión 3D">
+                  <option value="Impresión 3D">Impresión 3D (General)</option>
                   <option value="Posavasos, Platos y Portalatas">Posavasos, Platos y Portalatas</option>
                   <option value="Llaveros y Portallaveros">Llaveros y Portallaveros</option>
+                  <option value="Videojuegos y Juegos de Mesa">Videojuegos y Juegos de Mesa</option>
                   <option value="Estuches y Alcancias">Estuches y Alcancias</option>
                   <option value="Exhibidores y Joyeros">Exhibidores y Joyeros</option>
                   <option value="Separadores y Accesorios para Libros">Separadores y Accesorios para Libros</option>
@@ -525,7 +539,7 @@
                   <option value="Equipos y Deportes">Equipos y Deportes</option>
                   <option value="Jaboneras y Bandejas">Jaboneras y Bandejas</option>
                 </optgroup>
-                <optgroup label="Servicios Digitales">
+                <optgroup label="Pilar: Servicios Digitales">
                   <option value="Desarrollo Web">Desarrollo Web (Sin Envío)</option>
                 </optgroup>
               </select>
@@ -594,7 +608,7 @@
                 <tr>
                   <th class="py-2.5">Foto</th>
                   <th class="py-2.5">Producto</th>
-                  <th class="py-2.5">Categoría (3D)</th>
+                  <th class="py-2.5">Pilar / Categoría</th>
                   <th class="py-2.5">Peso / Medidas</th>
                   <th class="py-2.5">Precio ($)</th>
                   <th class="py-2.5">Costo ($)</th>
@@ -689,7 +703,7 @@
               <input type="text" id="order-customer-name" required class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
             </div>
             <div>
-              <label class="block font-semibold text-zinc-600 mb-1">Correo Electrónico</label>
+              <label class="block font-semibold text-zinc-600 mb-1">Correo Electrónico (Para confirmación)</label>
               <input type="email" id="order-customer-email" required class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
             </div>
             <div>
@@ -698,8 +712,9 @@
             </div>
           </div>
 
+          <!-- Formulario Dirección de Entrega (SOLO SI HAY PRODUCTOS FÍSICOS) -->
           <div id="checkout-address-section" class="bg-zinc-50 border border-zinc-200 rounded-xl p-3.5 space-y-3 text-xs">
-            <span class="font-bold text-zinc-900 uppercase block border-b border-zinc-200 pb-2">Dirección Completa de Entrega</span>
+            <span class="font-bold text-zinc-900 uppercase block border-b border-zinc-200 pb-2">Dirección Completa de Entrega (Paquetería)</span>
             <div>
               <label class="block font-semibold text-zinc-600 mb-1">Calle y Número (Ext e Int)</label>
               <input type="text" id="order-address" placeholder="Ej. Av. Siempre Viva 742, Depto 3B" required class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
@@ -733,6 +748,8 @@
 
         <!-- Footer / Checkout y Acciones -->
         <div class="p-5 border-t border-zinc-200 bg-zinc-50 space-y-3">
+          
+          <!-- Cotizador Skydropx (SOLO VISIBLE SI HAY PRODUCTOS FÍSICOS) -->
           <div id="shipping-calculator-box" class="space-y-2">
             <div class="flex justify-between items-center">
               <label class="text-xs font-bold text-zinc-700 uppercase">Cotizar Envío (Skydropx)</label>
@@ -745,9 +762,10 @@
             <div id="shipping-options-list" class="space-y-1.5 pt-1 hidden"></div>
           </div>
 
+          <!-- Resumen de Costos -->
           <div class="space-y-1.5 text-xs text-zinc-600 border-t border-zinc-200 pt-3">
             <div class="flex justify-between">
-              <span>Subtotal Productos</span>
+              <span>Subtotal Productos / Servicios</span>
               <span class="font-semibold text-zinc-900" id="cart-subtotal">$0 MXN</span>
             </div>
             <div class="flex justify-between">
@@ -813,14 +831,27 @@
       }
     } catch(e){}
 
-    // Catálogo con persistencia
+    // -------------------------------------------------------------
+    // MAPEO OFICIAL DE MACRO-CATEGORÍAS Y PILARES
+    // -------------------------------------------------------------
+    function getMacroCategory(category) {
+      if (category === 'Desarrollo Web') return 'Web';
+      if (category === 'Coleccionables' || category === 'Dioramas y Bases' || category === 'TCG y Cartas') return 'Coleccionables';
+      // Todas las demás ramas (las 12 del CSV y generales) pertenecen a Impresión 3D
+      return '3D';
+    }
+
+    // Catálogo inicial con los 3 pilares
     var catalogItems = [
+      // 1. Impresión 3D
       { id: "p1", title: "Soporte Articulado para Escritorio", description: "Impresión en PETG de alta resistencia.", price: 290, cost: 95, category: "Llaveros y Portallaveros", weight: 0.4, length: 15, width: 15, height: 10, image_url: "", badge: "Impresión 3D" },
       { id: "p2", title: "Organizador Modular de Herramientas", description: "Bandejas encastrables con ranuras.", price: 340, cost: 110, category: "Estuches y Alcancias", weight: 0.6, length: 20, width: 15, height: 12, image_url: "", badge: "Impresión 3D" },
-      { id: "p3", title: "Diorama Exhibidor Pop", description: "Base modular para figuras impresas en 3D.", price: 420, cost: 180, category: "Exhibidores y Joyeros", weight: 1.2, length: 25, width: 25, height: 20, image_url: "", badge: "Impresión 3D" },
-      { id: "p4", title: "Marco Exhibidor para Cartas TCG", description: "Caja rígida impresa en 3D.", price: 260, cost: 80, category: "Videojuegos y Juegos de Mesa", weight: 0.3, length: 15, width: 10, height: 5, image_url: "", badge: "Impresión 3D" },
-      { id: "p5", title: "Landing Page para Emprendedores", description: "Diseño minimalista ultra rápido.", price: 3200, cost: 500, category: "Desarrollo Web", weight: 0, length: 0, width: 0, height: 0, image_url: "", badge: "Servicio Digital" },
-      { id: "p6", title: "Tienda Online E-commerce", description: "Catálogo autogestionable y cobros.", price: 6500, cost: 1200, category: "Desarrollo Web", weight: 0, length: 0, width: 0, height: 0, image_url: "", badge: "Servicio Digital" }
+      // 2. Coleccionables
+      { id: "p3", title: "Diorama Exhibidor Edición Especial", description: "Base modular temática para figuras coleccionables.", price: 420, cost: 180, category: "Coleccionables", weight: 1.2, length: 25, width: 25, height: 20, image_url: "", badge: "Coleccionables" },
+      { id: "p4", title: "Marco Exhibidor para Cartas TCG", description: "Caja rígida con protección UV para coleccionistas.", price: 260, cost: 80, category: "Coleccionables", weight: 0.3, length: 15, width: 10, height: 5, image_url: "", badge: "Coleccionables" },
+      // 3. Desarrollo Web (Servicio Digital - Sin Envío)
+      { id: "p5", title: "Landing Page para Emprendedores", description: "Diseño minimalista ultra rápido responsivo y optimizado.", price: 3200, cost: 500, category: "Desarrollo Web", weight: 0, length: 0, width: 0, height: 0, image_url: "", badge: "Servicio Digital" },
+      { id: "p6", title: "Tienda Online E-commerce", description: "Catálogo autogestionable y cobros con Mercado Pago.", price: 6500, cost: 1200, category: "Desarrollo Web", weight: 0, length: 0, width: 0, height: 0, image_url: "", badge: "Servicio Digital" }
     ];
 
     try {
@@ -835,8 +866,8 @@
     } catch(e){}
 
     var selectedShippingRate = null;
-    var currentMacroFilter = 'all'; // 'all', '3D', 'Web'
-    var currentSubFilter = 'all';   // 'all' o subcategoría específica
+    var currentMacroFilter = 'all'; // 'all', '3D', 'Coleccionables', 'Web'
+    var currentSubFilter = 'all';   // 'all' o categoría específica
 
     function getSession() {
       try {
@@ -864,6 +895,8 @@
       var product = catalogItems.find(function(p){ return p.id === productId; });
       if (!product) return;
 
+      var isWeb = product.category === 'Desarrollo Web';
+
       var existing = cart.find(function(i){ return i.id === productId; });
       if (existing) {
         existing.quantity = (existing.quantity || 1) + 1;
@@ -874,10 +907,10 @@
           price: parseFloat(product.price),
           category: product.category,
           image_url: product.image_url || '',
-          weight: parseFloat(product.weight || 0.5),
-          length: parseFloat(product.length || 15),
-          width: parseFloat(product.width || 15),
-          height: parseFloat(product.height || 10),
+          weight: isWeb ? 0 : parseFloat(product.weight || 0.5),
+          length: isWeb ? 0 : parseFloat(product.length || 15),
+          width: isWeb ? 0 : parseFloat(product.width || 15),
+          height: isWeb ? 0 : parseFloat(product.height || 10),
           quantity: 1
         });
       }
@@ -898,6 +931,7 @@
       saveCart(cart.filter(function(i){ return i.id !== productId; }));
     };
 
+    // REGLA CLAVE DE ENVÍO: DESARROLLO WEB NUNCA COTIZA NI COBRA ENVÍO
     function updateCartUI() {
       var count = cart.reduce(function(acc, i){ return acc + (i.quantity || 1); }, 0);
       var subtotal = cart.reduce(function(acc, i){ return acc + (i.price * (i.quantity || 1)); }, 0);
@@ -927,16 +961,39 @@
         goToCartStep(1);
       } else {
         container.innerHTML = cart.map(function(item){
-          var img = item.image_url ? '<img src="' + item.image_url + '" class="w-12 h-12 rounded-lg object-cover border border-zinc-200">' : '<div class="w-12 h-12 bg-zinc-100 rounded-lg flex items-center justify-center font-bold text-xs text-zinc-400">3D</div>';
-          return '<div class="flex items-center justify-between gap-3 border-b border-zinc-100 pb-3"><div class="flex items-center gap-3">' + img + '<div><h4 class="text-xs font-bold text-zinc-900 leading-snug line-clamp-1">' + item.title + '</h4><span class="text-xs font-bold text-zinc-950">$' + item.price.toLocaleString() + ' MXN</span></div></div><div class="flex items-center gap-2"><div class="flex items-center border border-zinc-200 rounded-lg"><button onclick="changeQuantity(\'' + item.id + '\', -1)" class="px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-100">-</button><span class="px-2 text-xs font-bold">' + item.quantity + '</span><button onclick="changeQuantity(\'' + item.id + '\', 1)" class="px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-100">+</button></div><button onclick="removeFromCart(\'' + item.id + '\')" class="text-zinc-400 hover:text-rose-600 text-sm font-bold ml-1">&times;</button></div></div>';
+          var isWeb = item.category === 'Desarrollo Web';
+          var placeholderText = isWeb ? '</>' : (getMacroCategory(item.category) === 'Coleccionables' ? '★' : '3D');
+          var img = item.image_url ? '<img src="' + item.image_url + '" class="w-12 h-12 rounded-lg object-cover border border-zinc-200">' : '<div class="w-12 h-12 bg-zinc-100 rounded-lg flex items-center justify-center font-bold text-xs text-zinc-400">' + placeholderText + '</div>';
+          
+          return '<div class="flex items-center justify-between gap-3 border-b border-zinc-100 pb-3">' +
+                 '<div class="flex items-center gap-3">' + img + 
+                 '<div><h4 class="text-xs font-bold text-zinc-900 leading-snug line-clamp-1">' + item.title + '</h4>' +
+                 '<span class="text-xs font-bold text-zinc-950">$' + item.price.toLocaleString() + ' MXN</span>' +
+                 (isWeb ? '<span class="text-[10px] text-emerald-600 font-semibold block">Servicio Digital (Sin Envío)</span>' : '') +
+                 '</div></div>' +
+                 '<div class="flex items-center gap-2"><div class="flex items-center border border-zinc-200 rounded-lg">' +
+                 '<button onclick="changeQuantity(\'' + item.id + '\', -1)" class="px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-100">-</button>' +
+                 '<span class="px-2 text-xs font-bold">' + item.quantity + '</span>' +
+                 '<button onclick="changeQuantity(\'' + item.id + '\', 1)" class="px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-100">+</button>' +
+                 '</div><button onclick="removeFromCart(\'' + item.id + '\')" class="text-zinc-400 hover:text-rose-600 text-sm font-bold ml-1">&times;</button></div></div>';
         }).join('');
       }
 
+      // Detectar si hay artículos físicos que requieran paquetería
       var hasPhysical = cart.some(function(i){ return i.category !== 'Desarrollo Web'; });
-      var shippingBox = document.getElementById('shipping-calculator-box');
-      if (shippingBox) shippingBox.classList.toggle('hidden', !hasPhysical || cart.length === 0);
 
-      var shippingCost = hasPhysical && selectedShippingRate ? selectedShippingRate.cost : 0;
+      // Ocultar completamente el cotizador si solo hay desarrollo web
+      var shippingBox = document.getElementById('shipping-calculator-box');
+      if (shippingBox) {
+        shippingBox.classList.toggle('hidden', !hasPhysical || cart.length === 0);
+      }
+
+      // Si no hay productos físicos, el costo de envío es estrictamente 0
+      var shippingCost = 0;
+      if (hasPhysical && selectedShippingRate) {
+        shippingCost = selectedShippingRate.cost;
+      }
+
       var total = subtotal + shippingCost;
 
       var subLabel = document.getElementById('cart-subtotal');
@@ -944,7 +1001,17 @@
       var totLabel = document.getElementById('cart-total');
 
       if (subLabel) subLabel.innerText = '$' + subtotal.toLocaleString() + ' MXN';
-      if (shipLabel) shipLabel.innerText = shippingCost > 0 ? '$' + shippingCost.toLocaleString() + ' MXN' : (hasPhysical ? 'Pendiente' : '$0 MXN (Digital)');
+      if (shipLabel) {
+        if (!hasPhysical && cart.length > 0) {
+          shipLabel.innerText = '$0 MXN (Servicio Digital)';
+        } else if (hasPhysical && selectedShippingRate) {
+          shipLabel.innerText = '$' + shippingCost.toLocaleString() + ' MXN';
+        } else if (hasPhysical) {
+          shipLabel.innerText = 'Pendiente de cotizar';
+        } else {
+          shipLabel.innerText = '$0 MXN';
+        }
+      }
       if (totLabel) totLabel.innerText = '$' + total.toLocaleString() + ' MXN';
 
       var sess = getSession();
@@ -996,12 +1063,14 @@
       }
 
       var hasPhysical = cart.some(function(i){ return i.category !== 'Desarrollo Web'; });
+      
+      // Si hay productos físicos, exigir cotización de envío
       if (hasPhysical && !selectedShippingRate) {
         var zipInput = document.getElementById('shipping-zip');
         if (zipInput && zipInput.value.trim().length === 5) {
           calculateShippingRates();
         } else {
-          alert("Por favor cotiza y selecciona una paquetería de envío con tu Código Postal.");
+          alert("Por favor cotiza y selecciona una paquetería de envío ingresando tu Código Postal.");
           if (zipInput) zipInput.focus();
           return;
         }
@@ -1017,6 +1086,7 @@
       if (phoneInp) phoneInp.value = sess.phone || '';
       if (zipInp && selectedShippingRate) zipInp.value = document.getElementById('shipping-zip')?.value || '';
 
+      // Ocultar sección de dirección de paquetería si es únicamente servicio web
       var addressSection = document.getElementById('checkout-address-section');
       if (addressSection) {
         addressSection.classList.toggle('hidden', !hasPhysical);
@@ -1084,7 +1154,7 @@
       }
     }
 
-    // FINALIZAR PEDIDO: GUARDA EN BASE DE DATOS, DISPARA AMBOS CORREOS Y GUARDA ENLACE DE PAGO
+    // FINALIZAR PEDIDO
     window.finalizeOrderAndPay = async function() {
       var sess = getSession();
       var name = document.getElementById('order-customer-name').value.trim();
@@ -1125,7 +1195,7 @@
       var subtotal = cart.reduce(function(acc, i){ return acc + (i.price * (i.quantity || 1)); }, 0);
       var shippingCost = hasPhysical && selectedShippingRate ? selectedShippingRate.cost : 0;
       var total = subtotal + shippingCost;
-      var shippingMethod = selectedShippingRate ? (selectedShippingRate.provider + ' (' + selectedShippingRate.service + ')') : 'Entrega Digital';
+      var shippingMethod = hasPhysical ? (selectedShippingRate ? (selectedShippingRate.provider + ' (' + selectedShippingRate.service + ')') : 'Paquetería') : 'Entrega Digital (Sin Envío)';
       var itemsText = cart.map(function(i){ return '- ' + i.quantity + 'x ' + i.title + ' ($' + (i.price * i.quantity).toLocaleString() + ' MXN)'; }).join('\n');
 
       var checkoutUrl = await createMercadoPagoCheckout(orderId, cart, shippingCost, { name: name, email: email, phone: phone });
@@ -1137,7 +1207,7 @@
         customer_email: email,
         customer_phone: phone,
         shipping_address: address,
-        shipping_city: colonia + ', ' + city,
+        shipping_city: colonia ? (colonia + ', ' + city) : 'Digital',
         shipping_zip: zip,
         shipping_notes: notes,
         shipping_method: shippingMethod,
@@ -1172,7 +1242,7 @@
           customer_phone: phone,
           to_email: email,
           shipping_address: address,
-          shipping_city: colonia + ', ' + city,
+          shipping_city: colonia ? (colonia + ', ' + city) : 'Digital',
           shipping_zip: zip,
           shipping_notes: notes,
           shipping_method: shippingMethod,
@@ -1222,7 +1292,6 @@
       }
     };
 
-    // REANUDAR PAGO PENDIENTE DE MERCADO PAGO
     window.resumeOrderPayment = async function(orderId) {
       var allOrders = [];
       try { allOrders = JSON.parse(localStorage.getItem('five_friends_orders')) || []; } catch(e){}
@@ -1258,7 +1327,7 @@
       }
     };
 
-    // COTIZADOR SKYDROPX
+    // COTIZADOR SKYDROPX (SOLO EVALÚA PRODUCTOS FÍSICOS)
     window.calculateShippingRates = async function() {
       var zip = document.getElementById('shipping-zip').value.trim();
       var btn = document.getElementById('btn-calc-shipping');
@@ -1269,11 +1338,18 @@
         return;
       }
 
+      // Solo productos físicos suman peso y volumen
+      var physicalItems = cart.filter(function(i){ return i.category !== 'Desarrollo Web'; });
+      if (physicalItems.length === 0) {
+        alert("Tu carrito solo contiene servicios digitales. No requieren paquetería de envío.");
+        return;
+      }
+
       btn.innerText = "...";
       btn.disabled = true;
 
-      var totalWeight = cart.reduce(function(acc, i){ return acc + (parseFloat(i.weight || 0.5) * (i.quantity || 1)); }, 0);
-      var maxDim = cart.reduce(function(max, i){ return Math.max(max, parseFloat(i.length || 15), parseFloat(i.width || 15), parseFloat(i.height || 10)); }, 15);
+      var totalWeight = physicalItems.reduce(function(acc, i){ return acc + (parseFloat(i.weight || 0.5) * (i.quantity || 1)); }, 0);
+      var maxDim = physicalItems.reduce(function(max, i){ return Math.max(max, parseFloat(i.length || 15), parseFloat(i.width || 15), parseFloat(i.height || 10)); }, 15);
 
       try {
         var response = await fetch('/api/cotizar', {
@@ -1318,7 +1394,7 @@
     };
 
     // -------------------------------------------------------------
-    // GESTIÓN DE FILTROS: TODOS, IMPRESIÓN 3D Y DESARROLLO WEB
+    // GESTIÓN DE FILTROS: TODOS, IMPRESIÓN 3D, COLECCIONABLES Y WEB
     // -------------------------------------------------------------
     window.filterCategoryFromHome = function(macro) {
       navigate('catalogo');
@@ -1332,6 +1408,7 @@
       var mapping = {
         'all': 'btn-macro-all',
         '3D': 'btn-macro-3d',
+        'Coleccionables': 'btn-macro-col',
         'Web': 'btn-macro-web'
       };
 
@@ -1357,17 +1434,22 @@
       var bar = document.getElementById('subcategories-bar');
       if (!bar) return;
 
-      // Si se selecciona únicamente "Web", ocultar las ramas físicas de 3D
+      // Si se selecciona "Web", no hay subcategorías físicas que mostrar
       if (currentMacroFilter === 'Web') {
         bar.classList.add('hidden');
         return;
       }
 
-      // Obtener todas las categorías reales de Impresión 3D
+      // Obtener categorías presentes según el Macro-Filtro seleccionado
       var availableSubs = [];
       catalogItems.forEach(function(item) {
-        if (item.category && item.category !== 'Desarrollo Web' && !availableSubs.includes(item.category)) {
-          availableSubs.push(item.category);
+        if (item.category && item.category !== 'Desarrollo Web') {
+          var itemMacro = getMacroCategory(item.category);
+          if (currentMacroFilter === 'all' || currentMacroFilter === itemMacro) {
+            if (!availableSubs.includes(item.category)) {
+              availableSubs.push(item.category);
+            }
+          }
         }
       });
 
@@ -1377,8 +1459,10 @@
       }
       bar.classList.remove('hidden');
 
+      var labelText = currentMacroFilter === '3D' ? 'Todas las ramas 3D' : (currentMacroFilter === 'Coleccionables' ? 'Todos los coleccionables' : 'Todas las categorías');
+
       var html = '<button type="button" onclick="setSubcategoryFilter(\'all\')" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition ' + 
-        (currentSubFilter === 'all' ? 'bg-zinc-800 text-white shadow-sm' : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200') + '">Todas las piezas 3D (' + availableSubs.length + ' categorías)</button>';
+        (currentSubFilter === 'all' ? 'bg-zinc-800 text-white shadow-sm' : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200') + '">' + labelText + ' (' + availableSubs.length + ')</button>';
 
       availableSubs.forEach(function(sub){
         var isSelected = currentSubFilter === sub;
@@ -1421,25 +1505,22 @@
       reader.readAsDataURL(file);
     };
 
-    // RENDERIZADO DEL CATÁLOGO AGRUPADO Y FILTRADO
+    // RENDERIZADO DEL CATÁLOGO
     function renderCatalog() {
       var container = document.getElementById('catalog-container');
       if (!container) return;
       var searchQuery = (document.getElementById('cat-search')?.value || '').toLowerCase();
 
       var filtered = catalogItems.filter(function(item){
-        var isWeb = item.category === 'Desarrollo Web';
-        var matchesMacro = (currentMacroFilter === 'all') || 
-                           (currentMacroFilter === 'Web' && isWeb) || 
-                           (currentMacroFilter === '3D' && !isWeb);
-
+        var itemMacro = getMacroCategory(item.category);
+        var matchesMacro = (currentMacroFilter === 'all') || (currentMacroFilter === itemMacro);
         var matchesSub = (currentSubFilter === 'all' || item.category === currentSubFilter);
         var matchesSearch = item.title.toLowerCase().indexOf(searchQuery) !== -1 || (item.description && item.description.toLowerCase().indexOf(searchQuery) !== -1) || item.category.toLowerCase().indexOf(searchQuery) !== -1;
         return matchesMacro && matchesSub && matchesSearch;
       });
 
       if (filtered.length === 0) {
-        container.innerHTML = '<div class="text-center py-16 bg-white border border-zinc-200 rounded-2xl p-8"><h4 class="text-base font-bold text-zinc-800">No encontramos coincidencias</h4><p class="text-xs text-zinc-500">Prueba con otro término de búsqueda o selecciona otra categoría de impresión 3D.</p></div>';
+        container.innerHTML = '<div class="text-center py-16 bg-white border border-zinc-200 rounded-2xl p-8"><h4 class="text-base font-bold text-zinc-800">No hay productos en esta sección</h4><p class="text-xs text-zinc-500">Pronto agregaremos nuevas piezas. Puedes explorar las demás categorías.</p></div>';
         return;
       }
 
@@ -1454,27 +1535,31 @@
         var group = filtered.filter(function(i){ return i.category === cat; });
         if (group.length === 0) return;
 
-        var isWeb = cat === 'Desarrollo Web';
-        var icon = isWeb ? '</>' : '3D';
+        var macro = getMacroCategory(cat);
+        var icon = macro === '3D' ? '3D' : (macro === 'Coleccionables' ? '★' : '</>');
+        var subtitle = macro === 'Web' ? 'Servicio Digital (Sin costo de envío)' : (macro === 'Coleccionables' ? 'Ediciones de Colección & Accesorios' : 'Piezas en manufactura aditiva 3D');
 
         html += '<div class="space-y-4">';
         html += '<div class="flex items-center justify-between pb-2 border-b border-zinc-200">';
         html += '  <div class="flex items-center gap-2.5">';
         html += '    <span class="w-7 h-7 rounded-lg bg-zinc-950 text-white flex items-center justify-center text-xs font-bold">' + icon + '</span>';
-        html += '    <div><h3 class="font-extrabold text-lg text-zinc-950 leading-tight">' + cat + '</h3><span class="text-xs text-zinc-500">' + (isWeb ? 'Servicios de desarrollo' : 'Piezas en manufactura aditiva') + ' (' + group.length + ')</span></div>';
+        html += '    <div><h3 class="font-extrabold text-lg text-zinc-950 leading-tight">' + cat + '</h3><span class="text-xs text-zinc-500">' + subtitle + ' (' + group.length + ')</span></div>';
         html += '  </div>';
         html += '</div>';
 
         html += '<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">';
 
         group.forEach(function(p){
+          var isWeb = p.category === 'Desarrollo Web';
           var img = p.image_url 
             ? '<div class="w-full h-44 rounded-xl overflow-hidden bg-zinc-100 mb-3 border border-zinc-100"><img src="' + p.image_url + '" class="w-full h-full object-cover"></div>' 
             : '<div class="w-full h-24 rounded-xl bg-zinc-100/70 mb-3 border border-dashed border-zinc-200 flex items-center justify-center text-zinc-400 text-xs font-semibold">' + icon + ' ' + p.category + '</div>';
 
+          var badgeColor = isWeb ? 'bg-emerald-50 text-emerald-700' : (macro === 'Coleccionables' ? 'bg-amber-50 text-amber-700' : 'bg-zinc-100 text-zinc-600');
+
           html += '<div class="border border-zinc-200 bg-white p-5 rounded-2xl flex flex-col justify-between space-y-3 shadow-sm hover:border-zinc-400 transition">';
           html += '  <div>' + img;
-          html += '    <span class="text-[10px] uppercase font-bold px-2 py-0.5 bg-zinc-100 rounded text-zinc-600 inline-block mb-1.5">' + (p.badge || 'Impresión 3D') + '</span>';
+          html += '    <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded inline-block mb-1.5 ' + badgeColor + '">' + (p.badge || p.category) + '</span>';
           html += '    <h4 class="font-bold text-base text-zinc-950 leading-snug">' + p.title + '</h4>';
           html += '    <p class="text-xs text-zinc-500 leading-relaxed mt-1 line-clamp-2">' + (p.description || '') + '</p>';
           html += '  </div>';
@@ -1501,18 +1586,20 @@
       if (countLabel) countLabel.innerText = catalogItems.length + ' productos';
 
       table.innerHTML = catalogItems.map(function(p){
-        var thumb = p.image_url ? '<img src="' + p.image_url + '" class="w-9 h-9 object-cover rounded-lg border border-zinc-200">' : '<div class="w-9 h-9 rounded-lg bg-zinc-100 border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-500">3D</div>';
-        return '<tr class="hover:bg-zinc-50 transition"><td class="py-2.5">' + thumb + '</td><td class="py-2.5 font-semibold text-zinc-900">' + p.title + '</td><td class="py-2.5 text-zinc-600 font-medium">' + p.category + '</td><td class="py-2.5 text-zinc-500 font-mono text-[11px]">' + (p.category === 'Desarrollo Web' ? 'Digital' : (p.weight || 0.5) + 'kg (' + (p.length || 15) + 'x' + (p.width || 15) + 'x' + (p.height || 10) + 'cm)') + '</td><td class="py-2.5 font-bold text-zinc-950">$' + Number(p.price).toLocaleString() + '</td><td class="py-2.5 font-bold text-zinc-500">$' + Number(p.cost || 0).toLocaleString() + '</td><td class="py-2.5 text-right whitespace-nowrap"><button onclick="editProduct(\'' + p.id + '\')" class="px-2.5 py-1 text-xs font-semibold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-lg mr-1">Editar</button><button onclick="deleteProduct(\'' + p.id + '\')" class="px-2.5 py-1 text-xs font-semibold bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg">Eliminar</button></td></tr>';
+        var macro = getMacroCategory(p.category);
+        var icon = macro === '3D' ? '3D' : (macro === 'Coleccionables' ? '★' : '</>');
+        var thumb = p.image_url ? '<img src="' + p.image_url + '" class="w-9 h-9 object-cover rounded-lg border border-zinc-200">' : '<div class="w-9 h-9 rounded-lg bg-zinc-100 border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-500">' + icon + '</div>';
+        return '<tr class="hover:bg-zinc-50 transition"><td class="py-2.5">' + thumb + '</td><td class="py-2.5 font-semibold text-zinc-900">' + p.title + '</td><td class="py-2.5 text-zinc-600 font-medium"><span class="px-1.5 py-0.5 rounded bg-zinc-100 text-[10px] uppercase font-bold text-zinc-500 mr-1">' + macro + '</span>' + p.category + '</td><td class="py-2.5 text-zinc-500 font-mono text-[11px]">' + (p.category === 'Desarrollo Web' ? 'Digital' : (p.weight || 0.5) + 'kg (' + (p.length || 15) + 'x' + (p.width || 15) + 'x' + (p.height || 10) + 'cm)') + '</td><td class="py-2.5 font-bold text-zinc-950">$' + Number(p.price).toLocaleString() + '</td><td class="py-2.5 font-bold text-zinc-500">$' + Number(p.cost || 0).toLocaleString() + '</td><td class="py-2.5 text-right whitespace-nowrap"><button onclick="editProduct(\'' + p.id + '\')" class="px-2.5 py-1 text-xs font-semibold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-lg mr-1">Editar</button><button onclick="deleteProduct(\'' + p.id + '\')" class="px-2.5 py-1 text-xs font-semibold bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg">Eliminar</button></td></tr>';
       }).join('');
     }
 
     // -------------------------------------------------------------
-    // IMPORTACIÓN MASIVA COMPATIBLE CON MERCADO PAGO PUNTO DE VENTA (100% IMPRESIÓN 3D)
+    // IMPORTACIÓN MASIVA COMPATIBLE CON MERCADO PAGO PUNTO DE VENTA
     // -------------------------------------------------------------
     window.downloadCSVTemplate = function() {
       var csvContent = "data:text/csv;charset=utf-8,Titulo,Precio,Costo,Categoria,Descripcion,Imagen\n" +
         "Separador Samurai,90,33,Separadores y Accesorios para Libros,Impreso en PLA técnico,https://ejemplo.com/foto1.jpg\n" +
-        "Rincón De Libros Luffy,235,92,Separadores y Accesorios para Libros,Base sujetalibros decorativa,https://ejemplo.com/foto2.jpg\n" +
+        "Figura Dragón Shenlong,480,190,Coleccionables,Figura detallada para coleccionistas,https://ejemplo.com/foto2.jpg\n" +
         "Servilletero Hoja,195,117,Posavasos, Platos y Portalatas,Diseño botánico minimalista,\n" +
         "Sitio Web Tienda,5500,1000,Desarrollo Web,Tienda en línea completa,";
       
@@ -1559,7 +1646,6 @@
         var colCostIdx = -1;
         var colCatIdx = -1;
 
-        // 1. Detectar la fila de encabezados reales de Mercado Pago o genéricos
         for (var r = 0; r < Math.min(lines.length, 10); r++) {
           var parsed = parseCSVLine(lines[r]);
           for (var c = 0; c < parsed.length; c++) {
@@ -1589,7 +1675,6 @@
         var importedCount = 0;
         var newCatalog = [];
 
-        // 2. Extraer cada producto
         for (var i = headerRowIndex + 1; i < lines.length; i++) {
           var rawLine = lines[i].trim();
           if (!rawLine) continue;
@@ -1605,30 +1690,30 @@
 
           var rawCost = (colCostIdx !== -1 && cols[colCostIdx]) ? cols[colCostIdx].replace(/[$,]/g, '').trim() : '';
           var cost = parseFloat(rawCost) || Math.round(price * 0.4);
-          var rawCat = (colCatIdx !== -1 && cols[colCatIdx]) ? cols[colCatIdx].trim() : 'Figuras y Mas';
+          var rawCat = (colCatIdx !== -1 && cols[colCatIdx]) ? cols[colCatIdx].trim() : 'Impresión 3D';
 
           newCatalog.push({
             id: 'prod_mp_' + Date.now() + '_' + i,
             title: title,
             price: price,
             cost: cost,
-            category: rawCat || 'Figuras y Mas', // Categoría real de 3D
+            category: rawCat || 'Impresión 3D',
             weight: 0.5,
             length: 15,
             width: 15,
             height: 10,
             image_url: '',
-            description: 'Pieza fabricada en impresión 3D de alta precisión.',
-            badge: 'Impresión 3D'
+            description: 'Producto registrado desde Mercado Pago.',
+            badge: 'Disponible'
           });
           importedCount++;
         }
 
         if (importedCount > 0) {
-          var webItems = catalogItems.filter(function(i){ return i.category === 'Desarrollo Web'; });
-          catalogItems = newCatalog.concat(webItems);
+          var webAndCustom = catalogItems.filter(function(i){ return i.category === 'Desarrollo Web' || i.category === 'Coleccionables'; });
+          catalogItems = newCatalog.concat(webAndCustom);
           saveCatalog(catalogItems);
-          alert('✓ ¡Éxito! Se han importado ' + importedCount + ' piezas de Impresión 3D organizadas en sus 12 categorías reales.');
+          alert('✓ ¡Éxito! Se han importado ' + importedCount + ' productos de Mercado Pago.');
         } else {
           alert('No se detectaron productos válidos en las filas del archivo.');
         }
@@ -1664,7 +1749,7 @@
       }).join('');
     }
 
-    // HISTORIAL DE COMPRAS DEL CLIENTE CON BOTÓN PARA COMPLETAR PAGO
+    // HISTORIAL DE COMPRAS DEL CLIENTE
     async function renderUserOrdersTable() {
       var table = document.getElementById('user-orders-table');
       if (!table) return;
@@ -1721,15 +1806,18 @@
       var imageUrl = document.getElementById('adm-p-image-url').value.trim();
       var desc = document.getElementById('adm-p-desc').value.trim();
 
+      var macro = getMacroCategory(category);
+      var badgeText = macro === 'Web' ? 'Servicio Digital' : (macro === 'Coleccionables' ? 'Coleccionables' : 'Impresión 3D');
+
       if (id) {
         var idx = catalogItems.findIndex(function(p){ return p.id === id; });
         if (idx >= 0) {
-          catalogItems[idx] = { id: id, title: title, price: price, cost: cost, category: category, weight: weight, length: length, width: width, height: height, image_url: imageUrl, description: desc };
+          catalogItems[idx] = { id: id, title: title, price: price, cost: cost, category: category, weight: weight, length: length, width: width, height: height, image_url: imageUrl, description: desc, badge: badgeText };
           saveCatalog(catalogItems);
           alert('✓ Producto actualizado.');
         }
       } else {
-        catalogItems.unshift({ id: 'prod_' + Date.now(), title: title, price: price, cost: cost, category: category, weight: weight, length: length, width: width, height: height, image_url: imageUrl, description: desc, badge: (category === 'Desarrollo Web' ? 'Digital' : 'Impresión 3D') });
+        catalogItems.unshift({ id: 'prod_' + Date.now(), title: title, price: price, cost: cost, category: category, weight: weight, length: length, width: width, height: height, image_url: imageUrl, description: desc, badge: badgeText });
         saveCatalog(catalogItems);
         alert('✓ Producto guardado.');
       }
