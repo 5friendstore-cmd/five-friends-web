@@ -374,11 +374,14 @@
           </div>
         </div>
 
-        <!-- HISTORIAL DE COMPRAS DEL CLIENTE -->
+        <!-- HISTORIAL DE COMPRAS DEL CLIENTE CON BOTÓN PARA COMPLETAR PAGO -->
         <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm">
-          <h3 class="text-base sm:text-lg font-bold">Mis Compras & Pedidos en Tienda</h3>
+          <div class="flex justify-between items-center">
+            <h3 class="text-base sm:text-lg font-bold">Mis Compras & Pedidos en Tienda</h3>
+            <span class="text-xs text-zinc-400">Actualizado en tiempo real</span>
+          </div>
           <div class="overflow-x-auto -mx-2 sm:mx-0">
-            <table class="w-full text-left text-xs sm:text-sm min-w-[500px]">
+            <table class="w-full text-left text-xs sm:text-sm min-w-[620px]">
               <thead class="border-b border-zinc-200 text-[10px] text-zinc-400 uppercase">
                 <tr>
                   <th class="py-2.5">Folio</th>
@@ -386,7 +389,7 @@
                   <th class="py-2.5">Productos</th>
                   <th class="py-2.5">Envío</th>
                   <th class="py-2.5">Total</th>
-                  <th class="py-2.5">Estado</th>
+                  <th class="py-2.5">Estado / Acción</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-zinc-100" id="user-orders-table">
@@ -753,15 +756,11 @@
 
   <!-- SCRIPT DE DATOS Y LÓGICA DE NEGOCIO -->
   <script>
-    // -------------------------------------------------------------
     // CONFIGURACIÓN EXACTA DE EMAILJS (2 CUENTAS SEPARADAS)
-    // -------------------------------------------------------------
-    // Cuenta 1: Contraseñas Olvidadas
     const EMAILJS_PASS_PUBLIC_KEY = "k2u203TouhD3PPrZU";
     const EMAILJS_PASS_SERVICE_ID = "service_k329g2o";
     const EMAILJS_PASS_TEMPLATE_ID = "template_f9qsdal";
 
-    // Cuenta 2: Órdenes y Avisos de Compra
     const EMAILJS_ORDERS_PUBLIC_KEY = "6EJ7vQEuZeRa9HQ1o";
     const EMAILJS_ORDERS_SERVICE_ID = "service_oykr20y";
     const EMAILJS_ORDERS_TEMPLATE_ADMIN = "template_jfmj9i8";
@@ -771,7 +770,6 @@
     const MP_PUBLIC_KEY = "APP_USR-c2ecf1d6-0487-4ca6-a219-2162d6e048a1";
     const MP_ACCESS_TOKEN = "APP_USR-8740390679694896-092815-2deb03edc6e78227ae4b7e25f87e7c11-3720525449";
 
-    // Inicializar Mercado Pago
     try {
       if (window.MercadoPago) {
         window.mp = new MercadoPago(MP_PUBLIC_KEY, { locale: 'es-MX' });
@@ -1006,7 +1004,7 @@
       var mpItems = items.map(function(i){
         return {
           title: i.title,
-          quantity: Number(i.quantity),
+          quantity: Number(i.quantity || 1),
           currency_id: 'MXN',
           unit_price: Number(i.price)
         };
@@ -1060,7 +1058,7 @@
       }
     }
 
-    // FINALIZAR PEDIDO: GUARDA EN BASE DE DATOS, ENVÍA AMBOS CORREOS CON SERVICE_OYKR20Y Y ABRE MERCADO PAGO
+    // FINALIZAR PEDIDO: GUARDA EN BASE DE DATOS, DISPARA AMBOS CORREOS Y GUARDA ENLACE DE PAGO
     window.finalizeOrderAndPay = async function() {
       var sess = getSession();
       var name = document.getElementById('order-customer-name').value.trim();
@@ -1093,7 +1091,7 @@
       }
 
       var btn = document.getElementById('btn-confirm-pay');
-      btn.innerText = "Conectando con Mercado Pago y enviando correos...";
+      btn.innerText = "Conectando con Mercado Pago...";
       btn.disabled = true;
 
       var orderId = 'FF-' + Math.floor(100000 + Math.random() * 900000);
@@ -1103,6 +1101,9 @@
       var total = subtotal + shippingCost;
       var shippingMethod = selectedShippingRate ? (selectedShippingRate.provider + ' (' + selectedShippingRate.service + ')') : 'Entrega Digital';
       var itemsText = cart.map(function(i){ return '- ' + i.quantity + 'x ' + i.title + ' ($' + (i.price * i.quantity).toLocaleString() + ' MXN)'; }).join('\n');
+
+      // 1. GENERAR ENLACE EN MERCADO PAGO ANTES DE GUARDAR
+      var checkoutUrl = await createMercadoPagoCheckout(orderId, cart, shippingCost, { name: name, email: email, phone: phone });
 
       var orderRecord = {
         id: orderId,
@@ -1120,10 +1121,11 @@
         shipping_cost: shippingCost,
         total: total,
         status: 'Pendiente de Pago en Mercado Pago',
+        checkout_url: checkoutUrl || '',
         created_at: new Date().toISOString()
       };
 
-      // 1. Guardar orden en Supabase
+      // 2. Guardar orden en Supabase
       if (supabaseClient) {
         try {
           await supabaseClient.from('orders').insert([orderRecord]);
@@ -1132,13 +1134,13 @@
         }
       }
 
-      // 2. Guardar orden en LocalStorage para auditoría
+      // 3. Guardar orden en LocalStorage para auditoría
       var allOrders = [];
       try { allOrders = JSON.parse(localStorage.getItem('five_friends_orders')) || []; } catch(e){}
       allOrders.unshift(orderRecord);
       localStorage.setItem('five_friends_orders', JSON.stringify(allOrders));
 
-      // 3. ENVÍO DE AMBOS CORREOS CON LA CUENTA DE ÓRDENES (service_oykr20y + 6EJ7vQEuZeRa9HQ1o)
+      // 4. DISPARAR AMBOS CORREOS CON SERVICE_OYKR20Y
       if (window.emailjs) {
         var emailParams = {
           order_id: orderId,
@@ -1158,27 +1160,14 @@
           order_total: '$' + total.toLocaleString() + ' MXN'
         };
 
-        // Correo 1: Alerta para ti (5friendstore@gmail.com)
         emailjs.send(EMAILJS_ORDERS_SERVICE_ID, EMAILJS_ORDERS_TEMPLATE_ADMIN, emailParams, EMAILJS_ORDERS_PUBLIC_KEY)
-          .then(function(res) {
-            console.log("Email Admin recibido con éxito:", res.status);
-          })
-          .catch(function(err) {
-            console.warn("Error enviando Email Admin:", err);
-          });
+          .then(function(res) { console.log("Email Admin enviado:", res.status); })
+          .catch(function(err) { console.warn("Error Email Admin:", err); });
 
-        // Correo 2: Confirmación para el Cliente
         emailjs.send(EMAILJS_ORDERS_SERVICE_ID, EMAILJS_ORDERS_TEMPLATE_CLIENT, emailParams, EMAILJS_ORDERS_PUBLIC_KEY)
-          .then(function(res) {
-            console.log("Email Cliente recibido con éxito:", res.status);
-          })
-          .catch(function(err) {
-            console.warn("Error enviando Email Cliente:", err);
-          });
+          .then(function(res) { console.log("Email Cliente enviado:", res.status); })
+          .catch(function(err) { console.warn("Error Email Cliente:", err); });
       }
-
-      // 4. GENERAR ENLACE EN MERCADO PAGO
-      var checkoutUrl = await createMercadoPagoCheckout(orderId, cart, shippingCost, { name: name, email: email, phone: phone });
 
       // Sumar al total del usuario para su programa Club Five Friends
       if (sess) {
@@ -1200,18 +1189,55 @@
       btn.innerText = "Pagar con Mercado Pago";
       btn.disabled = false;
 
-      // 5. Redireccionar al Checkout de Mercado Pago o notificar
-      if (checkoutUrl) {
-        alert("¡Pedido registrado exitosamente (Folio: " + orderId + ")!\n\nSe han enviado los correos de confirmación. Te transferimos a la pasarela segura de Mercado Pago para realizar tu pago.");
-        window.location.href = checkoutUrl;
-      } else {
-        alert("¡Pedido registrado exitosamente (Folio: " + orderId + ")!\n\nSe han enviado los correos de confirmación al administrador y al comprador, y tu orden ha quedado guardada en tu historial.");
-      }
-
       renderUserOrdersTable();
       renderAdminOrdersTable();
       loadAdminData();
       if (sess) updateUserProgress(sess.total_spent);
+
+      // Redirigir a Mercado Pago de inmediato
+      if (checkoutUrl) {
+        alert("¡Orden registrada exitosamente con Folio: " + orderId + "!\n\nTe transferimos a la pasarela segura de Mercado Pago para realizar tu pago.");
+        window.location.href = checkoutUrl;
+      } else {
+        alert("¡Orden registrada exitosamente con Folio: " + orderId + "!\n\nPuedes pulsar en 'Completar Pago' dentro de tu historial en cualquier momento.");
+      }
+    };
+
+    // FUNCIÓN PARA COMPLETAR PAGO PENDIENTE DE UNA ORDEN
+    window.resumeOrderPayment = async function(orderId) {
+      var allOrders = [];
+      try { allOrders = JSON.parse(localStorage.getItem('five_friends_orders')) || []; } catch(e){}
+
+      var order = allOrders.find(function(o){ return o.id === orderId; });
+
+      if (order && order.checkout_url) {
+        window.location.href = order.checkout_url;
+        return;
+      }
+
+      // Si no tenía URL guardada previamente, generar una preferencia nueva de Mercado Pago al vuelo
+      if (order) {
+        var customer = {
+          name: order.customer_name || 'Cliente',
+          email: order.customer_email || '',
+          phone: order.customer_phone || ''
+        };
+        var singleItem = [{
+          title: 'Pedido ' + order.id,
+          price: Number(order.total || 0),
+          quantity: 1
+        }];
+
+        var newUrl = await createMercadoPagoCheckout(order.id, singleItem, 0, customer);
+        if (newUrl) {
+          order.checkout_url = newUrl;
+          localStorage.setItem('five_friends_orders', JSON.stringify(allOrders));
+          window.location.href = newUrl;
+        } else {
+          alert("Conectando con Mercado Pago para tu pedido " + order.id + "...");
+          window.open('https://www.mercadopago.com.mx', '_blank');
+        }
+      }
     };
 
     // COTIZADOR SKYDROPX
@@ -1394,11 +1420,11 @@
       }
 
       table.innerHTML = orders.map(function(o){
-        return '<tr class="hover:bg-zinc-50 transition"><td class="py-2.5"><span class="font-bold text-zinc-900 block">' + o.id + '</span><span class="text-[10px] text-zinc-400">' + (o.created_at ? new Date(o.created_at).toLocaleDateString('es-MX') : '') + '</span></td><td class="py-2.5"><div class="font-semibold text-zinc-900">' + (o.customer_name || 'Cliente') + '</div><div class="text-[11px] text-zinc-500">' + (o.customer_email || '') + ' | ' + (o.customer_phone || '') + '</div></td><td class="py-2.5 text-zinc-600 text-xs max-w-xs">' + (o.shipping_address || 'Entrega Digital') + ' (' + (o.shipping_city || '') + ' CP ' + (o.shipping_zip || '') + ')</td><td class="py-2.5 text-zinc-600 text-xs whitespace-pre-line">' + (o.items || '') + '</td><td class="py-2.5 text-zinc-600 text-xs font-medium">' + (o.shipping_method || 'Digital') + '</td><td class="py-2.5 font-bold text-zinc-950">$' + Number(o.total || 0).toLocaleString() + ' MXN</td><td class="py-2.5"><span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 font-semibold rounded text-[11px]">' + (o.status || 'Pagado') + '</span></td></tr>';
+        return '<tr class="hover:bg-zinc-50 transition"><td class="py-2.5"><span class="font-bold text-zinc-900 block">' + o.id + '</span><span class="text-[10px] text-zinc-400">' + (o.created_at ? new Date(o.created_at).toLocaleDateString('es-MX') : '') + '</span></td><td class="py-2.5"><div class="font-semibold text-zinc-900">' + (o.customer_name || 'Cliente') + '</div><div class="text-[11px] text-zinc-500">' + (o.customer_email || '') + ' | ' + (o.customer_phone || '') + '</div></td><td class="py-2.5 text-zinc-600 text-xs max-w-xs">' + (o.shipping_address || 'Entrega Digital') + ' (' + (o.shipping_city || '') + ' CP ' + (o.shipping_zip || '') + ')</td><td class="py-2.5 text-zinc-600 text-xs whitespace-pre-line">' + (o.items || '') + '</td><td class="py-2.5 text-zinc-600 text-xs font-medium">' + (o.shipping_method || 'Digital') + '</td><td class="py-2.5 font-bold text-zinc-950">$' + Number(o.total || 0).toLocaleString() + ' MXN</td><td class="py-2.5"><span class="px-2 py-0.5 bg-amber-50 text-amber-700 font-semibold rounded text-[11px]">' + (o.status || 'Pendiente') + '</span></td></tr>';
       }).join('');
     }
 
-    // HISTORIAL DE COMPRAS DEL CLIENTE LOGUEADO
+    // HISTORIAL DE COMPRAS DEL CLIENTE CON BOTÓN PARA COMPLETAR PAGO
     async function renderUserOrdersTable() {
       var table = document.getElementById('user-orders-table');
       if (!table) return;
@@ -1428,7 +1454,16 @@
       }
 
       table.innerHTML = userOrders.map(function(o){
-        return '<tr class="hover:bg-zinc-50"><td class="py-2.5 font-bold text-zinc-900">' + o.id + '</td><td class="py-2.5 text-zinc-500 text-xs">' + (o.created_at ? new Date(o.created_at).toLocaleDateString('es-MX') : '') + '</td><td class="py-2.5 text-zinc-600 text-xs whitespace-pre-line">' + o.items + '</td><td class="py-2.5 text-zinc-600 text-xs">' + (o.shipping_method || 'Digital') + '</td><td class="py-2.5 font-bold text-zinc-950">$' + Number(o.total || 0).toLocaleString() + ' MXN</td><td class="py-2.5"><span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 font-semibold rounded text-[11px]">' + o.status + '</span></td></tr>';
+        var isPending = o.status && o.status.indexOf('Pendiente') !== -1;
+        var actionCol = '';
+
+        if (isPending) {
+          actionCol = '<div class="space-y-1.5"><span class="px-2 py-0.5 bg-amber-50 text-amber-700 font-semibold rounded text-[11px] block text-center">Pendiente de Pago</span><button onclick="resumeOrderPayment(\'' + o.id + '\')" class="w-full px-2.5 py-1 bg-[#009ee3] hover:bg-[#0081ba] text-white rounded-lg text-xs font-bold transition shadow-sm flex items-center justify-center gap-1"><span>Completar Pago &rarr;</span></button></div>';
+        } else {
+          actionCol = '<span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 font-semibold rounded text-[11px] inline-block">' + (o.status || 'Pagado') + '</span>';
+        }
+
+        return '<tr class="hover:bg-zinc-50"><td class="py-3 font-bold text-zinc-900">' + o.id + '</td><td class="py-3 text-zinc-500 text-xs">' + (o.created_at ? new Date(o.created_at).toLocaleDateString('es-MX') : '') + '</td><td class="py-3 text-zinc-600 text-xs whitespace-pre-line">' + o.items + '</td><td class="py-3 text-zinc-600 text-xs">' + (o.shipping_method || 'Digital') + '</td><td class="py-3 font-bold text-zinc-950">$' + Number(o.total || 0).toLocaleString() + ' MXN</td><td class="py-3">' + actionCol + '</td></tr>';
       }).join('');
     }
 
