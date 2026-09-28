@@ -245,7 +245,6 @@
     <!-- SECCIÓN 4: CATÁLOGO Y TIENDA -->
     <section id="sec-catalogo" class="hidden space-y-6">
       
-      <!-- Encabezado y Buscador -->
       <div class="flex flex-col md:flex-row justify-between md:items-end gap-4 border-b border-zinc-200 pb-5">
         <div>
           <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-950">Tienda & Catálogo Oficial</h2>
@@ -393,7 +392,6 @@
           </div>
         </div>
 
-        <!-- HISTORIAL DE COMPRAS DEL CLIENTE -->
         <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm">
           <div class="flex justify-between items-center">
             <h3 class="text-base sm:text-lg font-bold">Mis Compras & Pedidos en Tienda</h3>
@@ -808,9 +806,9 @@
     const EMAILJS_ORDERS_TEMPLATE_ADMIN = "template_jfmj9i8";
     const EMAILJS_ORDERS_TEMPLATE_CLIENT = "template_5pk8lbk";
 
-    // CREDENCIALES MERCADO PAGO
-    const MP_PUBLIC_KEY = "APP_USR-c2ecf1d6-0487-4ca6-a219-2162d6e048a1";
-    const MP_ACCESS_TOKEN = "APP_USR-8740390679694896-092815-2deb03edc6e78227ae4b7e25f87e7c11-3720525449";
+    // CREDENCIALES DE PRODUCCIÓN OFICIALES DE MERCADO PAGO
+    const MP_PUBLIC_KEY = "APP_USR-c1b88801-4173-4b05-9b88-38c24b43b08f";
+    const MP_ACCESS_TOKEN = "APP_USR-1421461334886474-092815-6de2dd5f02a9b1a68a925207101b7584-293350388";
 
     try {
       if (window.MercadoPago) {
@@ -868,7 +866,6 @@
       }
     }
 
-    // CARGA DE PRODUCTOS DESDE SUPABASE SIN PERDER LOCALSTORAGE
     window.fetchCatalogFromDatabase = async function() {
       if (supabaseClient) {
         try {
@@ -1098,10 +1095,11 @@
       goToCartStep(2);
     };
 
+    // GENERAR PREFERENCIA DE PAGO EN PRODUCCIÓN (SIN CONFLICTO DE PAYER)
     async function createMercadoPagoCheckout(orderId, items, shippingCost, customer) {
       var mpItems = items.map(function(i){
         return {
-          title: i.title,
+          title: String(i.title).substring(0, 100),
           quantity: Number(i.quantity || 1),
           currency_id: 'MXN',
           unit_price: Number(i.price)
@@ -1110,7 +1108,7 @@
 
       if (shippingCost > 0) {
         mpItems.push({
-          title: 'Costo de Envío (' + (selectedShippingRate?.provider || 'Paquetería') + ')',
+          title: 'Envío (' + (selectedShippingRate?.provider || 'Paquetería') + ')',
           quantity: 1,
           currency_id: 'MXN',
           unit_price: Number(shippingCost)
@@ -1119,12 +1117,7 @@
 
       var preferenceData = {
         items: mpItems,
-        payer: {
-          name: customer.name,
-          email: customer.email,
-          phone: { number: customer.phone }
-        },
-        external_reference: orderId,
+        external_reference: String(orderId),
         back_urls: {
           success: window.location.origin + '?status=success&order=' + orderId,
           failure: window.location.origin + '?status=failure&order=' + orderId,
@@ -1144,14 +1137,19 @@
         });
 
         var resData = await response.json();
-        if (resData && (resData.init_point || resData.sandbox_init_point)) {
-          return resData.init_point || resData.sandbox_init_point;
+        
+        // Exigir estrictamente init_point de producción
+        if (resData && resData.init_point) {
+          return resData.init_point;
         } else {
-          console.warn("Mercado Pago API direct response:", resData);
+          console.error("Respuesta detallada de Mercado Pago:", resData);
+          if (resData && resData.message) {
+            alert("Aviso de Mercado Pago: " + resData.message);
+          }
           return null;
         }
       } catch(err) {
-        console.warn("Mercado Pago fetch error:", err);
+        console.error("Error al conectar con Mercado Pago:", err);
         return null;
       }
     }
@@ -1286,7 +1284,6 @@
       if (sess) updateUserProgress(sess.total_spent);
 
       if (checkoutUrl) {
-        alert("¡Orden registrada exitosamente con Folio: " + orderId + "!\n\nTe transferimos a la pasarela segura de Mercado Pago para realizar tu pago.");
         window.location.href = checkoutUrl;
       } else {
         alert("¡Orden registrada exitosamente con Folio: " + orderId + "!\n\nPuedes pulsar en 'Completar Pago' dentro de tu historial en cualquier momento.");
@@ -1305,18 +1302,13 @@
       }
 
       if (order) {
-        var customer = {
-          name: order.customer_name || 'Cliente',
-          email: order.customer_email || '',
-          phone: order.customer_phone || ''
-        };
         var singleItem = [{
           title: 'Pedido ' + order.id,
           price: Number(order.total || 0),
           quantity: 1
         }];
 
-        var newUrl = await createMercadoPagoCheckout(order.id, singleItem, 0, customer);
+        var newUrl = await createMercadoPagoCheckout(order.id, singleItem, 0, {});
         if (newUrl) {
           order.checkout_url = newUrl;
           localStorage.setItem('five_friends_orders', JSON.stringify(allOrders));
@@ -1586,9 +1578,6 @@
       }).join('');
     }
 
-    // -------------------------------------------------------------
-    // IMPORTACIÓN MASIVA ROBUSTA EN BLOQUES PARA SUPABASE
-    // -------------------------------------------------------------
     window.downloadCSVTemplate = function() {
       var csvContent = "data:text/csv;charset=utf-8,Titulo,Precio,Costo,Categoria,Descripcion,Imagen\n" +
         "Separador Samurai,90,33,Separadores y Accesorios para Libros,Impreso en PLA técnico,https://ejemplo.com/foto1.jpg\n" +
@@ -1709,7 +1698,6 @@
           catalogItems = newCatalog.concat(webAndCustom);
           saveCatalog(catalogItems);
 
-          // Subir a Supabase en bloques pequeños de 40 para evitar timeouts
           if (supabaseClient) {
             try {
               var chunkSize = 40;
@@ -1749,7 +1737,6 @@
       reader.readAsText(file, 'utf-8');
     };
 
-    // AUDITORÍA DE PEDIDOS EN EL PANEL DE ADMINISTRADOR
     async function renderAdminOrdersTable() {
       var table = document.getElementById('admin-orders-table');
       if (!table) return;
@@ -1776,7 +1763,6 @@
       }).join('');
     }
 
-    // HISTORIAL DE COMPRAS DEL CLIENTE
     async function renderUserOrdersTable() {
       var table = document.getElementById('user-orders-table');
       if (!table) return;
@@ -1819,7 +1805,6 @@
       }).join('');
     }
 
-    // GUARDAR PRODUCTO EN LOCAL Y SUPABASE
     window.handleProductFormSubmit = async function(e) {
       e.preventDefault();
       var id = document.getElementById('adm-p-id').value;
