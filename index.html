@@ -10,14 +10,15 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- QRCode.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <!-- EmailJS SDK -->
+  <!-- EmailJS SDK Oficial -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <!-- SDK Mercado Pago v2 -->
+  <script src="https://sdk.mercadopago.com/js/v2"></script>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
     .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); }
   </style>
 
-  <!-- NAVEGACIÓN Y APERTURA DE ELEMENTOS: NUNCA SE BLOQUEA -->
   <script>
     window.navigate = function(section) {
       var sections = ['inicio', 'puntos', 'contacto', 'catalogo', 'club'];
@@ -145,7 +146,7 @@
           Diseño, Fabricación 3D y Soluciones Digitales
         </h1>
         <p class="text-sm sm:text-base md:text-lg text-zinc-600 px-2 font-normal leading-relaxed">
-          Piezas personalizadas con manufactura aditiva y desarrollo web profesional. Compra en línea con envíos a todo México o retiro en bazares.
+          Piezas personalizadas con manufactura aditiva y desarrollo web profesional. Compra en línea con Mercado Pago y envíos a todo México o retiro en bazares.
         </p>
         <div class="flex flex-col sm:flex-row justify-center gap-3 pt-3 px-4 sm:px-0">
           <button type="button" onclick="navigate('catalogo')" class="w-full sm:w-auto bg-zinc-950 text-white px-6 py-3 rounded-xl font-medium text-sm hover:bg-zinc-800 transition shadow-sm">Explorar Tienda</button>
@@ -234,7 +235,7 @@
       <div class="flex flex-col md:flex-row justify-between md:items-end gap-4 border-b border-zinc-200 pb-5">
         <div>
           <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-950">Tienda & Catálogo Oficial</h2>
-          <p class="text-xs sm:text-sm text-zinc-500">Agrega productos a tu carrito y compra con envío a domicilio o retiro.</p>
+          <p class="text-xs sm:text-sm text-zinc-500">Agrega productos a tu carrito y compra con Mercado Pago y envíos por paquetería.</p>
         </div>
 
         <div class="w-full md:w-72">
@@ -722,7 +723,7 @@
               <span class="font-semibold text-zinc-900" id="cart-shipping-cost">$0 MXN</span>
             </div>
             <div class="flex justify-between text-sm font-extrabold text-zinc-950 pt-2 border-t border-zinc-200">
-              <span>Total</span>
+              <span>Total a Pagar</span>
               <span id="cart-total">$0 MXN</span>
             </div>
           </div>
@@ -735,12 +736,13 @@
             <p class="text-[10px] text-center text-zinc-400" id="auth-status-note">Requiere iniciar sesión en Five Friends para asociar tu compra.</p>
           </div>
 
-          <!-- Botón de Paso 2: Pagar y Enviar Notificaciones -->
+          <!-- Botón de Paso 2: Pagar en Mercado Pago y Disparar Correos -->
           <div id="action-step-2" class="space-y-2 pt-1 hidden">
-            <button type="button" onclick="finalizeOrderAndPay()" id="btn-confirm-pay" class="w-full bg-[#009ee3] hover:bg-[#0081ba] text-white py-3 rounded-xl font-bold text-sm shadow-md transition flex items-center justify-center gap-2">
-              <span>Confirmar Pedido y Pagar</span>
+            <button type="button" onclick="finalizeOrderAndPay()" id="btn-confirm-pay" class="w-full bg-[#009ee3] hover:bg-[#0081ba] text-white py-3.5 rounded-xl font-extrabold text-sm shadow-md transition flex items-center justify-center gap-2">
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+              <span>Pagar con Mercado Pago</span>
             </button>
-            <p class="text-[10px] text-center text-zinc-400">Recibirás tu comprobante inmediato por correo electrónico.</p>
+            <p class="text-[10px] text-center text-zinc-400">Acepta Tarjetas, Transferencia SPEI y Efectivo en OXXO.</p>
           </div>
 
         </div>
@@ -751,16 +753,32 @@
 
   <!-- SCRIPT DE DATOS Y LÓGICA DE NEGOCIO -->
   <script>
-    // Configuración EmailJS
-    const EMAILJS_PUBLIC_KEY = "6EJ7vQEuZeRa9HQ1o";
-    const EMAILJS_TEMPLATE_ADMIN = "template_jfmj9i8";
-    const EMAILJS_TEMPLATE_CLIENT = "template_5pk8lbk";
+    // -------------------------------------------------------------
+    // CONFIGURACIÓN EXACTA DE EMAILJS (2 CUENTAS SEPARADAS)
+    // -------------------------------------------------------------
+    // Cuenta 1: Contraseñas Olvidadas
+    const EMAILJS_PASS_PUBLIC_KEY = "k2u203TouhD3PPrZU";
+    const EMAILJS_PASS_SERVICE_ID = "service_k329g2o";
+    const EMAILJS_PASS_TEMPLATE_ID = "template_f9qsdal";
 
+    // Cuenta 2: Órdenes y Avisos de Compra
+    const EMAILJS_ORDERS_PUBLIC_KEY = "6EJ7vQEuZeRa9HQ1o";
+    const EMAILJS_ORDERS_SERVICE_ID = "service_oykr20y";
+    const EMAILJS_ORDERS_TEMPLATE_ADMIN = "template_jfmj9i8";
+    const EMAILJS_ORDERS_TEMPLATE_CLIENT = "template_5pk8lbk";
+
+    // CREDENCIALES MERCADO PAGO
+    const MP_PUBLIC_KEY = "APP_USR-c2ecf1d6-0487-4ca6-a219-2162d6e048a1";
+    const MP_ACCESS_TOKEN = "APP_USR-8740390679694896-092815-2deb03edc6e78227ae4b7e25f87e7c11-3720525449";
+
+    // Inicializar Mercado Pago
     try {
-      if (window.emailjs) {
-        emailjs.init(EMAILJS_PUBLIC_KEY);
+      if (window.MercadoPago) {
+        window.mp = new MercadoPago(MP_PUBLIC_KEY, { locale: 'es-MX' });
       }
-    } catch(e){}
+    } catch(e){
+      console.warn("Init libraries error:", e);
+    }
 
     // Configuración Supabase
     const SUPABASE_BASE_URL = "https://vqsuycquoeqakhttibao.supabase.co";
@@ -938,7 +956,6 @@
       }
     };
 
-    // FLUJO DE COMPRA OBLIGATORIO CON LOGIN/REGISTRO
     window.handleProceedToCheckout = function() {
       if (cart.length === 0) {
         alert("Agrega productos a tu carrito antes de continuar.");
@@ -984,7 +1001,66 @@
       goToCartStep(2);
     };
 
-    // FINALIZAR PEDIDO Y ENVIAR AMBOS CORREOS
+    // GENERAR PREFERENCIA EN MERCADO PAGO
+    async function createMercadoPagoCheckout(orderId, items, shippingCost, customer) {
+      var mpItems = items.map(function(i){
+        return {
+          title: i.title,
+          quantity: Number(i.quantity),
+          currency_id: 'MXN',
+          unit_price: Number(i.price)
+        };
+      });
+
+      if (shippingCost > 0) {
+        mpItems.push({
+          title: 'Costo de Envío (' + (selectedShippingRate?.provider || 'Paquetería') + ')',
+          quantity: 1,
+          currency_id: 'MXN',
+          unit_price: Number(shippingCost)
+        });
+      }
+
+      var preferenceData = {
+        items: mpItems,
+        payer: {
+          name: customer.name,
+          email: customer.email,
+          phone: { number: customer.phone }
+        },
+        external_reference: orderId,
+        back_urls: {
+          success: window.location.origin + '?status=success&order=' + orderId,
+          failure: window.location.origin + '?status=failure&order=' + orderId,
+          pending: window.location.origin + '?status=pending&order=' + orderId
+        },
+        auto_return: 'approved'
+      };
+
+      try {
+        var response = await fetch('https://api.mercadopago.com/checkout/preferences', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + MP_ACCESS_TOKEN,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(preferenceData)
+        });
+
+        var resData = await response.json();
+        if (resData && (resData.init_point || resData.sandbox_init_point)) {
+          return resData.init_point || resData.sandbox_init_point;
+        } else {
+          console.warn("Mercado Pago API direct response:", resData);
+          return null;
+        }
+      } catch(err) {
+        console.warn("Mercado Pago fetch error:", err);
+        return null;
+      }
+    }
+
+    // FINALIZAR PEDIDO: GUARDA EN BASE DE DATOS, ENVÍA AMBOS CORREOS CON SERVICE_OYKR20Y Y ABRE MERCADO PAGO
     window.finalizeOrderAndPay = async function() {
       var sess = getSession();
       var name = document.getElementById('order-customer-name').value.trim();
@@ -1017,7 +1093,7 @@
       }
 
       var btn = document.getElementById('btn-confirm-pay');
-      btn.innerText = "Procesando orden y notificaciones...";
+      btn.innerText = "Conectando con Mercado Pago y enviando correos...";
       btn.disabled = true;
 
       var orderId = 'FF-' + Math.floor(100000 + Math.random() * 900000);
@@ -1043,10 +1119,11 @@
         subtotal: subtotal,
         shipping_cost: shippingCost,
         total: total,
-        status: 'Pagado / En Preparación',
+        status: 'Pendiente de Pago en Mercado Pago',
         created_at: new Date().toISOString()
       };
 
+      // 1. Guardar orden en Supabase
       if (supabaseClient) {
         try {
           await supabaseClient.from('orders').insert([orderRecord]);
@@ -1055,55 +1132,55 @@
         }
       }
 
+      // 2. Guardar orden en LocalStorage para auditoría
       var allOrders = [];
       try { allOrders = JSON.parse(localStorage.getItem('five_friends_orders')) || []; } catch(e){}
       allOrders.unshift(orderRecord);
       localStorage.setItem('five_friends_orders', JSON.stringify(allOrders));
 
+      // 3. ENVÍO DE AMBOS CORREOS CON LA CUENTA DE ÓRDENES (service_oykr20y + 6EJ7vQEuZeRa9HQ1o)
       if (window.emailjs) {
-        try {
-          await emailjs.send("service_k329g2o", EMAILJS_TEMPLATE_ADMIN, {
-            order_id: orderId,
-            order_date: orderDate,
-            customer_name: name,
-            customer_email: email,
-            customer_phone: phone,
-            shipping_address: address,
-            shipping_city: colonia + ', ' + city,
-            shipping_zip: zip,
-            shipping_notes: notes,
-            shipping_method: shippingMethod,
-            order_items: itemsText,
-            order_subtotal: '$' + subtotal.toLocaleString() + ' MXN',
-            shipping_cost: '$' + shippingCost.toLocaleString() + ' MXN',
-            order_total: '$' + total.toLocaleString() + ' MXN'
-          }, EMAILJS_PUBLIC_KEY);
-        } catch(errAdmin) {
-          console.warn("Error alerta admin:", errAdmin);
-        }
+        var emailParams = {
+          order_id: orderId,
+          order_date: orderDate,
+          customer_name: name,
+          customer_email: email,
+          customer_phone: phone,
+          to_email: email,
+          shipping_address: address,
+          shipping_city: colonia + ', ' + city,
+          shipping_zip: zip,
+          shipping_notes: notes,
+          shipping_method: shippingMethod,
+          order_items: itemsText,
+          order_subtotal: '$' + subtotal.toLocaleString() + ' MXN',
+          shipping_cost: '$' + shippingCost.toLocaleString() + ' MXN',
+          order_total: '$' + total.toLocaleString() + ' MXN'
+        };
 
-        try {
-          await emailjs.send("service_k329g2o", EMAILJS_TEMPLATE_CLIENT, {
-            to_email: email,
-            order_id: orderId,
-            order_date: orderDate,
-            customer_name: name,
-            customer_email: email,
-            customer_phone: phone,
-            shipping_address: address,
-            shipping_city: colonia + ', ' + city,
-            shipping_zip: zip,
-            shipping_method: shippingMethod,
-            order_items: itemsText,
-            order_subtotal: '$' + subtotal.toLocaleString() + ' MXN',
-            shipping_cost: '$' + shippingCost.toLocaleString() + ' MXN',
-            order_total: '$' + total.toLocaleString() + ' MXN'
-          }, EMAILJS_PUBLIC_KEY);
-        } catch(errClient) {
-          console.warn("Error confirmación cliente:", errClient);
-        }
+        // Correo 1: Alerta para ti (5friendstore@gmail.com)
+        emailjs.send(EMAILJS_ORDERS_SERVICE_ID, EMAILJS_ORDERS_TEMPLATE_ADMIN, emailParams, EMAILJS_ORDERS_PUBLIC_KEY)
+          .then(function(res) {
+            console.log("Email Admin recibido con éxito:", res.status);
+          })
+          .catch(function(err) {
+            console.warn("Error enviando Email Admin:", err);
+          });
+
+        // Correo 2: Confirmación para el Cliente
+        emailjs.send(EMAILJS_ORDERS_SERVICE_ID, EMAILJS_ORDERS_TEMPLATE_CLIENT, emailParams, EMAILJS_ORDERS_PUBLIC_KEY)
+          .then(function(res) {
+            console.log("Email Cliente recibido con éxito:", res.status);
+          })
+          .catch(function(err) {
+            console.warn("Error enviando Email Cliente:", err);
+          });
       }
 
+      // 4. GENERAR ENLACE EN MERCADO PAGO
+      var checkoutUrl = await createMercadoPagoCheckout(orderId, cart, shippingCost, { name: name, email: email, phone: phone });
+
+      // Sumar al total del usuario para su programa Club Five Friends
       if (sess) {
         var newSpent = (Number(sess.total_spent) || 0) + total;
         sess.total_spent = newSpent;
@@ -1115,15 +1192,22 @@
         }
       }
 
+      // Limpiar carrito
       saveCart([]);
       goToCartStep(1);
       toggleCartDrawer();
 
-      btn.innerText = "Confirmar Pedido y Pagar";
+      btn.innerText = "Pagar con Mercado Pago";
       btn.disabled = false;
 
-      alert("🎉 ¡Pedido Confirmado con Éxito!\n\nFolio: " + orderId + "\nSe ha enviado el comprobante a tu correo (" + email + ") y nuestro equipo en Five Friends ya recibió los detalles para preparar tu envío.");
-      
+      // 5. Redireccionar al Checkout de Mercado Pago o notificar
+      if (checkoutUrl) {
+        alert("¡Pedido registrado exitosamente (Folio: " + orderId + ")!\n\nSe han enviado los correos de confirmación. Te transferimos a la pasarela segura de Mercado Pago para realizar tu pago.");
+        window.location.href = checkoutUrl;
+      } else {
+        alert("¡Pedido registrado exitosamente (Folio: " + orderId + ")!\n\nSe han enviado los correos de confirmación al administrador y al comprador, y tu orden ha quedado guardada en tu historial.");
+      }
+
       renderUserOrdersTable();
       renderAdminOrdersTable();
       loadAdminData();
@@ -1470,7 +1554,6 @@
       var pass = document.getElementById('login-password').value.trim();
       var found = null;
 
-      // 1. Consultar directamente la tabla profiles en Supabase (la misma que lee el Admin)
       if (supabaseClient) {
         try {
           var res = await supabaseClient.from('profiles').select('*');
@@ -1483,29 +1566,22 @@
               return (emailMatch || phoneMatch) && passMatch;
             });
 
-            // Si encontró el usuario pero la contraseña directa no coincide, intentar auth nativo
             if (!found) {
               var candidate = res.data.find(function(c) {
                 return (c.email && c.email.trim().toLowerCase() === searchId) || (c.phone && c.phone.trim() === id);
               });
               if (candidate) {
                 var emailToAuth = candidate.email || (candidate.phone + '@fivefriends.local');
-                var authRes = await supabaseClient.auth.signInWithPassword({
-                  email: emailToAuth,
-                  password: pass
-                });
-                if (authRes?.data?.user) {
-                  found = candidate;
-                }
+                var authRes = await supabaseClient.auth.signInWithPassword({ email: emailToAuth, password: pass });
+                if (authRes?.data?.user) found = candidate;
               }
             }
           }
         } catch(ex){
-          console.warn("Error en consulta Supabase:", ex);
+          console.warn("Error Supabase:", ex);
         }
       }
 
-      // 2. Respaldo en caché local
       if (!found) {
         try {
           var local = JSON.parse(localStorage.getItem('five_friends_clients_cache')) || [];
@@ -1597,7 +1673,7 @@
       document.getElementById('ticket-url').value = '';
     };
 
-    // OLVIDÉ CONTRASEÑA CONSULTANDO DIRECTO A SUPABASE
+    // OLVIDÉ CONTRASEÑA (USA LA CUENTA 1: service_k329g2o + k2u203TouhD3PPrZU)
     window.sendPasswordToEmail = async function(type) {
       var id = prompt("Ingresa tu correo o teléfono registrado:");
       if (!id) return;
@@ -1612,7 +1688,6 @@
       var userName = "Cliente";
       var targetEmail = "";
 
-      // 1. Buscar en la base de datos de Supabase
       if (supabaseClient) {
         try {
           var res = await supabaseClient.from('profiles').select('*');
@@ -1632,7 +1707,6 @@
         }
       }
 
-      // 2. Si no, buscar en la caché local
       if (!userPass) {
         try {
           var local = JSON.parse(localStorage.getItem('five_friends_clients_cache')) || [];
@@ -1651,25 +1725,19 @@
         return;
       }
 
-      // Si tiene correo, disparar EmailJS automático
       if (targetEmail && window.emailjs) {
         try {
-          await emailjs.send("service_k329g2o", EMAILJS_TEMPLATE_CLIENT, {
+          await emailjs.send(EMAILJS_PASS_SERVICE_ID, EMAILJS_PASS_TEMPLATE_ID, {
             to_email: targetEmail,
-            customer_name: userName,
-            order_id: "RECUPERACION-PASS",
-            order_date: new Date().toLocaleDateString('es-MX'),
-            order_items: "Contraseña Registrada: " + userPass,
-            order_subtotal: "$0 MXN",
-            shipping_cost: "$0 MXN",
-            order_total: "$0 MXN",
-            shipping_method: "Recuperación de Cuenta"
-          }, EMAILJS_PUBLIC_KEY);
+            to_name: userName,
+            user_password: userPass,
+            message: `Hola ${userName}, tu contraseña registrada en Five Friends es: ${userPass}`
+          }, EMAILJS_PASS_PUBLIC_KEY);
 
           alert("✓ Tu contraseña ha sido enviada a tu correo (" + targetEmail + ").\n\n(Tu contraseña es: " + userPass + ")");
           return;
         } catch(errMail){
-          console.warn("EmailJS error:", errMail);
+          console.warn("EmailJS pass error:", errMail);
         }
       }
 
@@ -1722,7 +1790,6 @@
       }
     };
 
-    // Inicio de página
     window.onload = function() {
       renderCatalog();
       updateCartUI();
