@@ -966,7 +966,6 @@
         }
       }
 
-      // Prellenar los datos del usuario logueado en el formulario
       var nameInp = document.getElementById('order-customer-name');
       var emailInp = document.getElementById('order-customer-email');
       var phoneInp = document.getElementById('order-customer-phone');
@@ -985,7 +984,7 @@
       goToCartStep(2);
     };
 
-    // FINALIZAR PEDIDO, ENVIAR AMBOS CORREOS Y REGISTRAR EN SUPABASE/AUDITORÍA
+    // FINALIZAR PEDIDO Y ENVIAR AMBOS CORREOS
     window.finalizeOrderAndPay = async function() {
       var sess = getSession();
       var name = document.getElementById('order-customer-name').value.trim();
@@ -1048,7 +1047,6 @@
         created_at: new Date().toISOString()
       };
 
-      // 1. Guardar en Base de Datos Supabase (Tabla orders)
       if (supabaseClient) {
         try {
           await supabaseClient.from('orders').insert([orderRecord]);
@@ -1057,13 +1055,11 @@
         }
       }
 
-      // 2. Guardar en memoria local (para auditoría instantánea)
       var allOrders = [];
       try { allOrders = JSON.parse(localStorage.getItem('five_friends_orders')) || []; } catch(e){}
       allOrders.unshift(orderRecord);
       localStorage.setItem('five_friends_orders', JSON.stringify(allOrders));
 
-      // 3. Disparar CORREO 1: Alerta a 5friendstore@gmail.com
       if (window.emailjs) {
         try {
           await emailjs.send("service_k329g2o", EMAILJS_TEMPLATE_ADMIN, {
@@ -1086,7 +1082,6 @@
           console.warn("Error alerta admin:", errAdmin);
         }
 
-        // 4. Disparar CORREO 2: Confirmación al comprador
         try {
           await emailjs.send("service_k329g2o", EMAILJS_TEMPLATE_CLIENT, {
             to_email: email,
@@ -1109,7 +1104,6 @@
         }
       }
 
-      // 5. Sumar el total gastado al usuario para su programa Club Five Friends (Barra a $1,500)
       if (sess) {
         var newSpent = (Number(sess.total_spent) || 0) + total;
         sess.total_spent = newSpent;
@@ -1121,7 +1115,6 @@
         }
       }
 
-      // Limpiar carrito
       saveCart([]);
       goToCartStep(1);
       toggleCartDrawer();
@@ -1131,7 +1124,6 @@
 
       alert("🎉 ¡Pedido Confirmado con Éxito!\n\nFolio: " + orderId + "\nSe ha enviado el comprobante a tu correo (" + email + ") y nuestro equipo en Five Friends ya recibió los detalles para preparar tu envío.");
       
-      // Actualizar tablas y progreso
       renderUserOrdersTable();
       renderAdminOrdersTable();
       loadAdminData();
@@ -1165,7 +1157,6 @@
         var rates = data.rates || [];
 
         if (rates.length === 0) {
-          // Tarifa plana estándar de respaldo si no hay API activa
           rates = [
             { cost: 135, provider: "Estafeta", service: "Terrestre", days: "2 a 4 días" },
             { cost: 175, provider: "FedEx", service: "Express", days: "1 a 2 días" }
@@ -1179,7 +1170,6 @@
         selectShippingOption(rates[0].cost, rates[0].provider, rates[0].service, rates[0].days);
         list.classList.remove('hidden');
       } catch(e) {
-        // Respaldo inmediato para que el cliente nunca se quede sin comprar
         var fallbackRates = [
           { cost: 135, provider: "Estafeta", service: "Terrestre", days: "2 a 4 días" },
           { cost: 175, provider: "FedEx", service: "Express", days: "1 a 2 días" }
@@ -1426,26 +1416,42 @@
       }
     };
 
-    // Autenticación Cliente y Admin
+    // REGISTRO DE USUARIO
     window.handleRegister = async function(e) {
       e.preventDefault();
       var name = document.getElementById('reg-name').value.trim();
       var email = document.getElementById('reg-email').value.trim().toLowerCase();
       var phone = document.getElementById('reg-phone').value.trim();
       var birthday = document.getElementById('reg-birthday').value;
-      var password = document.getElementById('reg-password').value;
+      var password = document.getElementById('reg-password').value.trim();
 
       var uId = '00000000-0000-0000-0000-' + Math.floor(100000000000 + Math.random() * 900000000000);
 
       if (supabaseClient) {
         try {
-          var authRes = await supabaseClient.auth.signUp({ email: email, password: password, options: { data: { full_name: name, phone: phone, birthday: birthday, raw_pass: password } } });
+          var authRes = await supabaseClient.auth.signUp({ 
+            email: email, 
+            password: password, 
+            options: { data: { full_name: name, phone: phone, birthday: birthday, raw_pass: password } } 
+          });
           if (authRes?.data?.user?.id) uId = authRes.data.user.id;
-          await supabaseClient.from('profiles').upsert({ id: uId, full_name: name, email: email, phone: phone, birthday: birthday, raw_pass: password, total_spent: 0 });
-        } catch(err){}
+          
+          await supabaseClient.from('profiles').upsert({ 
+            id: uId, 
+            full_name: name, 
+            email: email, 
+            phone: phone, 
+            birthday: birthday, 
+            raw_pass: password, 
+            total_spent: 0 
+          });
+        } catch(err){
+          console.warn("Supabase register error:", err);
+        }
       }
 
       var clientObj = { id: uId, name: name, full_name: name, email: email, phone: phone, birthday: birthday, raw_pass: password, total_spent: 0, type: 'client' };
+      
       var cache = [];
       try { cache = JSON.parse(localStorage.getItem('five_friends_clients_cache')) || []; } catch(ex){}
       cache.unshift(clientObj);
@@ -1457,39 +1463,83 @@
       updateCartUI();
     };
 
+    // LOGIN CON BÚSQUEDA EXHAUSTIVA EN SUPABASE Y LOCAL
     window.handleLogin = async function(e) {
       e.preventDefault();
       var id = document.getElementById('login-identifier').value.trim();
-      var pass = document.getElementById('login-password').value;
+      var pass = document.getElementById('login-password').value.trim();
       var found = null;
 
-      try {
-        var local = JSON.parse(localStorage.getItem('five_friends_clients_cache')) || [];
-        found = local.find(function(c){ return (c.email === id || c.phone === id) && c.raw_pass === pass; });
-      } catch(ex){}
-
-      if (!found && supabaseClient) {
+      // 1. Consultar directamente la tabla profiles en Supabase (la misma que lee el Admin)
+      if (supabaseClient) {
         try {
-          var col = id.indexOf('@') !== -1 ? 'email' : 'phone';
-          var res = await supabaseClient.from('profiles').select('*').ilike(col, id).maybeSingle();
-          if (res?.data && res.data.raw_pass === pass) found = res.data;
+          var res = await supabaseClient.from('profiles').select('*');
+          if (res?.data && Array.isArray(res.data)) {
+            var searchId = id.toLowerCase();
+            found = res.data.find(function(c) {
+              var emailMatch = c.email && c.email.trim().toLowerCase() === searchId;
+              var phoneMatch = c.phone && c.phone.trim() === id;
+              var passMatch = c.raw_pass && c.raw_pass.trim() === pass;
+              return (emailMatch || phoneMatch) && passMatch;
+            });
+
+            // Si encontró el usuario pero la contraseña directa no coincide, intentar auth nativo
+            if (!found) {
+              var candidate = res.data.find(function(c) {
+                return (c.email && c.email.trim().toLowerCase() === searchId) || (c.phone && c.phone.trim() === id);
+              });
+              if (candidate) {
+                var emailToAuth = candidate.email || (candidate.phone + '@fivefriends.local');
+                var authRes = await supabaseClient.auth.signInWithPassword({
+                  email: emailToAuth,
+                  password: pass
+                });
+                if (authRes?.data?.user) {
+                  found = candidate;
+                }
+              }
+            }
+          }
+        } catch(ex){
+          console.warn("Error en consulta Supabase:", ex);
+        }
+      }
+
+      // 2. Respaldo en caché local
+      if (!found) {
+        try {
+          var local = JSON.parse(localStorage.getItem('five_friends_clients_cache')) || [];
+          var sId = id.toLowerCase();
+          found = local.find(function(c) {
+            var eMatch = c.email && c.email.trim().toLowerCase() === sId;
+            var pMatch = c.phone && c.phone.trim() === id;
+            var pwMatch = c.raw_pass && c.raw_pass.trim() === pass;
+            return (eMatch || pMatch) && pwMatch;
+          });
         } catch(ex){}
       }
 
       if (found) {
-        var session = { id: found.id, type: 'client', name: found.full_name || id, email: found.email, phone: found.phone, total_spent: found.total_spent || 0 };
+        var session = { 
+          id: found.id, 
+          type: 'client', 
+          name: found.full_name || id, 
+          email: found.email, 
+          phone: found.phone, 
+          total_spent: Number(found.total_spent || 0) 
+        };
         localStorage.setItem('five_friends_session', JSON.stringify(session));
         showUserView(session.name, session.total_spent);
         updateCartUI();
       } else {
-        alert('Usuario no encontrado o contraseña incorrecta.');
+        alert('Usuario no encontrado o contraseña incorrecta.\nVerifica haber escrito correctamente tu correo/teléfono y contraseña.');
       }
     };
 
     window.handleAdminLogin = function(e) {
       e.preventDefault();
       var email = document.getElementById('admin-email').value.trim().toLowerCase();
-      var pass = document.getElementById('admin-password').value;
+      var pass = document.getElementById('admin-password').value.trim();
 
       if (email === '5friendstore@gmail.com' && pass === 'Five.Friends@2025') {
         localStorage.setItem('five_friends_session', JSON.stringify({ type: 'admin', email: email }));
@@ -1547,19 +1597,83 @@
       document.getElementById('ticket-url').value = '';
     };
 
+    // OLVIDÉ CONTRASEÑA CONSULTANDO DIRECTO A SUPABASE
     window.sendPasswordToEmail = async function(type) {
       var id = prompt("Ingresa tu correo o teléfono registrado:");
       if (!id) return;
-      if (type === 'admin' || id === '5friendstore@gmail.com') {
+      id = id.trim();
+
+      if (type === 'admin' || id.toLowerCase() === '5friendstore@gmail.com') {
         alert('Tu clave de administrador es: Five.Friends@2025');
         return;
       }
-      try {
-        var local = JSON.parse(localStorage.getItem('five_friends_clients_cache')) || [];
-        var f = local.find(function(c){ return c.email === id || c.phone === id; });
-        if (f) alert('Tu contraseña registrada es: ' + f.raw_pass);
-        else alert('No se encontró registro con esos datos.');
-      } catch(e){}
+
+      var userPass = "";
+      var userName = "Cliente";
+      var targetEmail = "";
+
+      // 1. Buscar en la base de datos de Supabase
+      if (supabaseClient) {
+        try {
+          var res = await supabaseClient.from('profiles').select('*');
+          if (res?.data && Array.isArray(res.data)) {
+            var searchId = id.toLowerCase();
+            var found = res.data.find(function(c) {
+              return (c.email && c.email.trim().toLowerCase() === searchId) || (c.phone && c.phone.trim() === id);
+            });
+            if (found) {
+              userPass = found.raw_pass;
+              userName = found.full_name || userName;
+              targetEmail = found.email || "";
+            }
+          }
+        } catch(ex){
+          console.warn(ex);
+        }
+      }
+
+      // 2. Si no, buscar en la caché local
+      if (!userPass) {
+        try {
+          var local = JSON.parse(localStorage.getItem('five_friends_clients_cache')) || [];
+          var sId = id.toLowerCase();
+          var f = local.find(function(c){ return (c.email && c.email.trim().toLowerCase() === sId) || (c.phone && c.phone.trim() === id); });
+          if (f) {
+            userPass = f.raw_pass;
+            userName = f.full_name || userName;
+            targetEmail = f.email || "";
+          }
+        } catch(e){}
+      }
+
+      if (!userPass) {
+        alert('No se encontró ningún usuario registrado con ese correo o teléfono.');
+        return;
+      }
+
+      // Si tiene correo, disparar EmailJS automático
+      if (targetEmail && window.emailjs) {
+        try {
+          await emailjs.send("service_k329g2o", EMAILJS_TEMPLATE_CLIENT, {
+            to_email: targetEmail,
+            customer_name: userName,
+            order_id: "RECUPERACION-PASS",
+            order_date: new Date().toLocaleDateString('es-MX'),
+            order_items: "Contraseña Registrada: " + userPass,
+            order_subtotal: "$0 MXN",
+            shipping_cost: "$0 MXN",
+            order_total: "$0 MXN",
+            shipping_method: "Recuperación de Cuenta"
+          }, EMAILJS_PUBLIC_KEY);
+
+          alert("✓ Tu contraseña ha sido enviada a tu correo (" + targetEmail + ").\n\n(Tu contraseña es: " + userPass + ")");
+          return;
+        } catch(errMail){
+          console.warn("EmailJS error:", errMail);
+        }
+      }
+
+      alert('Tu contraseña registrada es: ' + userPass);
     };
 
     async function loadAdminData() {
