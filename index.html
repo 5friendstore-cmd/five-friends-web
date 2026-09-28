@@ -17,6 +17,8 @@
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
     .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); }
+    .scrollbar-none::-webkit-scrollbar { display: none; }
+    .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 
   <script>
@@ -163,7 +165,7 @@
         </div>
         <div onclick="filterCategoryFromHome('Coleccionables')" class="p-6 border border-zinc-200 rounded-2xl bg-white shadow-sm space-y-3 cursor-pointer hover:border-zinc-900 transition">
           <div class="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center font-bold text-sm">★</div>
-          <h3 class="text-lg font-bold">Coleccionables</h3>
+          <h3 class="text-lg font-bold">Coleccionables & Juegos</h3>
           <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed">Dioramas temáticos, bases exhibidoras y accesorios especializados para figuras y cartas.</p>
           <span class="text-xs font-semibold underline text-zinc-900">Explorar coleccionables &rarr;</span>
         </div>
@@ -230,26 +232,35 @@
       </div>
     </section>
 
-    <!-- SECCIÓN 4: CATÁLOGO Y TIENDA -->
+    <!-- SECCIÓN 4: CATÁLOGO Y TIENDA CON SUBCATEGORÍAS -->
     <section id="sec-catalogo" class="hidden space-y-6">
+      
+      <!-- Encabezado y Buscador -->
       <div class="flex flex-col md:flex-row justify-between md:items-end gap-4 border-b border-zinc-200 pb-5">
         <div>
           <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-950">Tienda & Catálogo Oficial</h2>
-          <p class="text-xs sm:text-sm text-zinc-500">Agrega productos a tu carrito y compra con Mercado Pago y envíos por paquetería.</p>
+          <p class="text-xs sm:text-sm text-zinc-500" id="catalog-subtitle">Explora por categorías y subcategorías o busca una pieza en particular.</p>
         </div>
 
         <div class="w-full md:w-72">
-          <input type="text" id="cat-search" oninput="filterCatalog()" placeholder="Buscar producto o servicio..." class="w-full px-3.5 py-2 bg-white border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+          <input type="text" id="cat-search" oninput="filterCatalog()" placeholder="Buscar en el catálogo..." class="w-full px-3.5 py-2 bg-white border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
         </div>
       </div>
 
+      <!-- NIVEL 1: MACRO-CATEGORÍAS -->
       <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
-        <button type="button" onclick="setCatalogFilter('all')" id="btn-cat-all" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-zinc-950 text-white shadow-sm">Todos</button>
-        <button type="button" onclick="setCatalogFilter('Impresión 3D')" id="btn-cat-3d" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Impresión 3D</button>
-        <button type="button" onclick="setCatalogFilter('Coleccionables')" id="btn-cat-col" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Coleccionables</button>
-        <button type="button" onclick="setCatalogFilter('Desarrollo Web')" id="btn-cat-web" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Desarrollo Web</button>
+        <button type="button" onclick="setMacroFilter('all')" id="btn-macro-all" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap bg-zinc-950 text-white shadow-sm">Todos los Productos</button>
+        <button type="button" onclick="setMacroFilter('3D')" id="btn-macro-3d" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Impresión 3D & Hogar</button>
+        <button type="button" onclick="setMacroFilter('Coleccionables')" id="btn-macro-col" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Coleccionables & Juegos</button>
+        <button type="button" onclick="setMacroFilter('Web')" id="btn-macro-web" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Desarrollo Web & Tiendas</button>
       </div>
 
+      <!-- NIVEL 2: SUBCATEGORÍAS DINÁMICAS (CHIPS DE MERCADO PAGO) -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 pt-1 border-t border-zinc-100 scrollbar-none" id="subcategories-bar">
+        <!-- Renderizado dinámico de las 12 subcategorías -->
+      </div>
+
+      <!-- Contenedor Dinámico con Productos Agrupados -->
       <div id="catalog-container" class="space-y-10"></div>
     </section>
 
@@ -374,7 +385,7 @@
           </div>
         </div>
 
-        <!-- HISTORIAL DE COMPRAS DEL CLIENTE CON BOTÓN PARA COMPLETAR PAGO -->
+        <!-- HISTORIAL DE COMPRAS DEL CLIENTE -->
         <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm">
           <div class="flex justify-between items-center">
             <h3 class="text-base sm:text-lg font-bold">Mis Compras & Pedidos en Tienda</h3>
@@ -486,7 +497,7 @@
 
             <div>
               <label class="block text-xs font-semibold text-zinc-600 mb-1">Título del Producto</label>
-              <input type="text" id="adm-p-title" required placeholder="Ej. Soporte 3D articulado" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+              <input type="text" id="adm-p-title" required placeholder="Ej. Separador Samurai" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
             </div>
 
             <div>
@@ -500,11 +511,27 @@
             </div>
 
             <div>
-              <label class="block text-xs font-semibold text-zinc-600 mb-1">Categoría</label>
+              <label class="block text-xs font-semibold text-zinc-600 mb-1">Categoría / Subcategoría</label>
               <select id="adm-p-category" onchange="toggleShippingFields(this.value)" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
-                <option value="Impresión 3D">Impresión 3D</option>
-                <option value="Coleccionables">Coleccionables</option>
-                <option value="Desarrollo Web">Desarrollo Web (Sin Envío)</option>
+                <optgroup label="Coleccionables & Juegos">
+                  <option value="Figuras y Mas">Figuras y Mas</option>
+                  <option value="Videojuegos y Juegos de Mesa">Videojuegos y Juegos de Mesa</option>
+                  <option value="Exhibidores y Joyeros">Exhibidores y Joyeros</option>
+                  <option value="Equipos y Deportes">Equipos y Deportes</option>
+                  <option value="Mascaras y Mas">Mascaras y Mas</option>
+                </optgroup>
+                <optgroup label="Impresión 3D & Hogar">
+                  <option value="Posavasos, Platos y Portalatas">Posavasos, Platos y Portalatas</option>
+                  <option value="Llaveros y Portallaveros">Llaveros y Portallaveros</option>
+                  <option value="Estuches y Alcancias">Estuches y Alcancias</option>
+                  <option value="Separadores y Accesorios para Libros">Separadores y Accesorios para Libros</option>
+                  <option value="Lámparas y Lítofanias">Lámparas y Lítofanias</option>
+                  <option value="Macetas y Floreros">Macetas y Floreros</option>
+                  <option value="Jaboneras y Bandejas">Jaboneras y Bandejas</option>
+                </optgroup>
+                <optgroup label="Servicios Digitales">
+                  <option value="Desarrollo Web">Desarrollo Web (Sin Envío)</option>
+                </optgroup>
               </select>
             </div>
 
@@ -513,19 +540,19 @@
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                 <div>
                   <label class="block text-[11px] text-zinc-500 font-semibold mb-1">Peso (kg)</label>
-                  <input type="number" id="adm-p-weight" step="0.1" value="3.0" class="w-full px-2.5 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs">
+                  <input type="number" id="adm-p-weight" step="0.1" value="0.5" class="w-full px-2.5 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs">
                 </div>
                 <div>
                   <label class="block text-[11px] text-zinc-500 font-semibold mb-1">Largo (cm)</label>
-                  <input type="number" id="adm-p-length" step="1" value="25" class="w-full px-2.5 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs">
+                  <input type="number" id="adm-p-length" step="1" value="15" class="w-full px-2.5 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs">
                 </div>
                 <div>
                   <label class="block text-[11px] text-zinc-500 font-semibold mb-1">Ancho (cm)</label>
-                  <input type="number" id="adm-p-width" step="1" value="25" class="w-full px-2.5 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs">
+                  <input type="number" id="adm-p-width" step="1" value="15" class="w-full px-2.5 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs">
                 </div>
                 <div>
                   <label class="block text-[11px] text-zinc-500 font-semibold mb-1">Alto (cm)</label>
-                  <input type="number" id="adm-p-height" step="1" value="25" class="w-full px-2.5 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs">
+                  <input type="number" id="adm-p-height" step="1" value="10" class="w-full px-2.5 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs">
                 </div>
               </div>
             </div>
@@ -549,7 +576,7 @@
 
             <div class="sm:col-span-2 md:col-span-4">
               <label class="block text-xs font-semibold text-zinc-600 mb-1">Descripción</label>
-              <input type="text" id="adm-p-desc" placeholder="Detalles de materiales o tiempos..." class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+              <input type="text" id="adm-p-desc" placeholder="Detalles de materiales, medidas o tiempos..." class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
             </div>
 
             <div class="sm:col-span-2 md:col-span-4 pt-1">
@@ -571,7 +598,7 @@
                 <tr>
                   <th class="py-2.5">Foto</th>
                   <th class="py-2.5">Producto</th>
-                  <th class="py-2.5">Categoría</th>
+                  <th class="py-2.5">Subcategoría</th>
                   <th class="py-2.5">Peso / Medidas</th>
                   <th class="py-2.5">Precio ($)</th>
                   <th class="py-2.5">Costo ($)</th>
@@ -654,11 +681,11 @@
           </div>
         </div>
 
-        <!-- PASO 2: DIRECCIÓN Y CONFIRMACIÓN DE DATOS (SOLO LOGUEADOS) -->
+        <!-- PASO 2: DIRECCIÓN Y CONFIRMACIÓN DE DATOS -->
         <div id="cart-step-2" class="flex-1 overflow-y-auto p-5 space-y-4 hidden">
           <div class="bg-zinc-50 border border-zinc-200 rounded-xl p-3.5 space-y-3 text-xs">
             <div class="flex justify-between items-center border-b border-zinc-200 pb-2">
-              <span class="font-bold text-zinc-900 uppercase">Datos de Contacto (Editables)</span>
+              <span class="font-bold text-zinc-900 uppercase">Datos de Contacto</span>
               <button onclick="goToCartStep(1)" class="text-zinc-500 underline font-semibold">&larr; Volver al Carrito</button>
             </div>
             <div>
@@ -666,7 +693,7 @@
               <input type="text" id="order-customer-name" required class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
             </div>
             <div>
-              <label class="block font-semibold text-zinc-600 mb-1">Correo Electrónico (Para confirmación)</label>
+              <label class="block font-semibold text-zinc-600 mb-1">Correo Electrónico</label>
               <input type="email" id="order-customer-email" required class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
             </div>
             <div>
@@ -675,7 +702,6 @@
             </div>
           </div>
 
-          <!-- Formulario Dirección de Entrega -->
           <div id="checkout-address-section" class="bg-zinc-50 border border-zinc-200 rounded-xl p-3.5 space-y-3 text-xs">
             <span class="font-bold text-zinc-900 uppercase block border-b border-zinc-200 pb-2">Dirección Completa de Entrega</span>
             <div>
@@ -711,8 +737,6 @@
 
         <!-- Footer / Checkout y Acciones -->
         <div class="p-5 border-t border-zinc-200 bg-zinc-50 space-y-3">
-          
-          <!-- Cotizador Skydropx (en paso 1) -->
           <div id="shipping-calculator-box" class="space-y-2">
             <div class="flex justify-between items-center">
               <label class="text-xs font-bold text-zinc-700 uppercase">Cotizar Envío (Skydropx)</label>
@@ -725,7 +749,6 @@
             <div id="shipping-options-list" class="space-y-1.5 pt-1 hidden"></div>
           </div>
 
-          <!-- Resumen de Costos -->
           <div class="space-y-1.5 text-xs text-zinc-600 border-t border-zinc-200 pt-3">
             <div class="flex justify-between">
               <span>Subtotal Productos</span>
@@ -741,7 +764,6 @@
             </div>
           </div>
 
-          <!-- Botón de Paso 1: Continuar a Envío / Iniciar Sesión -->
           <div id="action-step-1" class="space-y-2 pt-1">
             <button type="button" onclick="handleProceedToCheckout()" id="btn-next-step" class="w-full bg-zinc-950 hover:bg-zinc-800 text-white py-3 rounded-xl font-bold text-sm shadow-md transition flex items-center justify-center gap-2">
               <span>Continuar con mi Pedido &rarr;</span>
@@ -749,7 +771,6 @@
             <p class="text-[10px] text-center text-zinc-400" id="auth-status-note">Requiere iniciar sesión en Five Friends para asociar tu compra.</p>
           </div>
 
-          <!-- Botón de Paso 2: Pagar en Mercado Pago y Disparar Correos -->
           <div id="action-step-2" class="space-y-2 pt-1 hidden">
             <button type="button" onclick="finalizeOrderAndPay()" id="btn-confirm-pay" class="w-full bg-[#009ee3] hover:bg-[#0081ba] text-white py-3.5 rounded-xl font-extrabold text-sm shadow-md transition flex items-center justify-center gap-2">
               <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
@@ -757,7 +778,6 @@
             </button>
             <p class="text-[10px] text-center text-zinc-400">Acepta Tarjetas, Transferencia SPEI y Efectivo en OXXO.</p>
           </div>
-
         </div>
 
       </div>
@@ -766,7 +786,7 @@
 
   <!-- SCRIPT DE DATOS Y LÓGICA DE NEGOCIO -->
   <script>
-    // CONFIGURACIÓN EXACTA DE EMAILJS (2 CUENTAS SEPARADAS)
+    // CONFIGURACIÓN DE EMAILJS
     const EMAILJS_PASS_PUBLIC_KEY = "k2u203TouhD3PPrZU";
     const EMAILJS_PASS_SERVICE_ID = "service_k329g2o";
     const EMAILJS_PASS_TEMPLATE_ID = "template_f9qsdal";
@@ -784,9 +804,7 @@
       if (window.MercadoPago) {
         window.mp = new MercadoPago(MP_PUBLIC_KEY, { locale: 'es-MX' });
       }
-    } catch(e){
-      console.warn("Init libraries error:", e);
-    }
+    } catch(e){}
 
     // Configuración Supabase
     const SUPABASE_BASE_URL = "https://vqsuycquoeqakhttibao.supabase.co";
@@ -799,12 +817,43 @@
       }
     } catch(e){}
 
-    // Catálogo inicial con persistencia
+    // DEFINICIÓN DE MACRO-CATEGORÍAS Y SUBCATEGORÍAS OFICIALES
+    const CATEGORY_MAP = {
+      'Coleccionables & Juegos': [
+        'Figuras y Mas',
+        'Videojuegos y Juegos de Mesa',
+        'Exhibidores y Joyeros',
+        'Equipos y Deportes',
+        'Mascaras y Mas'
+      ],
+      'Impresión 3D & Hogar': [
+        'Posavasos, Platos y Portalatas',
+        'Llaveros y Portallaveros',
+        'Estuches y Alcancias',
+        'Separadores y Accesorios para Libros',
+        'Lámparas y Lítofanias',
+        'Macetas y Floreros',
+        'Jaboneras y Bandejas'
+      ],
+      'Desarrollo Web & Tiendas': [
+        'Desarrollo Web'
+      ]
+    };
+
+    // Función auxiliar para saber a qué Macro-Categoría pertenece una subcategoría
+    function getMacroCategory(subCategory) {
+      if (CATEGORY_MAP['Coleccionables & Juegos'].includes(subCategory)) return 'Coleccionables';
+      if (CATEGORY_MAP['Impresión 3D & Hogar'].includes(subCategory)) return '3D';
+      if (subCategory === 'Desarrollo Web') return 'Web';
+      return '3D'; // Default
+    }
+
+    // Catálogo con persistencia
     var catalogItems = [
-      { id: "p1", title: "Soporte Articulado para Escritorio", description: "Impresión en PETG de alta resistencia.", price: 290, cost: 95, category: "Impresión 3D", weight: 0.4, length: 15, width: 15, height: 10, image_url: "", badge: "Entrega Inmediata" },
-      { id: "p2", title: "Organizador Modular de Herramientas", description: "Bandejas encastrables con ranuras.", price: 340, cost: 110, category: "Impresión 3D", weight: 0.6, length: 20, width: 15, height: 12, image_url: "", badge: "Personalizable" },
-      { id: "p3", title: "Diorama Exhibidor Coleccionable", description: "Base modular para figuras a escala.", price: 420, cost: 180, category: "Coleccionables", weight: 1.2, length: 25, width: 25, height: 20, image_url: "", badge: "Edición Limitada" },
-      { id: "p4", title: "Marco Exhibidor para Cartas TCG", description: "Caja rígida con protección UV.", price: 260, cost: 80, category: "Coleccionables", weight: 0.3, length: 15, width: 10, height: 5, image_url: "", badge: "Protección UV" },
+      { id: "p1", title: "Soporte Articulado para Escritorio", description: "Impresión en PETG de alta resistencia.", price: 290, cost: 95, category: "Llaveros y Portallaveros", weight: 0.4, length: 15, width: 15, height: 10, image_url: "", badge: "Entrega Inmediata" },
+      { id: "p2", title: "Organizador Modular de Herramientas", description: "Bandejas encastrables con ranuras.", price: 340, cost: 110, category: "Estuches y Alcancias", weight: 0.6, length: 20, width: 15, height: 12, image_url: "", badge: "Personalizable" },
+      { id: "p3", title: "Diorama Exhibidor Coleccionable", description: "Base modular para figuras a escala.", price: 420, cost: 180, category: "Exhibidores y Joyeros", weight: 1.2, length: 25, width: 25, height: 20, image_url: "", badge: "Edición Limitada" },
+      { id: "p4", title: "Marco Exhibidor para Cartas TCG", description: "Caja rígida con protección UV.", price: 260, cost: 80, category: "Videojuegos y Juegos de Mesa", weight: 0.3, length: 15, width: 10, height: 5, image_url: "", badge: "Protección UV" },
       { id: "p5", title: "Landing Page para Emprendedores", description: "Diseño minimalista ultra rápido.", price: 3200, cost: 500, category: "Desarrollo Web", weight: 0, length: 0, width: 0, height: 0, image_url: "", badge: "Servicio Digital" },
       { id: "p6", title: "Tienda Online E-commerce", description: "Catálogo autogestionable y cobros.", price: 6500, cost: 1200, category: "Desarrollo Web", weight: 0, length: 0, width: 0, height: 0, image_url: "", badge: "Servicio Digital" }
     ];
@@ -821,7 +870,8 @@
     } catch(e){}
 
     var selectedShippingRate = null;
-    var currentCategoryFilter = 'all';
+    var currentMacroFilter = 'all'; // 'all', '3D', 'Coleccionables', 'Web'
+    var currentSubFilter = 'all';   // 'all' o el nombre exacto de la subcategoría
 
     function getSession() {
       try {
@@ -834,6 +884,7 @@
     function saveCatalog(items) {
       catalogItems = items;
       try { localStorage.setItem('five_friends_catalog', JSON.stringify(catalogItems)); } catch(e){}
+      renderSubcategoriesBar();
       renderCatalog();
       renderAdminProductsTable();
     }
@@ -858,10 +909,10 @@
           price: parseFloat(product.price),
           category: product.category,
           image_url: product.image_url || '',
-          weight: parseFloat(product.weight || 3),
-          length: parseFloat(product.length || 25),
-          width: parseFloat(product.width || 25),
-          height: parseFloat(product.height || 25),
+          weight: parseFloat(product.weight || 0.5),
+          length: parseFloat(product.length || 15),
+          width: parseFloat(product.width || 15),
+          height: parseFloat(product.height || 10),
           quantity: 1
         });
       }
@@ -1206,7 +1257,7 @@
       }
     };
 
-    // FUNCIÓN PARA COMPLETAR PAGO PENDIENTE DE UNA ORDEN
+    // REANUDAR PAGO PENDIENTE DE MERCADO PAGO
     window.resumeOrderPayment = async function(orderId) {
       var allOrders = [];
       try { allOrders = JSON.parse(localStorage.getItem('five_friends_orders')) || []; } catch(e){}
@@ -1256,8 +1307,8 @@
       btn.innerText = "...";
       btn.disabled = true;
 
-      var totalWeight = cart.reduce(function(acc, i){ return acc + (parseFloat(i.weight || 3) * (i.quantity || 1)); }, 0);
-      var maxDim = cart.reduce(function(max, i){ return Math.max(max, parseFloat(i.length || 25), parseFloat(i.width || 25), parseFloat(i.height || 25)); }, 25);
+      var totalWeight = cart.reduce(function(acc, i){ return acc + (parseFloat(i.weight || 0.5) * (i.quantity || 1)); }, 0);
+      var maxDim = cart.reduce(function(max, i){ return Math.max(max, parseFloat(i.length || 15), parseFloat(i.width || 15), parseFloat(i.height || 10)); }, 15);
 
       try {
         var response = await fetch('/api/cotizar', {
@@ -1301,23 +1352,85 @@
       updateCartUI();
     };
 
-    // RENDERIZADO DEL CATÁLOGO
-    window.filterCategoryFromHome = function(cat) {
+    // -------------------------------------------------------------
+    // GESTIÓN DE FILTROS: MACRO Y SUBCATEGORÍAS
+    // -------------------------------------------------------------
+    window.filterCategoryFromHome = function(macroOrSub) {
       navigate('catalogo');
-      setCatalogFilter(cat);
+      if (macroOrSub === 'Impresión 3D') setMacroFilter('3D');
+      else if (macroOrSub === 'Coleccionables') setMacroFilter('Coleccionables');
+      else if (macroOrSub === 'Desarrollo Web') setMacroFilter('Web');
+      else setMacroFilter('all');
     };
 
-    window.setCatalogFilter = function(category) {
-      currentCategoryFilter = category;
-      var mapping = { 'all': 'btn-cat-all', 'Impresión 3D': 'btn-cat-3d', 'Coleccionables': 'btn-cat-col', 'Desarrollo Web': 'btn-cat-web' };
+    window.setMacroFilter = function(macro) {
+      currentMacroFilter = macro;
+      currentSubFilter = 'all';
+
+      var mapping = {
+        'all': 'btn-macro-all',
+        '3D': 'btn-macro-3d',
+        'Coleccionables': 'btn-macro-col',
+        'Web': 'btn-macro-web'
+      };
+
       Object.keys(mapping).forEach(function(k){
         var b = document.getElementById(mapping[k]);
         if (b) b.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400';
       });
-      var active = document.getElementById(mapping[category]);
-      if (active) active.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-zinc-950 text-white shadow-sm';
+
+      var active = document.getElementById(mapping[macro]);
+      if (active) active.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap bg-zinc-950 text-white shadow-sm';
+
+      renderSubcategoriesBar();
       renderCatalog();
     };
+
+    window.setSubcategoryFilter = function(sub) {
+      currentSubFilter = sub;
+      renderSubcategoriesBar();
+      renderCatalog();
+    };
+
+    function renderSubcategoriesBar() {
+      var bar = document.getElementById('subcategories-bar');
+      if (!bar) return;
+
+      // Obtener todas las subcategorías presentes en el catálogo actual
+      var availableSubs = [];
+      catalogItems.forEach(function(item) {
+        if (item.category && !availableSubs.includes(item.category)) {
+          availableSubs.push(item.category);
+        }
+      });
+
+      // Filtrar según la Macro-Categoría seleccionada
+      if (currentMacroFilter === '3D') {
+        availableSubs = availableSubs.filter(function(s){ return getMacroCategory(s) === '3D'; });
+      } else if (currentMacroFilter === 'Coleccionables') {
+        availableSubs = availableSubs.filter(function(s){ return getMacroCategory(s) === 'Coleccionables'; });
+      } else if (currentMacroFilter === 'Web') {
+        availableSubs = availableSubs.filter(function(s){ return s === 'Desarrollo Web'; });
+      }
+
+      if (availableSubs.length === 0) {
+        bar.classList.add('hidden');
+        return;
+      }
+      bar.classList.remove('hidden');
+
+      var html = '<button type="button" onclick="setSubcategoryFilter(\'all\')" class="px-3 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition ' + 
+        (currentSubFilter === 'all' ? 'bg-zinc-800 text-white' : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200') + '">Todas las subcategorías (' + availableSubs.length + ')</button>';
+
+      availableSubs.forEach(function(sub){
+        var isSelected = currentSubFilter === sub;
+        var count = catalogItems.filter(function(i){ return i.category === sub; }).length;
+        html += '<button type="button" onclick="setSubcategoryFilter(\'' + sub + '\')" class="px-3 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition ' + 
+          (isSelected ? 'bg-zinc-950 text-white font-bold' : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200') + '">' + sub + ' (' + count + ')</button>';
+      });
+
+      bar.innerHTML = html;
+    }
 
     window.filterCatalog = function() {
       renderCatalog();
@@ -1350,35 +1463,69 @@
       reader.readAsDataURL(file);
     };
 
+    // RENDERIZADO DEL CATÁLOGO AGRUPADO Y FILTRADO
     function renderCatalog() {
       var container = document.getElementById('catalog-container');
       if (!container) return;
       var searchQuery = (document.getElementById('cat-search')?.value || '').toLowerCase();
 
       var filtered = catalogItems.filter(function(item){
-        var matchesCat = (currentCategoryFilter === 'all' || item.category === currentCategoryFilter);
-        var matchesSearch = item.title.toLowerCase().indexOf(searchQuery) !== -1 || item.description.toLowerCase().indexOf(searchQuery) !== -1;
-        return matchesCat && matchesSearch;
+        var itemMacro = getMacroCategory(item.category);
+        var matchesMacro = (currentMacroFilter === 'all' || itemMacro === currentMacroFilter);
+        var matchesSub = (currentSubFilter === 'all' || item.category === currentSubFilter);
+        var matchesSearch = item.title.toLowerCase().indexOf(searchQuery) !== -1 || (item.description && item.description.toLowerCase().indexOf(searchQuery) !== -1) || item.category.toLowerCase().indexOf(searchQuery) !== -1;
+        return matchesMacro && matchesSub && matchesSearch;
       });
 
       if (filtered.length === 0) {
-        container.innerHTML = '<div class="text-center py-16 bg-white border border-zinc-200 rounded-2xl p-8"><h4 class="text-base font-bold text-zinc-800">No encontramos coincidencias</h4><p class="text-xs text-zinc-500">Prueba con otro término o categoría.</p></div>';
+        container.innerHTML = '<div class="text-center py-16 bg-white border border-zinc-200 rounded-2xl p-8"><h4 class="text-base font-bold text-zinc-800">No encontramos coincidencias</h4><p class="text-xs text-zinc-500">Prueba con otro término de búsqueda o selecciona otra subcategoría.</p></div>';
         return;
       }
 
-      var categories = currentCategoryFilter === 'all' ? ['Impresión 3D', 'Coleccionables', 'Desarrollo Web'] : [currentCategoryFilter];
+      // Obtener las subcategorías presentes en el resultado
+      var distinctCats = [];
+      filtered.forEach(function(i){
+        if (!distinctCats.includes(i.category)) distinctCats.push(i.category);
+      });
+
       var html = '';
 
-      categories.forEach(function(cat){
+      distinctCats.forEach(function(cat){
         var group = filtered.filter(function(i){ return i.category === cat; });
         if (group.length === 0) return;
-        var icon = cat === 'Impresión 3D' ? '3D' : (cat === 'Coleccionables' ? '★' : '</>');
 
-        html += '<div class="space-y-4"><div class="flex items-center gap-2.5 pb-2 border-b border-zinc-200"><span class="w-7 h-7 rounded-lg bg-zinc-950 text-white flex items-center justify-center text-xs font-bold">' + icon + '</span><h3 class="font-extrabold text-lg text-zinc-950">' + cat + '</h3></div><div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">';
+        var macro = getMacroCategory(cat);
+        var icon = macro === '3D' ? '3D' : (macro === 'Coleccionables' ? '★' : '</>');
+
+        html += '<div class="space-y-4">';
+        html += '<div class="flex items-center justify-between pb-2 border-b border-zinc-200">';
+        html += '  <div class="flex items-center gap-2.5">';
+        html += '    <span class="w-7 h-7 rounded-lg bg-zinc-950 text-white flex items-center justify-center text-xs font-bold">' + icon + '</span>';
+        html += '    <div><h3 class="font-extrabold text-lg text-zinc-950 leading-tight">' + cat + '</h3><span class="text-xs text-zinc-500">' + group.length + ' producto' + (group.length > 1 ? 's' : '') + '</span></div>';
+        html += '  </div>';
+        html += '</div>';
+
+        html += '<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">';
 
         group.forEach(function(p){
-          var img = p.image_url ? '<div class="w-full h-44 rounded-xl overflow-hidden bg-zinc-100 mb-3 border border-zinc-100"><img src="' + p.image_url + '" class="w-full h-full object-cover"></div>' : '<div class="w-full h-24 rounded-xl bg-zinc-100/70 mb-3 border border-dashed border-zinc-200 flex items-center justify-center text-zinc-400 text-xs font-semibold">' + icon + ' ' + p.category + '</div>';
-          html += '<div class="border border-zinc-200 bg-white p-5 rounded-2xl flex flex-col justify-between space-y-3 shadow-sm hover:border-zinc-400 transition"><div>' + img + '<span class="text-[10px] uppercase font-bold px-2 py-0.5 bg-zinc-100 rounded text-zinc-600 inline-block mb-1.5">' + (p.badge || p.category) + '</span><h4 class="font-bold text-base text-zinc-950 leading-snug">' + p.title + '</h4><p class="text-xs text-zinc-500 leading-relaxed mt-1">' + p.description + '</p></div><div class="flex justify-between items-center pt-3 border-t border-zinc-100"><div><span class="text-[10px] text-zinc-400 uppercase font-semibold block">Precio</span><span class="font-extrabold text-base sm:text-lg text-zinc-950">$' + Number(p.price).toLocaleString() + ' MXN</span></div><button type="button" onclick="addToCart(\'' + p.id + '\')" class="px-4 py-2 bg-zinc-950 text-white text-xs font-semibold rounded-xl hover:bg-zinc-800 transition shadow-sm flex items-center gap-1.5"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg><span>Agregar</span></button></div></div>';
+          var img = p.image_url 
+            ? '<div class="w-full h-44 rounded-xl overflow-hidden bg-zinc-100 mb-3 border border-zinc-100"><img src="' + p.image_url + '" class="w-full h-full object-cover"></div>' 
+            : '<div class="w-full h-24 rounded-xl bg-zinc-100/70 mb-3 border border-dashed border-zinc-200 flex items-center justify-center text-zinc-400 text-xs font-semibold">' + icon + ' ' + p.category + '</div>';
+
+          html += '<div class="border border-zinc-200 bg-white p-5 rounded-2xl flex flex-col justify-between space-y-3 shadow-sm hover:border-zinc-400 transition">';
+          html += '  <div>' + img;
+          html += '    <span class="text-[10px] uppercase font-bold px-2 py-0.5 bg-zinc-100 rounded text-zinc-600 inline-block mb-1.5">' + (p.badge || p.category) + '</span>';
+          html += '    <h4 class="font-bold text-base text-zinc-950 leading-snug">' + p.title + '</h4>';
+          html += '    <p class="text-xs text-zinc-500 leading-relaxed mt-1 line-clamp-2">' + (p.description || '') + '</p>';
+          html += '  </div>';
+          html += '  <div class="flex justify-between items-center pt-3 border-t border-zinc-100">';
+          html += '    <div><span class="text-[10px] text-zinc-400 uppercase font-semibold block">Precio</span><span class="font-extrabold text-base sm:text-lg text-zinc-950">$' + Number(p.price).toLocaleString() + ' MXN</span></div>';
+          html += '    <button type="button" onclick="addToCart(\'' + p.id + '\')" class="px-4 py-2 bg-zinc-950 text-white text-xs font-semibold rounded-xl hover:bg-zinc-800 transition shadow-sm flex items-center gap-1.5">';
+          html += '      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>';
+          html += '      <span>Agregar</span>';
+          html += '    </button>';
+          html += '  </div>';
+          html += '</div>';
         });
 
         html += '</div></div>';
@@ -1395,7 +1542,7 @@
 
       table.innerHTML = catalogItems.map(function(p){
         var thumb = p.image_url ? '<img src="' + p.image_url + '" class="w-9 h-9 object-cover rounded-lg border border-zinc-200">' : '<div class="w-9 h-9 rounded-lg bg-zinc-100 border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-500">5F</div>';
-        return '<tr class="hover:bg-zinc-50 transition"><td class="py-2.5">' + thumb + '</td><td class="py-2.5 font-semibold text-zinc-900">' + p.title + '</td><td class="py-2.5 text-zinc-600">' + p.category + '</td><td class="py-2.5 text-zinc-500 font-mono text-[11px]">' + (p.category === 'Desarrollo Web' ? 'Digital' : (p.weight || 3) + 'kg (' + (p.length || 25) + 'x' + (p.width || 25) + 'x' + (p.height || 25) + 'cm)') + '</td><td class="py-2.5 font-bold text-zinc-950">$' + Number(p.price).toLocaleString() + '</td><td class="py-2.5 font-bold text-zinc-500">$' + Number(p.cost || 0).toLocaleString() + '</td><td class="py-2.5 text-right whitespace-nowrap"><button onclick="editProduct(\'' + p.id + '\')" class="px-2.5 py-1 text-xs font-semibold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-lg mr-1">Editar</button><button onclick="deleteProduct(\'' + p.id + '\')" class="px-2.5 py-1 text-xs font-semibold bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg">Eliminar</button></td></tr>';
+        return '<tr class="hover:bg-zinc-50 transition"><td class="py-2.5">' + thumb + '</td><td class="py-2.5 font-semibold text-zinc-900">' + p.title + '</td><td class="py-2.5 text-zinc-600">' + p.category + '</td><td class="py-2.5 text-zinc-500 font-mono text-[11px]">' + (p.category === 'Desarrollo Web' ? 'Digital' : (p.weight || 0.5) + 'kg (' + (p.length || 15) + 'x' + (p.width || 15) + 'x' + (p.height || 10) + 'cm)') + '</td><td class="py-2.5 font-bold text-zinc-950">$' + Number(p.price).toLocaleString() + '</td><td class="py-2.5 font-bold text-zinc-500">$' + Number(p.cost || 0).toLocaleString() + '</td><td class="py-2.5 text-right whitespace-nowrap"><button onclick="editProduct(\'' + p.id + '\')" class="px-2.5 py-1 text-xs font-semibold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-lg mr-1">Editar</button><button onclick="deleteProduct(\'' + p.id + '\')" class="px-2.5 py-1 text-xs font-semibold bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg">Eliminar</button></td></tr>';
       }).join('');
     }
 
@@ -1404,8 +1551,9 @@
     // -------------------------------------------------------------
     window.downloadCSVTemplate = function() {
       var csvContent = "data:text/csv;charset=utf-8,Titulo,Precio,Costo,Categoria,Descripcion,Imagen\n" +
-        "Soporte Gamer 3D,320,110,Impresión 3D,Soporte para audífonos en PLA reforzado,https://ejemplo.com/foto1.jpg\n" +
-        "Diorama Anime Base,450,190,Coleccionables,Base modular para figuras a escala,https://ejemplo.com/foto2.jpg\n" +
+        "Separador Samurai,90,33,Separadores y Accesorios para Libros,Impreso en PLA técnico,https://ejemplo.com/foto1.jpg\n" +
+        "Rincón De Libros Luffy,235,92,Separadores y Accesorios para Libros,Base sujetalibros decorativa,https://ejemplo.com/foto2.jpg\n" +
+        "Servilletero Hoja,195,117,Posavasos, Platos y Portalatas,Diseño botánico minimalista,\n" +
         "Sitio Web Tienda,5500,1000,Desarrollo Web,Tienda en línea completa,";
       
       var encodedUri = encodeURI(csvContent);
@@ -1479,6 +1627,7 @@
         }
 
         var importedCount = 0;
+        var newCatalog = [];
 
         // 2. Extraer cada producto
         for (var i = headerRowIndex + 1; i < lines.length; i++) {
@@ -1497,18 +1646,18 @@
 
           var rawCost = (colCostIdx !== -1 && cols[colCostIdx]) ? cols[colCostIdx].replace(/[$,]/g, '').trim() : '';
           var cost = parseFloat(rawCost) || Math.round(price * 0.4);
-          var rawCat = (colCatIdx !== -1 && cols[colCatIdx]) ? cols[colCatIdx].trim() : 'Impresión 3D';
+          var rawCat = (colCatIdx !== -1 && cols[colCatIdx]) ? cols[colCatIdx].trim() : 'Figuras y Mas';
 
-          catalogItems.push({
+          newCatalog.push({
             id: 'prod_mp_' + Date.now() + '_' + i,
             title: title,
             price: price,
             cost: cost,
-            category: rawCat || 'Impresión 3D',
-            weight: 3.0,
-            length: 25,
-            width: 25,
-            height: 25,
+            category: rawCat || 'Figuras y Mas',
+            weight: 0.5,
+            length: 15,
+            width: 15,
+            height: 10,
             image_url: '',
             description: 'Producto registrado desde Mercado Pago Punto de Venta.',
             badge: 'Disponible'
@@ -1517,8 +1666,11 @@
         }
 
         if (importedCount > 0) {
+          // Conservar productos de Desarrollo Web si existían
+          var webItems = catalogItems.filter(function(i){ return i.category === 'Desarrollo Web'; });
+          catalogItems = newCatalog.concat(webItems);
           saveCatalog(catalogItems);
-          alert('✓ ¡Éxito! Se han importado ' + importedCount + ' productos de Mercado Pago directamente a tu catálogo.');
+          alert('✓ ¡Éxito! Se han importado ' + importedCount + ' productos de Mercado Pago organizados en sus 12 subcategorías.');
         } else {
           alert('No se detectaron productos válidos en las filas del archivo.');
         }
@@ -1604,10 +1756,10 @@
       var price = parseFloat(document.getElementById('adm-p-price').value);
       var cost = parseFloat(document.getElementById('adm-p-cost').value);
       var category = document.getElementById('adm-p-category').value;
-      var weight = parseFloat(document.getElementById('adm-p-weight').value) || 3.0;
-      var length = parseFloat(document.getElementById('adm-p-length').value) || 25;
-      var width = parseFloat(document.getElementById('adm-p-width').value) || 25;
-      var height = parseFloat(document.getElementById('adm-p-height').value) || 25;
+      var weight = parseFloat(document.getElementById('adm-p-weight').value) || 0.5;
+      var length = parseFloat(document.getElementById('adm-p-length').value) || 15;
+      var width = parseFloat(document.getElementById('adm-p-width').value) || 15;
+      var height = parseFloat(document.getElementById('adm-p-height').value) || 10;
       var imageUrl = document.getElementById('adm-p-image-url').value.trim();
       var desc = document.getElementById('adm-p-desc').value.trim();
 
@@ -1634,10 +1786,10 @@
       document.getElementById('adm-p-price').value = prod.price;
       document.getElementById('adm-p-cost').value = prod.cost || 0;
       document.getElementById('adm-p-category').value = prod.category;
-      document.getElementById('adm-p-weight').value = prod.weight || 3.0;
-      document.getElementById('adm-p-length').value = prod.length || 25;
-      document.getElementById('adm-p-width').value = prod.width || 25;
-      document.getElementById('adm-p-height').value = prod.height || 25;
+      document.getElementById('adm-p-weight').value = prod.weight || 0.5;
+      document.getElementById('adm-p-length').value = prod.length || 15;
+      document.getElementById('adm-p-width').value = prod.width || 15;
+      document.getElementById('adm-p-height').value = prod.height || 10;
       document.getElementById('adm-p-image-url').value = prod.image_url || '';
       document.getElementById('adm-p-desc').value = prod.description || '';
       toggleShippingFields(prod.category);
@@ -1712,7 +1864,7 @@
       updateCartUI();
     };
 
-    // LOGIN CON BÚSQUEDA EXHAUSTIVA EN SUPABASE Y LOCAL
+    // LOGIN CLIENTE
     window.handleLogin = async function(e) {
       e.preventDefault();
       var id = document.getElementById('login-identifier').value.trim();
@@ -1961,6 +2113,7 @@
     };
 
     window.onload = function() {
+      renderSubcategoriesBar();
       renderCatalog();
       updateCartUI();
       try {
