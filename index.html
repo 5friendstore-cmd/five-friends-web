@@ -461,12 +461,12 @@
           </div>
         </div>
 
-        <!-- FORMULARIO PRODUCTO + BOTÓN IMPORTAR CSV/EXCEL -->
+        <!-- FORMULARIO PRODUCTO + BOTÓN IMPORTAR CSV/EXCEL DE MERCADO PAGO -->
         <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm">
           <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
             <div>
               <h3 class="text-base sm:text-lg font-bold" id="product-form-title">Agregar / Editar Producto</h3>
-              <p class="text-xs text-zinc-500">Configura precios, costos, imágenes o importa masivamente tu catálogo.</p>
+              <p class="text-xs text-zinc-500">Configura precios, costos, imágenes o importa masivamente tu catálogo de Mercado Pago.</p>
             </div>
             
             <!-- Herramienta de Importación Masiva CSV -->
@@ -766,9 +766,7 @@
 
   <!-- SCRIPT DE DATOS Y LÓGICA DE NEGOCIO -->
   <script>
-    // -------------------------------------------------------------
     // CONFIGURACIÓN EXACTA DE EMAILJS (2 CUENTAS SEPARADAS)
-    // -------------------------------------------------------------
     const EMAILJS_PASS_PUBLIC_KEY = "k2u203TouhD3PPrZU";
     const EMAILJS_PASS_SERVICE_ID = "service_k329g2o";
     const EMAILJS_PASS_TEMPLATE_ID = "template_f9qsdal";
@@ -801,7 +799,7 @@
       }
     } catch(e){}
 
-    // Catálogo con dimensiones y persistencia
+    // Catálogo inicial con persistencia
     var catalogItems = [
       { id: "p1", title: "Soporte Articulado para Escritorio", description: "Impresión en PETG de alta resistencia.", price: 290, cost: 95, category: "Impresión 3D", weight: 0.4, length: 15, width: 15, height: 10, image_url: "", badge: "Entrega Inmediata" },
       { id: "p2", title: "Organizador Modular de Herramientas", description: "Bandejas encastrables con ranuras.", price: 340, cost: 110, category: "Impresión 3D", weight: 0.6, length: 20, width: 15, height: 12, image_url: "", badge: "Personalizable" },
@@ -1380,7 +1378,7 @@
 
         group.forEach(function(p){
           var img = p.image_url ? '<div class="w-full h-44 rounded-xl overflow-hidden bg-zinc-100 mb-3 border border-zinc-100"><img src="' + p.image_url + '" class="w-full h-full object-cover"></div>' : '<div class="w-full h-24 rounded-xl bg-zinc-100/70 mb-3 border border-dashed border-zinc-200 flex items-center justify-center text-zinc-400 text-xs font-semibold">' + icon + ' ' + p.category + '</div>';
-          html += '<div class="border border-zinc-200 bg-white p-5 rounded-2xl flex flex-col justify-between space-y-3 shadow-sm hover:border-zinc-400 transition"><div>' + img + '<span class="text-[10px] uppercase font-bold px-2 py-0.5 bg-zinc-100 rounded text-zinc-600 inline-block mb-1.5">' + (p.badge || p.category) + '</span><h4 class="font-bold text-base text-zinc-950 leading-snug">${p.title}</h4><p class="text-xs text-zinc-500 leading-relaxed mt-1">${p.description}</p></div><div class="flex justify-between items-center pt-3 border-t border-zinc-100"><div><span class="text-[10px] text-zinc-400 uppercase font-semibold block">Precio</span><span class="font-extrabold text-base sm:text-lg text-zinc-950">$' + Number(p.price).toLocaleString() + ' MXN</span></div><button type="button" onclick="addToCart(\'' + p.id + '\')" class="px-4 py-2 bg-zinc-950 text-white text-xs font-semibold rounded-xl hover:bg-zinc-800 transition shadow-sm flex items-center gap-1.5"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg><span>Agregar</span></button></div></div>';
+          html += '<div class="border border-zinc-200 bg-white p-5 rounded-2xl flex flex-col justify-between space-y-3 shadow-sm hover:border-zinc-400 transition"><div>' + img + '<span class="text-[10px] uppercase font-bold px-2 py-0.5 bg-zinc-100 rounded text-zinc-600 inline-block mb-1.5">' + (p.badge || p.category) + '</span><h4 class="font-bold text-base text-zinc-950 leading-snug">' + p.title + '</h4><p class="text-xs text-zinc-500 leading-relaxed mt-1">' + p.description + '</p></div><div class="flex justify-between items-center pt-3 border-t border-zinc-100"><div><span class="text-[10px] text-zinc-400 uppercase font-semibold block">Precio</span><span class="font-extrabold text-base sm:text-lg text-zinc-950">$' + Number(p.price).toLocaleString() + ' MXN</span></div><button type="button" onclick="addToCart(\'' + p.id + '\')" class="px-4 py-2 bg-zinc-950 text-white text-xs font-semibold rounded-xl hover:bg-zinc-800 transition shadow-sm flex items-center gap-1.5"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg><span>Agregar</span></button></div></div>';
         });
 
         html += '</div></div>';
@@ -1402,7 +1400,7 @@
     }
 
     // -------------------------------------------------------------
-    // IMPORTACIÓN MASIVA DE CATÁLOGO (CSV / EXCEL)
+    // IMPORTACIÓN MASIVA COMPATIBLE CON MERCADO PAGO PUNTO DE VENTA Y CSV GENÉRICO
     // -------------------------------------------------------------
     window.downloadCSVTemplate = function() {
       var csvContent = "data:text/csv;charset=utf-8,Titulo,Precio,Costo,Categoria,Descripcion,Imagen\n" +
@@ -1426,52 +1424,107 @@
       var reader = new FileReader();
       reader.onload = function(e) {
         var text = e.target.result;
-        var lines = text.split(/\r\n|\n/);
-        var importedCount = 0;
-
-        for (var i = 1; i < lines.length; i++) {
-          var line = lines[i].trim();
-          if (!line) continue;
-
-          // Manejar comas en el CSV
-          var cols = line.split(',');
-          if (cols.length >= 2) {
-            var title = cols[0] ? cols[0].trim() : '';
-            var price = parseFloat(cols[1]) || 0;
-            var cost = parseFloat(cols[2]) || Math.round(price * 0.4);
-            var category = cols[3] ? cols[3].trim() : 'Impresión 3D';
-            var desc = cols[4] ? cols[4].trim() : '';
-            var img = cols[5] ? cols[5].trim() : '';
-
-            if (title && price > 0) {
-              catalogItems.unshift({
-                id: 'prod_' + Date.now() + '_' + i,
-                title: title,
-                price: price,
-                cost: cost,
-                category: category,
-                weight: 3.0,
-                length: 25,
-                width: 25,
-                height: 25,
-                image_url: img,
-                description: desc,
-                badge: 'Importado'
-              });
-              importedCount++;
+        
+        function parseCSVLine(line) {
+          var values = [];
+          var current = '';
+          var inQuotes = false;
+          for (var i = 0; i < line.length; i++) {
+            var c = line[i];
+            if (c === '"') {
+              inQuotes = !inQuotes;
+            } else if (c === ',' && !inQuotes) {
+              values.push(current.trim().replace(/^"|"$/g, '').replace(/""/g, '"'));
+              current = '';
+            } else {
+              current += c;
             }
           }
+          values.push(current.trim().replace(/^"|"$/g, '').replace(/""/g, '"'));
+          return values;
+        }
+
+        var lines = text.split(/\r\n|\n/);
+        var headerRowIndex = -1;
+        var colNameIdx = -1;
+        var colPriceIdx = -1;
+        var colCostIdx = -1;
+        var colCatIdx = -1;
+
+        // 1. Detectar la fila de encabezados reales de Mercado Pago o genéricos
+        for (var r = 0; r < Math.min(lines.length, 10); r++) {
+          var parsed = parseCSVLine(lines[r]);
+          for (var c = 0; c < parsed.length; c++) {
+            var val = parsed[c].toLowerCase();
+            if (val.indexOf('nombre del producto') !== -1 || val === 'titulo' || val === 'title') {
+              headerRowIndex = r;
+              colNameIdx = c;
+            }
+            if (val.indexOf('precio de venta') !== -1 || val === 'precio' || val === 'price') {
+              colPriceIdx = c;
+            }
+            if (val.indexOf('costo') !== -1 || val === 'cost') {
+              colCostIdx = c;
+            }
+            if (val.indexOf('categoría') !== -1 || val.indexOf('categoria') !== -1 || val === 'category') {
+              colCatIdx = c;
+            }
+          }
+          if (colNameIdx !== -1 && colPriceIdx !== -1) break;
+        }
+
+        if (colNameIdx === -1 || colPriceIdx === -1) {
+          alert('No se pudieron identificar las columnas de Producto y Precio en el archivo.');
+          return;
+        }
+
+        var importedCount = 0;
+
+        // 2. Extraer cada producto
+        for (var i = headerRowIndex + 1; i < lines.length; i++) {
+          var rawLine = lines[i].trim();
+          if (!rawLine) continue;
+
+          var cols = parseCSVLine(rawLine);
+          var title = cols[colNameIdx] ? cols[colNameIdx].trim() : '';
+          var rawPrice = cols[colPriceIdx] ? cols[colPriceIdx].replace(/[$,]/g, '').trim() : '';
+          var price = parseFloat(rawPrice);
+
+          // Filtrar encabezados explicativos o filas vacías de Mercado Pago
+          if (!title || isNaN(price) || price <= 0 || title.indexOf('Máximo de 60 caracteres') !== -1) {
+            continue;
+          }
+
+          var rawCost = (colCostIdx !== -1 && cols[colCostIdx]) ? cols[colCostIdx].replace(/[$,]/g, '').trim() : '';
+          var cost = parseFloat(rawCost) || Math.round(price * 0.4);
+          var rawCat = (colCatIdx !== -1 && cols[colCatIdx]) ? cols[colCatIdx].trim() : 'Impresión 3D';
+
+          catalogItems.push({
+            id: 'prod_mp_' + Date.now() + '_' + i,
+            title: title,
+            price: price,
+            cost: cost,
+            category: rawCat || 'Impresión 3D',
+            weight: 3.0,
+            length: 25,
+            width: 25,
+            height: 25,
+            image_url: '',
+            description: 'Producto registrado desde Mercado Pago Punto de Venta.',
+            badge: 'Disponible'
+          });
+          importedCount++;
         }
 
         if (importedCount > 0) {
           saveCatalog(catalogItems);
-          alert('✓ ¡Éxito! Se han importado ' + importedCount + ' productos a tu catálogo.');
+          alert('✓ ¡Éxito! Se han importado ' + importedCount + ' productos de Mercado Pago directamente a tu catálogo.');
         } else {
-          alert('No se detectaron productos válidos. Revisa la plantilla descargable.');
+          alert('No se detectaron productos válidos en las filas del archivo.');
         }
         event.target.value = '';
       };
-      reader.readAsText(file);
+      reader.readAsText(file, 'utf-8');
     };
 
     // AUDITORÍA DE PEDIDOS EN EL PANEL DE ADMINISTRADOR
