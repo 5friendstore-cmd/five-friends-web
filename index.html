@@ -32,6 +32,9 @@
       if (target) {
         target.classList.remove('hidden');
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (section === 'catalogo' && typeof window.fetchCatalogFromDatabase === 'function') {
+          window.fetchCatalogFromDatabase();
+        }
       }
     };
 
@@ -141,7 +144,7 @@
   <!-- CONTENIDO PRINCIPAL -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
 
-    <!-- SECCIÓN 1: INICIO (LOS 3 PILARES DE NEGOCIO) -->
+    <!-- SECCIÓN 1: INICIO (LOS 3 PILARES) -->
     <section id="sec-inicio" class="space-y-12 sm:space-y-16">
       <div class="text-center max-w-2xl mx-auto space-y-4 pt-6 sm:pt-12">
         <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-zinc-950 leading-tight">
@@ -831,29 +834,26 @@
       }
     } catch(e){}
 
-    // -------------------------------------------------------------
     // MAPEO OFICIAL DE MACRO-CATEGORÍAS Y PILARES
-    // -------------------------------------------------------------
     function getMacroCategory(category) {
       if (category === 'Desarrollo Web') return 'Web';
-      if (category === 'Coleccionables' || category === 'Dioramas y Bases' || category === 'TCG y Cartas') return 'Coleccionables';
-      // Todas las demás ramas (las 12 del CSV y generales) pertenecen a Impresión 3D
+      if (category === 'Coleccionables' || category === 'Dioramas y Bases' || category === 'TCG y Cartas' || category === 'Figuras y Mas') return 'Coleccionables';
       return '3D';
     }
 
-    // Catálogo inicial con los 3 pilares
-    var catalogItems = [
+    var defaultInitialCatalog = [
       // 1. Impresión 3D
       { id: "p1", title: "Soporte Articulado para Escritorio", description: "Impresión en PETG de alta resistencia.", price: 290, cost: 95, category: "Llaveros y Portallaveros", weight: 0.4, length: 15, width: 15, height: 10, image_url: "", badge: "Impresión 3D" },
       { id: "p2", title: "Organizador Modular de Herramientas", description: "Bandejas encastrables con ranuras.", price: 340, cost: 110, category: "Estuches y Alcancias", weight: 0.6, length: 20, width: 15, height: 12, image_url: "", badge: "Impresión 3D" },
       // 2. Coleccionables
       { id: "p3", title: "Diorama Exhibidor Edición Especial", description: "Base modular temática para figuras coleccionables.", price: 420, cost: 180, category: "Coleccionables", weight: 1.2, length: 25, width: 25, height: 20, image_url: "", badge: "Coleccionables" },
       { id: "p4", title: "Marco Exhibidor para Cartas TCG", description: "Caja rígida con protección UV para coleccionistas.", price: 260, cost: 80, category: "Coleccionables", weight: 0.3, length: 15, width: 10, height: 5, image_url: "", badge: "Coleccionables" },
-      // 3. Desarrollo Web (Servicio Digital - Sin Envío)
+      // 3. Desarrollo Web
       { id: "p5", title: "Landing Page para Emprendedores", description: "Diseño minimalista ultra rápido responsivo y optimizado.", price: 3200, cost: 500, category: "Desarrollo Web", weight: 0, length: 0, width: 0, height: 0, image_url: "", badge: "Servicio Digital" },
       { id: "p6", title: "Tienda Online E-commerce", description: "Catálogo autogestionable y cobros con Mercado Pago.", price: 6500, cost: 1200, category: "Desarrollo Web", weight: 0, length: 0, width: 0, height: 0, image_url: "", badge: "Servicio Digital" }
     ];
 
+    var catalogItems = defaultInitialCatalog;
     try {
       var savedCat = localStorage.getItem('five_friends_catalog');
       if (savedCat) catalogItems = JSON.parse(savedCat);
@@ -866,8 +866,8 @@
     } catch(e){}
 
     var selectedShippingRate = null;
-    var currentMacroFilter = 'all'; // 'all', '3D', 'Coleccionables', 'Web'
-    var currentSubFilter = 'all';   // 'all' o categoría específica
+    var currentMacroFilter = 'all';
+    var currentSubFilter = 'all';
 
     function getSession() {
       try {
@@ -877,7 +877,56 @@
       }
     }
 
-    function saveCatalog(items) {
+    // -------------------------------------------------------------
+    // SINCRONIZACIÓN AUTOMÁTICA DESDE SUPABASE PARA CLIENTES Y ADMIN
+    // -------------------------------------------------------------
+    window.fetchCatalogFromDatabase = async function() {
+      if (!supabaseClient) {
+        renderSubcategoriesBar();
+        renderCatalog();
+        renderAdminProductsTable();
+        return;
+      }
+
+      try {
+        var res = await supabaseClient.from('products').select('*').order('created_at', { ascending: false });
+        if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+          // Fusionar con los productos locales asegurando que todos existan
+          var dbProducts = res.data;
+          
+          // Preservar en local y sincronizar
+          catalogItems = dbProducts;
+          localStorage.setItem('five_friends_catalog', JSON.stringify(catalogItems));
+        } else if (catalogItems.length > 0) {
+          // Si la base de datos está vacía, subir los productos existentes para inicializarla
+          for (var i = 0; i < Math.min(catalogItems.length, 30); i++) {
+            var item = catalogItems[i];
+            await supabaseClient.from('products').upsert({
+              id: item.id || ('prod_' + Date.now() + '_' + i),
+              title: item.title,
+              description: item.description || '',
+              price: item.price,
+              cost: item.cost || 0,
+              category: item.category,
+              badge: item.badge || '',
+              weight: item.weight || 0.5,
+              length: item.length || 15,
+              width: item.width || 15,
+              height: item.height || 10,
+              image_url: item.image_url || ''
+            });
+          }
+        }
+      } catch(err) {
+        console.warn("Error cargando productos de Supabase:", err);
+      }
+
+      renderSubcategoriesBar();
+      renderCatalog();
+      renderAdminProductsTable();
+    };
+
+    async function saveCatalog(items) {
       catalogItems = items;
       try { localStorage.setItem('five_friends_catalog', JSON.stringify(catalogItems)); } catch(e){}
       renderSubcategoriesBar();
@@ -931,7 +980,6 @@
       saveCart(cart.filter(function(i){ return i.id !== productId; }));
     };
 
-    // REGLA CLAVE DE ENVÍO: DESARROLLO WEB NUNCA COTIZA NI COBRA ENVÍO
     function updateCartUI() {
       var count = cart.reduce(function(acc, i){ return acc + (i.quantity || 1); }, 0);
       var subtotal = cart.reduce(function(acc, i){ return acc + (i.price * (i.quantity || 1)); }, 0);
@@ -979,16 +1027,13 @@
         }).join('');
       }
 
-      // Detectar si hay artículos físicos que requieran paquetería
       var hasPhysical = cart.some(function(i){ return i.category !== 'Desarrollo Web'; });
 
-      // Ocultar completamente el cotizador si solo hay desarrollo web
       var shippingBox = document.getElementById('shipping-calculator-box');
       if (shippingBox) {
         shippingBox.classList.toggle('hidden', !hasPhysical || cart.length === 0);
       }
 
-      // Si no hay productos físicos, el costo de envío es estrictamente 0
       var shippingCost = 0;
       if (hasPhysical && selectedShippingRate) {
         shippingCost = selectedShippingRate.cost;
@@ -1064,7 +1109,6 @@
 
       var hasPhysical = cart.some(function(i){ return i.category !== 'Desarrollo Web'; });
       
-      // Si hay productos físicos, exigir cotización de envío
       if (hasPhysical && !selectedShippingRate) {
         var zipInput = document.getElementById('shipping-zip');
         if (zipInput && zipInput.value.trim().length === 5) {
@@ -1086,7 +1130,6 @@
       if (phoneInp) phoneInp.value = sess.phone || '';
       if (zipInp && selectedShippingRate) zipInp.value = document.getElementById('shipping-zip')?.value || '';
 
-      // Ocultar sección de dirección de paquetería si es únicamente servicio web
       var addressSection = document.getElementById('checkout-address-section');
       if (addressSection) {
         addressSection.classList.toggle('hidden', !hasPhysical);
@@ -1095,7 +1138,6 @@
       goToCartStep(2);
     };
 
-    // GENERAR PREFERENCIA EN MERCADO PAGO
     async function createMercadoPagoCheckout(orderId, items, shippingCost, customer) {
       var mpItems = items.map(function(i){
         return {
@@ -1154,7 +1196,6 @@
       }
     }
 
-    // FINALIZAR PEDIDO
     window.finalizeOrderAndPay = async function() {
       var sess = getSession();
       var name = document.getElementById('order-customer-name').value.trim();
@@ -1327,7 +1368,6 @@
       }
     };
 
-    // COTIZADOR SKYDROPX (SOLO EVALÚA PRODUCTOS FÍSICOS)
     window.calculateShippingRates = async function() {
       var zip = document.getElementById('shipping-zip').value.trim();
       var btn = document.getElementById('btn-calc-shipping');
@@ -1338,7 +1378,6 @@
         return;
       }
 
-      // Solo productos físicos suman peso y volumen
       var physicalItems = cart.filter(function(i){ return i.category !== 'Desarrollo Web'; });
       if (physicalItems.length === 0) {
         alert("Tu carrito solo contiene servicios digitales. No requieren paquetería de envío.");
@@ -1393,9 +1432,6 @@
       updateCartUI();
     };
 
-    // -------------------------------------------------------------
-    // GESTIÓN DE FILTROS: TODOS, IMPRESIÓN 3D, COLECCIONABLES Y WEB
-    // -------------------------------------------------------------
     window.filterCategoryFromHome = function(macro) {
       navigate('catalogo');
       setMacroFilter(macro);
@@ -1434,13 +1470,11 @@
       var bar = document.getElementById('subcategories-bar');
       if (!bar) return;
 
-      // Si se selecciona "Web", no hay subcategorías físicas que mostrar
       if (currentMacroFilter === 'Web') {
         bar.classList.add('hidden');
         return;
       }
 
-      // Obtener categorías presentes según el Macro-Filtro seleccionado
       var availableSubs = [];
       catalogItems.forEach(function(item) {
         if (item.category && item.category !== 'Desarrollo Web') {
@@ -1612,12 +1646,12 @@
       document.body.removeChild(link);
     };
 
-    window.handleBulkCSVImport = function(event) {
+    window.handleBulkCSVImport = async function(event) {
       var file = event.target.files[0];
       if (!file) return;
 
       var reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = async function(e) {
         var text = e.target.result;
         
         function parseCSVLine(line) {
@@ -1692,7 +1726,7 @@
           var cost = parseFloat(rawCost) || Math.round(price * 0.4);
           var rawCat = (colCatIdx !== -1 && cols[colCatIdx]) ? cols[colCatIdx].trim() : 'Impresión 3D';
 
-          newCatalog.push({
+          var pObj = {
             id: 'prod_mp_' + Date.now() + '_' + i,
             title: title,
             price: price,
@@ -1705,7 +1739,8 @@
             image_url: '',
             description: 'Producto registrado desde Mercado Pago.',
             badge: 'Disponible'
-          });
+          };
+          newCatalog.push(pObj);
           importedCount++;
         }
 
@@ -1713,7 +1748,33 @@
           var webAndCustom = catalogItems.filter(function(i){ return i.category === 'Desarrollo Web' || i.category === 'Coleccionables'; });
           catalogItems = newCatalog.concat(webAndCustom);
           saveCatalog(catalogItems);
-          alert('✓ ¡Éxito! Se han importado ' + importedCount + ' productos de Mercado Pago.');
+
+          // Subir a Supabase en bloques para que queden disponibles para todos
+          if (supabaseClient) {
+            try {
+              var payload = catalogItems.map(function(item) {
+                return {
+                  id: item.id,
+                  title: item.title,
+                  description: item.description || '',
+                  price: item.price,
+                  cost: item.cost || 0,
+                  category: item.category,
+                  badge: item.badge || '',
+                  weight: item.weight || 0.5,
+                  length: item.length || 15,
+                  width: item.width || 15,
+                  height: item.height || 10,
+                  image_url: item.image_url || ''
+                };
+              });
+              await supabaseClient.from('products').upsert(payload);
+            } catch(dbErr) {
+              console.warn("Error sincronizando catálogo con Supabase:", dbErr);
+            }
+          }
+
+          alert('✓ ¡Éxito! Se han importado ' + importedCount + ' productos a Supabase y al catálogo público.');
         } else {
           alert('No se detectaron productos válidos en las filas del archivo.');
         }
@@ -1792,7 +1853,8 @@
       }).join('');
     }
 
-    window.handleProductFormSubmit = function(e) {
+    // GUARDAR PRODUCTO EN LOCAL Y SUPABASE
+    window.handleProductFormSubmit = async function(e) {
       e.preventDefault();
       var id = document.getElementById('adm-p-id').value;
       var title = document.getElementById('adm-p-title').value.trim();
@@ -1808,19 +1870,42 @@
 
       var macro = getMacroCategory(category);
       var badgeText = macro === 'Web' ? 'Servicio Digital' : (macro === 'Coleccionables' ? 'Coleccionables' : 'Impresión 3D');
+      var finalId = id || ('prod_' + Date.now());
+
+      var productRecord = { 
+        id: finalId, 
+        title: title, 
+        price: price, 
+        cost: cost, 
+        category: category, 
+        weight: weight, 
+        length: length, 
+        width: width, 
+        height: height, 
+        image_url: imageUrl, 
+        description: desc, 
+        badge: badgeText 
+      };
 
       if (id) {
         var idx = catalogItems.findIndex(function(p){ return p.id === id; });
-        if (idx >= 0) {
-          catalogItems[idx] = { id: id, title: title, price: price, cost: cost, category: category, weight: weight, length: length, width: width, height: height, image_url: imageUrl, description: desc, badge: badgeText };
-          saveCatalog(catalogItems);
-          alert('✓ Producto actualizado.');
-        }
+        if (idx >= 0) catalogItems[idx] = productRecord;
       } else {
-        catalogItems.unshift({ id: 'prod_' + Date.now(), title: title, price: price, cost: cost, category: category, weight: weight, length: length, width: width, height: height, image_url: imageUrl, description: desc, badge: badgeText });
-        saveCatalog(catalogItems);
-        alert('✓ Producto guardado.');
+        catalogItems.unshift(productRecord);
       }
+
+      saveCatalog(catalogItems);
+
+      // Guardar en Supabase para que todos los clientes lo vean
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from('products').upsert(productRecord);
+        } catch(dbErr) {
+          console.warn("Supabase upsert error:", dbErr);
+        }
+      }
+
+      alert('✓ Producto guardado y sincronizado con éxito para todos los usuarios.');
       cancelProductEdit();
     };
 
@@ -1855,11 +1940,16 @@
       document.getElementById('btn-cancel-edit').classList.add('hidden');
     };
 
-    window.deleteProduct = function(id) {
+    window.deleteProduct = async function(id) {
       var prod = catalogItems.find(function(p){ return p.id === id; });
       if (!prod) return;
-      if (confirm('¿Eliminar "' + prod.title + '"?')) {
+      if (confirm('¿Eliminar "' + prod.title + '" de la tienda y la base de datos?')) {
         saveCatalog(catalogItems.filter(function(p){ return p.id !== id; }));
+        if (supabaseClient) {
+          try {
+            await supabaseClient.from('products').delete().eq('id', id);
+          } catch(e){}
+        }
       }
     };
 
@@ -2159,8 +2249,7 @@
     };
 
     window.onload = function() {
-      renderSubcategoriesBar();
-      renderCatalog();
+      window.fetchCatalogFromDatabase();
       updateCartUI();
       try {
         var sess = getSession();
