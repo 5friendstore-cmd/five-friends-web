@@ -12,8 +12,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <!-- EmailJS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-  <!-- SDK de Mercado Pago v2 -->
-  <script src="https://sdk.mercadopago.com/js/v2"></script>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
     .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); }
@@ -69,7 +67,7 @@
 
     </div>
 
-    <!-- Menú Desplegable Móvil -->
+    <!-- Menú Móvil Desplegable -->
     <div id="mobile-menu" class="hidden md:hidden border-b border-zinc-200 bg-white px-5 py-4 space-y-3 text-sm font-medium text-zinc-700 shadow-lg">
       <button type="button" onclick="navigate('inicio'); toggleMobileMenu()" class="block w-full text-left py-2 hover:text-zinc-950 border-b border-zinc-100">Inicio</button>
       <button type="button" onclick="navigate('catalogo'); toggleMobileMenu()" class="block w-full text-left py-2 hover:text-zinc-950 border-b border-zinc-100">Tienda & Catálogo</button>
@@ -143,7 +141,7 @@
         <div class="border border-zinc-200 rounded-2xl p-5 sm:p-6 bg-white space-y-3 shadow-sm">
           <span class="text-[11px] font-semibold px-2 py-0.5 bg-zinc-100 rounded text-zinc-700 uppercase">Networking</span>
           <h3 class="text-base sm:text-lg font-bold">Bazar EE Networking</h3>
-          <p class="text-xs sm:text-sm text-zinc-500">Ubicado en <strong>Plaza San Miguel</strong>. Espacio de exposición y pedidos de desarrollo web y 3D.</p>
+          <p class="text-xs sm:text-sm text-zinc-500">Ubicado en <strong>Plaza San Miguel</strong>. Espacio de exposición y pedidos de desarrollo web e impresión.</p>
         </div>
       </div>
     </section>
@@ -173,7 +171,7 @@
       </div>
     </section>
 
-    <!-- SECCIÓN 4: CATÁLOGO CLASIFICADO CON TIENDA Y CARRITO -->
+    <!-- SECCIÓN 4: TIENDA & CATÁLOGO -->
     <section id="sec-catalogo" class="hidden space-y-6">
       <div class="flex flex-col md:flex-row justify-between md:items-end gap-4 border-b border-zinc-200 pb-5">
         <div>
@@ -352,7 +350,7 @@
           </div>
         </div>
 
-        <!-- FORMULARIO DE AÑADIR / EDITAR PRODUCTO (CON PESO Y MEDIDAS) -->
+        <!-- FORMULARIO DE AÑADIR / EDITAR PRODUCTO -->
         <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm">
           <div class="flex justify-between items-center">
             <div>
@@ -389,7 +387,7 @@
               </select>
             </div>
 
-            <!-- PESO Y MEDIDAS DEL PRODUCTO PARA ENVÍOS (SKYDROPX) -->
+            <!-- PESO Y MEDIDAS -->
             <div id="shipping-dimensions-box" class="sm:col-span-2 md:col-span-4 bg-zinc-50 border border-zinc-200 p-3.5 rounded-xl space-y-2">
               <span class="text-xs font-bold text-zinc-800 uppercase tracking-wider block">Dimensiones y Peso para Envío Automático</span>
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
@@ -412,7 +410,7 @@
               </div>
             </div>
 
-            <!-- GESTIÓN DE IMAGEN -->
+            <!-- IMAGEN -->
             <div class="sm:col-span-2 md:col-span-3">
               <label class="block text-xs font-semibold text-zinc-600 mb-1">Imagen del Producto (URL o Archivo)</label>
               <div class="flex flex-col sm:flex-row gap-2">
@@ -466,7 +464,7 @@
           </div>
         </div>
 
-        <!-- NUEVA SECCIÓN: PEDIDOS Y GUÍAS DE ENVÍO -->
+        <!-- PEDIDOS Y GUÍAS DE ENVÍO -->
         <div class="bg-white border border-zinc-200 rounded-2xl p-5 space-y-4 shadow-sm">
           <div class="flex justify-between items-center">
             <div>
@@ -543,7 +541,7 @@
 
   </main>
 
-  <!-- CAJÓN DESLIZANTE LATERAL DEL CARRITO DE COMPRAS (DRAWER) -->
+  <!-- CAJÓN DESLIZANTE DEL CARRITO DE COMPRAS -->
   <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="toggleCartDrawer()"></div>
     <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
@@ -558,7 +556,7 @@
           <button onclick="toggleCartDrawer()" class="p-2 text-zinc-400 hover:text-zinc-800 text-xl font-bold focus:outline-none">&times;</button>
         </div>
 
-        <!-- Lista de Productos en el Carrito -->
+        <!-- Lista de Productos -->
         <div class="flex-1 overflow-y-auto p-6 space-y-4" id="cart-items-container">
           <div class="text-center py-12 text-zinc-400 space-y-2">
             <p class="text-sm">Tu carrito está vacío.</p>
@@ -569,18 +567,18 @@
         <!-- Módulo de Envío y Checkout -->
         <div class="p-6 border-t border-zinc-200 bg-zinc-50 space-y-4">
           
-          <!-- Cotizador de Envíos Skydropx -->
+          <!-- Cotizador Skydropx -->
           <div id="shipping-calculator-box" class="space-y-2">
             <div class="flex justify-between items-center">
               <label class="text-xs font-bold text-zinc-700 uppercase">Calcular Envío (Skydropx)</label>
               <span id="shipping-origin-label" class="text-[10px] text-zinc-400">Origen: CP 54807</span>
             </div>
             <div class="flex gap-2">
-              <input type="text" id="shipping-zip" placeholder="Ingresa tu Código Postal" maxlength="5" class="flex-1 px-3 py-2 bg-white border border-zinc-300 rounded-xl text-xs outline-none focus:border-zinc-950">
+              <input type="text" id="shipping-zip" placeholder="Código Postal (5 dígitos)" maxlength="5" class="flex-1 px-3 py-2 bg-white border border-zinc-300 rounded-xl text-xs outline-none focus:border-zinc-950">
               <button type="button" onclick="calculateShippingRates()" id="btn-calc-shipping" class="px-4 py-2 bg-zinc-950 text-white rounded-xl text-xs font-semibold hover:bg-zinc-800">Cotizar</button>
             </div>
 
-            <!-- Opciones de Paquetería Cotizadas -->
+            <!-- Opciones Cotizadas -->
             <div id="shipping-options-list" class="space-y-1.5 pt-1 hidden"></div>
           </div>
 
@@ -616,28 +614,69 @@
   </div>
 
   <script>
+    // -------------------------------------------------------------
+    // FUNCIONES GLOBALES INMEDIATAS (BLINDADAS CONTRA ERRORES)
+    // -------------------------------------------------------------
+    window.navigate = function(section) {
+      ['inicio', 'puntos', 'contacto', 'catalogo', 'club'].forEach(s => {
+        const el = document.getElementById('sec-' + s);
+        if (el) el.classList.add('hidden');
+      });
+      const target = document.getElementById('sec-' + section);
+      if (target) {
+        target.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
+
+    window.toggleMobileMenu = function() {
+      const menu = document.getElementById('mobile-menu');
+      const bars = document.getElementById('menu-icon-bars');
+      const close = document.getElementById('menu-icon-close');
+      const isHidden = menu.classList.contains('hidden');
+
+      menu.classList.toggle('hidden');
+      bars.classList.toggle('hidden', isHidden);
+      close.classList.toggle('hidden', !isHidden);
+    };
+
+    window.toggleCartDrawer = function() {
+      const drawer = document.getElementById('cart-drawer');
+      if (drawer) drawer.classList.toggle('hidden');
+    };
+
+    window.toggleAuthTab = function(tab) {
+      document.getElementById('form-login').classList.add('hidden');
+      document.getElementById('form-register').classList.add('hidden');
+      document.getElementById('form-admin').classList.add('hidden');
+
+      ['login', 'register', 'admin'].forEach(t => {
+        const el = document.getElementById('tab-' + t);
+        if (el) el.className = 'text-zinc-400 hover:text-zinc-700 pb-2.5';
+      });
+
+      const activeTab = document.getElementById('tab-' + tab);
+      if (activeTab) activeTab.className = 'text-zinc-950 border-b-2 border-zinc-950 pb-2.5';
+      const form = document.getElementById('form-' + tab);
+      if (form) form.classList.remove('hidden');
+    };
+
     // CREDENCIALES CONFIGURADAS
     const SUPABASE_BASE_URL = "https://vqsuycquoeqakhttibao.supabase.co";
     const SUPABASE_KEY = "sb_publishable_iglMJnYPy3iFulCFv3j_qw_s3An5vme";
     let supabaseClient = null;
 
-    const MP_PUBLIC_KEY = "APP_USR-c2ecf1d6-0487-4ca6-a219-2162d6e048a1";
-    let mpInstance = null;
-
     try {
       if (window.supabase && typeof window.supabase.createClient === 'function') {
         supabaseClient = window.supabase.createClient(SUPABASE_BASE_URL, SUPABASE_KEY);
       }
-      if (window.MercadoPago) {
-        mpInstance = new MercadoPago(MP_PUBLIC_KEY, { locale: 'es-MX' });
-      }
     } catch (err) {
-      console.warn("Init error:", err);
+      console.warn("Supabase Init Error:", err);
     }
 
-    // -----------------------------------------------------------------
+    // -------------------------------------------------------------
     // GESTIÓN DEL CARRITO DE COMPRAS Y PEDIDOS
-    // -----------------------------------------------------------------
+    // -------------------------------------------------------------
     function getStoredCart() {
       try {
         return JSON.parse(localStorage.getItem('five_friends_cart')) || [];
@@ -654,11 +693,6 @@
       localStorage.setItem('five_friends_cart', JSON.stringify(cart));
       updateCartUI();
     }
-
-    window.toggleCartDrawer = function() {
-      const drawer = document.getElementById('cart-drawer');
-      drawer.classList.toggle('hidden');
-    };
 
     window.addToCart = function(productId) {
       const product = catalogItems.find(p => p.id === productId);
@@ -705,7 +739,6 @@
       const count = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
       const subtotal = cart.reduce((acc, item) => acc + (item.price * (item.quantity || 1)), 0);
 
-      // Badges
       const badgeDesk = document.getElementById('cart-badge-desktop');
       const badgeMob = document.getElementById('cart-badge-mobile');
       const countLabel = document.getElementById('cart-item-count');
@@ -718,7 +751,6 @@
       });
       if (countLabel) countLabel.innerText = count;
 
-      // Render items
       const container = document.getElementById('cart-items-container');
       if (cart.length === 0) {
         container.innerHTML = `
@@ -751,14 +783,12 @@
         `).join('');
       }
 
-      // Desactivar cálculo de envío si todos los ítems son digitales (Desarrollo Web)
       const hasPhysicalItems = cart.some(i => i.category !== 'Desarrollo Web');
       const shippingBox = document.getElementById('shipping-calculator-box');
       if (shippingBox) {
         shippingBox.classList.toggle('hidden', !hasPhysicalItems || cart.length === 0);
       }
 
-      // Totales
       const shippingCost = hasPhysicalItems && selectedShippingRate ? selectedShippingRate.cost : 0;
       const total = subtotal + shippingCost;
 
@@ -767,7 +797,7 @@
       document.getElementById('cart-total').innerText = `$${total.toLocaleString()} MXN`;
     }
 
-    // COTIZADOR SKYDROPX CON SERVIDOR VERCEL
+    // COTIZADOR SKYDROPX
     window.calculateShippingRates = async function() {
       const zip = document.getElementById('shipping-zip').value.trim();
       const btn = document.getElementById('btn-calc-shipping');
@@ -781,7 +811,6 @@
       btn.innerText = "...";
       btn.disabled = true;
 
-      // Calcular peso acumulado y empaque óptimo
       const totalWeight = cart.reduce((acc, i) => acc + (parseFloat(i.weight || 3) * (i.quantity || 1)), 0);
       const maxDim = cart.reduce((max, i) => Math.max(max, parseFloat(i.length || 25), parseFloat(i.width || 25), parseFloat(i.height || 25)), 25);
 
@@ -817,7 +846,6 @@
             </label>
           `).join('');
 
-          // Seleccionar la primera por defecto
           selectShippingOption(rates[0].cost, rates[0].provider, rates[0].service, rates[0].days);
         }
 
@@ -870,9 +898,7 @@
         const data = await response.json();
 
         if (data.init_point) {
-          // Guardar orden previa para el admin
           registerStoreOrder(data.id);
-          // Redirigir al Checkout seguro de Mercado Pago
           window.location.href = data.init_point;
         } else {
           alert("No se pudo iniciar el pago. Revisa la consola o credenciales.");
@@ -1209,47 +1235,8 @@
     };
 
     // -------------------------------------------------------------
-    // CLUB, AUTENTICACIÓN Y ADMIN
+    // CLUB, AUTENTICACIÓN Y PERSISTENCIA
     // -------------------------------------------------------------
-    window.toggleMobileMenu = function() {
-      const menu = document.getElementById('mobile-menu');
-      const bars = document.getElementById('menu-icon-bars');
-      const close = document.getElementById('menu-icon-close');
-      const isHidden = menu.classList.contains('hidden');
-
-      menu.classList.toggle('hidden');
-      bars.classList.toggle('hidden', isHidden);
-      close.classList.toggle('hidden', !isHidden);
-    };
-
-    window.navigate = function(section) {
-      ['inicio', 'puntos', 'contacto', 'catalogo', 'club'].forEach(s => {
-        const el = document.getElementById('sec-' + s);
-        if (el) el.classList.add('hidden');
-      });
-      const target = document.getElementById('sec-' + section);
-      if (target) {
-        target.classList.remove('hidden');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    };
-
-    window.toggleAuthTab = function(tab) {
-      document.getElementById('form-login').classList.add('hidden');
-      document.getElementById('form-register').classList.add('hidden');
-      document.getElementById('form-admin').classList.add('hidden');
-
-      ['login', 'register', 'admin'].forEach(t => {
-        const el = document.getElementById('tab-' + t);
-        if (el) el.className = 'text-zinc-400 hover:text-zinc-700 pb-2.5';
-      });
-
-      const activeTab = document.getElementById('tab-' + tab);
-      if (activeTab) activeTab.className = 'text-zinc-950 border-b-2 border-zinc-950 pb-2.5';
-      const form = document.getElementById('form-' + tab);
-      if (form) form.classList.remove('hidden');
-    };
-
     function getStoredClients() {
       try {
         return JSON.parse(localStorage.getItem('five_friends_clients_cache')) || [];
@@ -1592,12 +1579,12 @@
       }
     };
 
+    // INICIALIZACIÓN
     window.addEventListener('DOMContentLoaded', () => {
       renderCatalog();
       updateCartUI();
       restoreSession();
 
-      // Verificar si regresa de un pago exitoso
       const params = new URLSearchParams(window.location.search);
       if (params.get('payment') === 'success') {
         alert("✓ ¡Pago completado con éxito! Hemos recibido tu compra y estamos preparando tu paquete.");
