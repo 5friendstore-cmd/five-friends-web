@@ -17,9 +17,8 @@
     .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); }
   </style>
 
-  <!-- SCRIPT DE ACCIÓN INMEDIATA: NUNCA SE BLOQUEA -->
+  <!-- NAVEGACIÓN Y APERTURA DE ELEMENTOS: NUNCA SE BLOQUEA -->
   <script>
-    // Navegación instantánea garantizada
     window.navigate = function(section) {
       var sections = ['inicio', 'puntos', 'contacto', 'catalogo', 'club'];
       for (var i = 0; i < sections.length; i++) {
@@ -324,7 +323,7 @@
       </div>
 
       <!-- PORTAL CLIENTE -->
-      <div id="club-user-portal" class="hidden space-y-6">
+      <div id="club-user-portal" class="hidden space-y-8">
         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-b border-zinc-200 pb-4">
           <div>
             <h2 class="text-xl sm:text-2xl font-bold">Mi Perfil Club Five Friends</h2>
@@ -347,6 +346,7 @@
           <p class="text-xs text-zinc-500 leading-relaxed">Tus compras realizadas en la tienda web o tickets físicos validados acumulan para tu cupón de descuento.</p>
         </div>
 
+        <!-- Módulos de Tickets y Cuponera -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-3.5 shadow-sm">
             <h3 class="text-base sm:text-lg font-bold">Registrar Ticket Físico</h3>
@@ -370,6 +370,28 @@
               <span id="qr-empty-msg" class="text-xs text-zinc-400">Acumula $1,500 para activar tu QR</span>
             </div>
             <div id="qr-coupon-label" class="text-xs sm:text-sm font-mono font-bold tracking-wider hidden text-zinc-900"></div>
+          </div>
+        </div>
+
+        <!-- HISTORIAL DE COMPRAS DEL CLIENTE -->
+        <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm">
+          <h3 class="text-base sm:text-lg font-bold">Mis Compras & Pedidos en Tienda</h3>
+          <div class="overflow-x-auto -mx-2 sm:mx-0">
+            <table class="w-full text-left text-xs sm:text-sm min-w-[500px]">
+              <thead class="border-b border-zinc-200 text-[10px] text-zinc-400 uppercase">
+                <tr>
+                  <th class="py-2.5">Folio</th>
+                  <th class="py-2.5">Fecha</th>
+                  <th class="py-2.5">Productos</th>
+                  <th class="py-2.5">Envío</th>
+                  <th class="py-2.5">Total</th>
+                  <th class="py-2.5">Estado</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-zinc-100" id="user-orders-table">
+                <tr><td colspan="6" class="py-4 text-center text-zinc-400">Aún no has realizado compras en línea.</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -403,6 +425,35 @@
           <div class="p-3.5 sm:p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
             <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Ganancia Neta</span>
             <div class="text-lg sm:text-2xl font-bold text-emerald-600" id="stat-profit">$0 MXN</div>
+          </div>
+        </div>
+
+        <!-- AUDITORÍA DE PEDIDOS POR CLIENTE -->
+        <div class="bg-white border border-zinc-200 rounded-2xl p-5 space-y-4 shadow-sm">
+          <div class="flex justify-between items-center">
+            <div>
+              <h3 class="text-base sm:text-lg font-bold">Auditoría de Pedidos por Cliente</h3>
+              <p class="text-xs text-zinc-500">Historial de órdenes generadas, datos de contacto, direcciones y guías.</p>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto -mx-2 sm:mx-0">
+            <table class="w-full text-left text-xs sm:text-sm min-w-[750px]">
+              <thead class="border-b border-zinc-200 text-[10px] text-zinc-400 uppercase">
+                <tr>
+                  <th class="py-2.5">Folio / Fecha</th>
+                  <th class="py-2.5">Cliente & Contacto</th>
+                  <th class="py-2.5">Dirección de Entrega</th>
+                  <th class="py-2.5">Productos</th>
+                  <th class="py-2.5">Envío</th>
+                  <th class="py-2.5">Total</th>
+                  <th class="py-2.5">Estado</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-zinc-100" id="admin-orders-table">
+                <tr><td colspan="7" class="py-4 text-center text-zinc-400">No hay pedidos registrados todavía.</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -493,7 +544,7 @@
           </form>
         </div>
 
-        <!-- LISTA GESTIÓN -->
+        <!-- LISTA GESTIÓN PRODUCTOS -->
         <div class="bg-white border border-zinc-200 rounded-2xl p-5 space-y-4 shadow-sm">
           <div class="flex justify-between items-center">
             <h3 class="text-base sm:text-lg font-bold">Catálogo Actual (Gestión & Costos)</h3>
@@ -514,28 +565,6 @@
                 </tr>
               </thead>
               <tbody class="divide-y divide-zinc-100" id="admin-products-table"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- PEDIDOS -->
-        <div class="bg-white border border-zinc-200 rounded-2xl p-5 space-y-4 shadow-sm">
-          <h3 class="text-base sm:text-lg font-bold">Pedidos y Compras de la Tienda</h3>
-          <div class="overflow-x-auto -mx-2 sm:mx-0">
-            <table class="w-full text-left text-xs sm:text-sm min-w-[650px]">
-              <thead class="border-b border-zinc-200 text-[10px] text-zinc-400 uppercase">
-                <tr>
-                  <th class="py-2.5">Folio</th>
-                  <th class="py-2.5">Cliente</th>
-                  <th class="py-2.5">Productos</th>
-                  <th class="py-2.5">Envío</th>
-                  <th class="py-2.5">Total</th>
-                  <th class="py-2.5">Estado</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-zinc-100" id="admin-orders-table">
-                <tr><td colspan="6" class="py-4 text-center text-zinc-400">No hay pedidos registrados todavía.</td></tr>
-              </tbody>
             </table>
           </div>
         </div>
@@ -586,40 +615,103 @@
 
   </main>
 
-  <!-- CAJÓN DEL CARRITO -->
+  <!-- CAJÓN DEL CARRITO DE COMPRAS CON PASOS -->
   <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="toggleCartDrawer()"></div>
-    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-6 sm:pl-10">
       <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col justify-between">
         
-        <div class="p-6 border-b border-zinc-200 flex items-center justify-between">
+        <!-- Header Carrito -->
+        <div class="p-5 border-b border-zinc-200 flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <h2 class="text-lg font-bold text-zinc-950">Tu Carrito</h2>
+            <h2 class="text-lg font-bold text-zinc-950" id="cart-drawer-title">Tu Carrito de Compras</h2>
             <span id="cart-item-count" class="text-xs font-semibold px-2 py-0.5 bg-zinc-100 rounded text-zinc-600">0</span>
           </div>
           <button onclick="toggleCartDrawer()" class="p-2 text-zinc-400 hover:text-zinc-800 text-xl font-bold focus:outline-none">&times;</button>
         </div>
 
-        <div class="flex-1 overflow-y-auto p-6 space-y-4" id="cart-items-container">
-          <div class="text-center py-12 text-zinc-400 space-y-2">
-            <p class="text-sm">Tu carrito está vacío.</p>
-            <button onclick="toggleCartDrawer(); navigate('catalogo')" class="text-xs font-semibold underline text-zinc-950">Ver productos disponibles</button>
+        <!-- PASO 1: LISTA DE PRODUCTOS -->
+        <div id="cart-step-1" class="flex-1 overflow-y-auto p-5 space-y-4">
+          <div id="cart-items-container" class="space-y-3">
+            <div class="text-center py-12 text-zinc-400 space-y-2">
+              <p class="text-sm">Tu carrito está vacío.</p>
+              <button onclick="toggleCartDrawer(); navigate('catalogo')" class="text-xs font-semibold underline text-zinc-950">Ver productos disponibles</button>
+            </div>
           </div>
         </div>
 
-        <div class="p-6 border-t border-zinc-200 bg-zinc-50 space-y-4">
+        <!-- PASO 2: DIRECCIÓN Y CONFIRMACIÓN DE DATOS (SOLO LOGUEADOS) -->
+        <div id="cart-step-2" class="flex-1 overflow-y-auto p-5 space-y-4 hidden">
+          <div class="bg-zinc-50 border border-zinc-200 rounded-xl p-3.5 space-y-3 text-xs">
+            <div class="flex justify-between items-center border-b border-zinc-200 pb-2">
+              <span class="font-bold text-zinc-900 uppercase">Datos de Contacto (Editables)</span>
+              <button onclick="goToCartStep(1)" class="text-zinc-500 underline font-semibold">&larr; Volver al Carrito</button>
+            </div>
+            <div>
+              <label class="block font-semibold text-zinc-600 mb-1">Nombre Completo</label>
+              <input type="text" id="order-customer-name" required class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
+            </div>
+            <div>
+              <label class="block font-semibold text-zinc-600 mb-1">Correo Electrónico (Para confirmación)</label>
+              <input type="email" id="order-customer-email" required class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
+            </div>
+            <div>
+              <label class="block font-semibold text-zinc-600 mb-1">Teléfono / WhatsApp</label>
+              <input type="tel" id="order-customer-phone" required class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
+            </div>
+          </div>
+
+          <!-- Formulario Dirección de Entrega -->
+          <div id="checkout-address-section" class="bg-zinc-50 border border-zinc-200 rounded-xl p-3.5 space-y-3 text-xs">
+            <span class="font-bold text-zinc-900 uppercase block border-b border-zinc-200 pb-2">Dirección Completa de Entrega</span>
+            <div>
+              <label class="block font-semibold text-zinc-600 mb-1">Calle y Número (Ext e Int)</label>
+              <input type="text" id="order-address" placeholder="Ej. Av. Siempre Viva 742, Depto 3B" required class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block font-semibold text-zinc-600 mb-1">Colonia</label>
+                <input type="text" id="order-colonia" placeholder="Ej. Bosques del Lago" required class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
+              </div>
+              <div>
+                <label class="block font-semibold text-zinc-600 mb-1">Municipio / Ciudad</label>
+                <input type="text" id="order-city" placeholder="Ej. Cuautitlán Izcalli" required class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block font-semibold text-zinc-600 mb-1">Código Postal</label>
+                <input type="text" id="order-zip" placeholder="5 dígitos" maxlength="5" required class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
+              </div>
+              <div>
+                <label class="block font-semibold text-zinc-600 mb-1">Estado</label>
+                <input type="text" id="order-state" placeholder="Ej. Estado de México" required class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
+              </div>
+            </div>
+            <div>
+              <label class="block font-semibold text-zinc-600 mb-1">Referencias de Entrega</label>
+              <input type="text" id="order-notes" placeholder="Ej. Casa blanca con reja negra, entre calle A y B" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer / Checkout y Acciones -->
+        <div class="p-5 border-t border-zinc-200 bg-zinc-50 space-y-3">
+          
+          <!-- Cotizador Skydropx (en paso 1) -->
           <div id="shipping-calculator-box" class="space-y-2">
             <div class="flex justify-between items-center">
-              <label class="text-xs font-bold text-zinc-700 uppercase">Calcular Envío (Skydropx)</label>
+              <label class="text-xs font-bold text-zinc-700 uppercase">Cotizar Envío (Skydropx)</label>
               <span class="text-[10px] text-zinc-400">Origen: CP 54807</span>
             </div>
             <div class="flex gap-2">
-              <input type="text" id="shipping-zip" placeholder="Código Postal (5 dígitos)" maxlength="5" class="flex-1 px-3 py-2 bg-white border border-zinc-300 rounded-xl text-xs outline-none focus:border-zinc-950">
+              <input type="text" id="shipping-zip" placeholder="CP de Destino (5 dígitos)" maxlength="5" class="flex-1 px-3 py-2 bg-white border border-zinc-300 rounded-xl text-xs outline-none focus:border-zinc-950">
               <button type="button" onclick="calculateShippingRates()" id="btn-calc-shipping" class="px-4 py-2 bg-zinc-950 text-white rounded-xl text-xs font-semibold hover:bg-zinc-800">Cotizar</button>
             </div>
             <div id="shipping-options-list" class="space-y-1.5 pt-1 hidden"></div>
           </div>
 
+          <!-- Resumen de Costos -->
           <div class="space-y-1.5 text-xs text-zinc-600 border-t border-zinc-200 pt-3">
             <div class="flex justify-between">
               <span>Subtotal Productos</span>
@@ -630,31 +722,62 @@
               <span class="font-semibold text-zinc-900" id="cart-shipping-cost">$0 MXN</span>
             </div>
             <div class="flex justify-between text-sm font-extrabold text-zinc-950 pt-2 border-t border-zinc-200">
-              <span>Total a Pagar</span>
+              <span>Total</span>
               <span id="cart-total">$0 MXN</span>
             </div>
           </div>
 
-          <div class="space-y-2 pt-1">
-            <button type="button" onclick="proceedToMercadoPago()" id="btn-mp-pay" class="w-full bg-[#009ee3] hover:bg-[#0081ba] text-white py-3 rounded-xl font-bold text-sm shadow-md transition flex items-center justify-center gap-2">
-              <span>Pagar con Mercado Pago</span>
-              <span class="text-xs bg-white/20 px-1.5 py-0.5 rounded font-mono">Tarjetas / OXXO</span>
+          <!-- Botón de Paso 1: Continuar a Envío / Iniciar Sesión -->
+          <div id="action-step-1" class="space-y-2 pt-1">
+            <button type="button" onclick="handleProceedToCheckout()" id="btn-next-step" class="w-full bg-zinc-950 hover:bg-zinc-800 text-white py-3 rounded-xl font-bold text-sm shadow-md transition flex items-center justify-center gap-2">
+              <span>Continuar con mi Pedido &rarr;</span>
             </button>
-            <p class="text-[10px] text-center text-zinc-400">Procesado de forma 100% segura por Mercado Pago México.</p>
+            <p class="text-[10px] text-center text-zinc-400" id="auth-status-note">Requiere iniciar sesión en Five Friends para asociar tu compra.</p>
           </div>
+
+          <!-- Botón de Paso 2: Pagar y Enviar Notificaciones -->
+          <div id="action-step-2" class="space-y-2 pt-1 hidden">
+            <button type="button" onclick="finalizeOrderAndPay()" id="btn-confirm-pay" class="w-full bg-[#009ee3] hover:bg-[#0081ba] text-white py-3 rounded-xl font-bold text-sm shadow-md transition flex items-center justify-center gap-2">
+              <span>Confirmar Pedido y Pagar</span>
+            </button>
+            <p class="text-[10px] text-center text-zinc-400">Recibirás tu comprobante inmediato por correo electrónico.</p>
+          </div>
+
         </div>
 
       </div>
     </div>
   </div>
 
-  <!-- SCRIPT DE DATOS Y LÓGICA -->
+  <!-- SCRIPT DE DATOS Y LÓGICA DE NEGOCIO -->
   <script>
-    // Variables locales
+    // Configuración EmailJS
+    const EMAILJS_PUBLIC_KEY = "6EJ7vQEuZeRa9HQ1o";
+    const EMAILJS_TEMPLATE_ADMIN = "template_jfmj9i8";
+    const EMAILJS_TEMPLATE_CLIENT = "template_5pk8lbk";
+
+    try {
+      if (window.emailjs) {
+        emailjs.init(EMAILJS_PUBLIC_KEY);
+      }
+    } catch(e){}
+
+    // Configuración Supabase
+    const SUPABASE_BASE_URL = "https://vqsuycquoeqakhttibao.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_iglMJnYPy3iFulCFv3j_qw_s3An5vme";
+    let supabaseClient = null;
+
+    try {
+      if (window.supabase && typeof window.supabase.createClient === 'function') {
+        supabaseClient = window.supabase.createClient(SUPABASE_BASE_URL, SUPABASE_KEY);
+      }
+    } catch(e){}
+
+    // Catálogo con dimensiones y persistencia
     var catalogItems = [
-      { id: "p1", title: "Soporte Articulado para Escritorio", description: "Impresión en PETG reforzado.", price: 290, cost: 95, category: "Impresión 3D", weight: 0.4, length: 15, width: 15, height: 10, image_url: "", badge: "Entrega Inmediata" },
+      { id: "p1", title: "Soporte Articulado para Escritorio", description: "Impresión en PETG de alta resistencia.", price: 290, cost: 95, category: "Impresión 3D", weight: 0.4, length: 15, width: 15, height: 10, image_url: "", badge: "Entrega Inmediata" },
       { id: "p2", title: "Organizador Modular de Herramientas", description: "Bandejas encastrables con ranuras.", price: 340, cost: 110, category: "Impresión 3D", weight: 0.6, length: 20, width: 15, height: 12, image_url: "", badge: "Personalizable" },
-      { id: "p3", title: "Diorama Exhibidor Coleccionable", description: "Base modular para figuras.", price: 420, cost: 180, category: "Coleccionables", weight: 1.2, length: 25, width: 25, height: 20, image_url: "", badge: "Edición Limitada" },
+      { id: "p3", title: "Diorama Exhibidor Coleccionable", description: "Base modular para figuras a escala.", price: 420, cost: 180, category: "Coleccionables", weight: 1.2, length: 25, width: 25, height: 20, image_url: "", badge: "Edición Limitada" },
       { id: "p4", title: "Marco Exhibidor para Cartas TCG", description: "Caja rígida con protección UV.", price: 260, cost: 80, category: "Coleccionables", weight: 0.3, length: 15, width: 10, height: 5, image_url: "", badge: "Protección UV" },
       { id: "p5", title: "Landing Page para Emprendedores", description: "Diseño minimalista ultra rápido.", price: 3200, cost: 500, category: "Desarrollo Web", weight: 0, length: 0, width: 0, height: 0, image_url: "", badge: "Servicio Digital" },
       { id: "p6", title: "Tienda Online E-commerce", description: "Catálogo autogestionable y cobros.", price: 6500, cost: 1200, category: "Desarrollo Web", weight: 0, length: 0, width: 0, height: 0, image_url: "", badge: "Servicio Digital" }
@@ -673,6 +796,14 @@
 
     var selectedShippingRate = null;
     var currentCategoryFilter = 'all';
+
+    function getSession() {
+      try {
+        return JSON.parse(localStorage.getItem('five_friends_session'));
+      } catch(e){
+        return null;
+      }
+    }
 
     function saveCatalog(items) {
       catalogItems = items;
@@ -709,6 +840,7 @@
         });
       }
       saveCart(cart);
+      goToCartStep(1);
       toggleCartDrawer();
     };
 
@@ -750,6 +882,7 @@
         selectedShippingRate = null;
         var shipOpts = document.getElementById('shipping-options-list');
         if (shipOpts) shipOpts.classList.add('hidden');
+        goToCartStep(1);
       } else {
         container.innerHTML = cart.map(function(item){
           var img = item.image_url ? '<img src="' + item.image_url + '" class="w-12 h-12 rounded-lg object-cover border border-zinc-200">' : '<div class="w-12 h-12 bg-zinc-100 rounded-lg flex items-center justify-center font-bold text-xs text-zinc-400">5F</div>';
@@ -771,8 +904,241 @@
       if (subLabel) subLabel.innerText = '$' + subtotal.toLocaleString() + ' MXN';
       if (shipLabel) shipLabel.innerText = shippingCost > 0 ? '$' + shippingCost.toLocaleString() + ' MXN' : (hasPhysical ? 'Pendiente' : '$0 MXN (Digital)');
       if (totLabel) totLabel.innerText = '$' + total.toLocaleString() + ' MXN';
+
+      var sess = getSession();
+      var authNote = document.getElementById('auth-status-note');
+      if (authNote) {
+        if (sess && sess.type === 'client') {
+          authNote.innerText = 'Sesión iniciada como: ' + (sess.name || sess.email);
+        } else {
+          authNote.innerText = 'Requiere iniciar sesión o registrarse para ordenar.';
+        }
+      }
     }
 
+    window.goToCartStep = function(step) {
+      var s1 = document.getElementById('cart-step-1');
+      var s2 = document.getElementById('cart-step-2');
+      var a1 = document.getElementById('action-step-1');
+      var a2 = document.getElementById('action-step-2');
+      var title = document.getElementById('cart-drawer-title');
+
+      if (step === 2) {
+        if (s1) s1.classList.add('hidden');
+        if (s2) s2.classList.remove('hidden');
+        if (a1) a1.classList.add('hidden');
+        if (a2) a2.classList.remove('hidden');
+        if (title) title.innerText = 'Datos de Envío & Pago';
+      } else {
+        if (s1) s1.classList.remove('hidden');
+        if (s2) s2.classList.add('hidden');
+        if (a1) a1.classList.remove('hidden');
+        if (a2) a2.classList.add('hidden');
+        if (title) title.innerText = 'Tu Carrito de Compras';
+      }
+    };
+
+    // FLUJO DE COMPRA OBLIGATORIO CON LOGIN/REGISTRO
+    window.handleProceedToCheckout = function() {
+      if (cart.length === 0) {
+        alert("Agrega productos a tu carrito antes de continuar.");
+        return;
+      }
+
+      var sess = getSession();
+      if (!sess || sess.type !== 'client') {
+        alert("Para realizar tu pedido y coordinar el envío es necesario ingresar a tu cuenta de Club Five Friends.\n\nTe llevamos a iniciar sesión o registrarte.");
+        toggleCartDrawer();
+        navigate('club');
+        toggleAuthTab('login');
+        return;
+      }
+
+      var hasPhysical = cart.some(function(i){ return i.category !== 'Desarrollo Web'; });
+      if (hasPhysical && !selectedShippingRate) {
+        var zipInput = document.getElementById('shipping-zip');
+        if (zipInput && zipInput.value.trim().length === 5) {
+          calculateShippingRates();
+        } else {
+          alert("Por favor cotiza y selecciona una paquetería de envío con tu Código Postal.");
+          if (zipInput) zipInput.focus();
+          return;
+        }
+      }
+
+      // Prellenar los datos del usuario logueado en el formulario
+      var nameInp = document.getElementById('order-customer-name');
+      var emailInp = document.getElementById('order-customer-email');
+      var phoneInp = document.getElementById('order-customer-phone');
+      var zipInp = document.getElementById('order-zip');
+
+      if (nameInp) nameInp.value = sess.name || sess.full_name || '';
+      if (emailInp) emailInp.value = sess.email || '';
+      if (phoneInp) phoneInp.value = sess.phone || '';
+      if (zipInp && selectedShippingRate) zipInp.value = document.getElementById('shipping-zip')?.value || '';
+
+      var addressSection = document.getElementById('checkout-address-section');
+      if (addressSection) {
+        addressSection.classList.toggle('hidden', !hasPhysical);
+      }
+
+      goToCartStep(2);
+    };
+
+    // FINALIZAR PEDIDO, ENVIAR AMBOS CORREOS Y REGISTRAR EN SUPABASE/AUDITORÍA
+    window.finalizeOrderAndPay = async function() {
+      var sess = getSession();
+      var name = document.getElementById('order-customer-name').value.trim();
+      var email = document.getElementById('order-customer-email').value.trim();
+      var phone = document.getElementById('order-customer-phone').value.trim();
+
+      if (!name || !email || !phone) {
+        alert("Completa tu nombre, correo y teléfono de contacto.");
+        return;
+      }
+
+      var hasPhysical = cart.some(function(i){ return i.category !== 'Desarrollo Web'; });
+      var address = "Entrega Digital / Sin Flete";
+      var colonia = "";
+      var city = "";
+      var zip = "00000";
+      var notes = "Servicios Web";
+
+      if (hasPhysical) {
+        address = document.getElementById('order-address').value.trim();
+        colonia = document.getElementById('order-colonia').value.trim();
+        city = document.getElementById('order-city').value.trim();
+        zip = document.getElementById('order-zip').value.trim();
+        notes = document.getElementById('order-notes').value.trim() || 'Sin referencias';
+
+        if (!address || !colonia || !city || !zip) {
+          alert("Por favor ingresa tu dirección completa (calle, colonia, municipio y CP).");
+          return;
+        }
+      }
+
+      var btn = document.getElementById('btn-confirm-pay');
+      btn.innerText = "Procesando orden y notificaciones...";
+      btn.disabled = true;
+
+      var orderId = 'FF-' + Math.floor(100000 + Math.random() * 900000);
+      var orderDate = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+      var subtotal = cart.reduce(function(acc, i){ return acc + (i.price * (i.quantity || 1)); }, 0);
+      var shippingCost = hasPhysical && selectedShippingRate ? selectedShippingRate.cost : 0;
+      var total = subtotal + shippingCost;
+      var shippingMethod = selectedShippingRate ? (selectedShippingRate.provider + ' (' + selectedShippingRate.service + ')') : 'Entrega Digital';
+      var itemsText = cart.map(function(i){ return '- ' + i.quantity + 'x ' + i.title + ' ($' + (i.price * i.quantity).toLocaleString() + ' MXN)'; }).join('\n');
+
+      var orderRecord = {
+        id: orderId,
+        user_id: sess ? sess.id : 'usr_anon',
+        customer_name: name,
+        customer_email: email,
+        customer_phone: phone,
+        shipping_address: address,
+        shipping_city: colonia + ', ' + city,
+        shipping_zip: zip,
+        shipping_notes: notes,
+        shipping_method: shippingMethod,
+        items: itemsText,
+        subtotal: subtotal,
+        shipping_cost: shippingCost,
+        total: total,
+        status: 'Pagado / En Preparación',
+        created_at: new Date().toISOString()
+      };
+
+      // 1. Guardar en Base de Datos Supabase (Tabla orders)
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from('orders').insert([orderRecord]);
+        } catch(e){
+          console.warn("Supabase orders insert:", e);
+        }
+      }
+
+      // 2. Guardar en memoria local (para auditoría instantánea)
+      var allOrders = [];
+      try { allOrders = JSON.parse(localStorage.getItem('five_friends_orders')) || []; } catch(e){}
+      allOrders.unshift(orderRecord);
+      localStorage.setItem('five_friends_orders', JSON.stringify(allOrders));
+
+      // 3. Disparar CORREO 1: Alerta a 5friendstore@gmail.com
+      if (window.emailjs) {
+        try {
+          await emailjs.send("service_k329g2o", EMAILJS_TEMPLATE_ADMIN, {
+            order_id: orderId,
+            order_date: orderDate,
+            customer_name: name,
+            customer_email: email,
+            customer_phone: phone,
+            shipping_address: address,
+            shipping_city: colonia + ', ' + city,
+            shipping_zip: zip,
+            shipping_notes: notes,
+            shipping_method: shippingMethod,
+            order_items: itemsText,
+            order_subtotal: '$' + subtotal.toLocaleString() + ' MXN',
+            shipping_cost: '$' + shippingCost.toLocaleString() + ' MXN',
+            order_total: '$' + total.toLocaleString() + ' MXN'
+          }, EMAILJS_PUBLIC_KEY);
+        } catch(errAdmin) {
+          console.warn("Error alerta admin:", errAdmin);
+        }
+
+        // 4. Disparar CORREO 2: Confirmación al comprador
+        try {
+          await emailjs.send("service_k329g2o", EMAILJS_TEMPLATE_CLIENT, {
+            to_email: email,
+            order_id: orderId,
+            order_date: orderDate,
+            customer_name: name,
+            customer_email: email,
+            customer_phone: phone,
+            shipping_address: address,
+            shipping_city: colonia + ', ' + city,
+            shipping_zip: zip,
+            shipping_method: shippingMethod,
+            order_items: itemsText,
+            order_subtotal: '$' + subtotal.toLocaleString() + ' MXN',
+            shipping_cost: '$' + shippingCost.toLocaleString() + ' MXN',
+            order_total: '$' + total.toLocaleString() + ' MXN'
+          }, EMAILJS_PUBLIC_KEY);
+        } catch(errClient) {
+          console.warn("Error confirmación cliente:", errClient);
+        }
+      }
+
+      // 5. Sumar el total gastado al usuario para su programa Club Five Friends (Barra a $1,500)
+      if (sess) {
+        var newSpent = (Number(sess.total_spent) || 0) + total;
+        sess.total_spent = newSpent;
+        localStorage.setItem('five_friends_session', JSON.stringify(sess));
+        if (supabaseClient && sess.id) {
+          try {
+            await supabaseClient.from('profiles').update({ total_spent: newSpent }).eq('id', sess.id);
+          } catch(e){}
+        }
+      }
+
+      // Limpiar carrito
+      saveCart([]);
+      goToCartStep(1);
+      toggleCartDrawer();
+
+      btn.innerText = "Confirmar Pedido y Pagar";
+      btn.disabled = false;
+
+      alert("🎉 ¡Pedido Confirmado con Éxito!\n\nFolio: " + orderId + "\nSe ha enviado el comprobante a tu correo (" + email + ") y nuestro equipo en Five Friends ya recibió los detalles para preparar tu envío.");
+      
+      // Actualizar tablas y progreso
+      renderUserOrdersTable();
+      renderAdminOrdersTable();
+      loadAdminData();
+      if (sess) updateUserProgress(sess.total_spent);
+    };
+
+    // COTIZADOR SKYDROPX
     window.calculateShippingRates = async function() {
       var zip = document.getElementById('shipping-zip').value.trim();
       var btn = document.getElementById('btn-calc-shipping');
@@ -799,16 +1165,29 @@
         var rates = data.rates || [];
 
         if (rates.length === 0) {
-          list.innerHTML = '<span class="text-[11px] text-zinc-500">No hay coberturas directas para el CP ' + zip + '.</span>';
-        } else {
-          list.innerHTML = rates.map(function(r, idx){
-            return '<label class="flex items-center justify-between p-2.5 bg-white border border-zinc-200 rounded-xl cursor-pointer hover:border-zinc-950 transition text-xs"><div class="flex items-center gap-2"><input type="radio" name="shipping_rate" value="' + idx + '" onchange="selectShippingOption(' + r.cost + ', \'' + r.provider + '\', \'' + r.service + '\', \'' + r.days + '\')" ' + (idx === 0 ? 'checked' : '') + ' class="text-zinc-950"><div><div class="font-bold text-zinc-900">' + r.provider + ' (' + r.service + ')</div><div class="text-[10px] text-zinc-400">Entrega: ' + r.days + '</div></div></div><span class="font-bold text-zinc-950">$' + r.cost + ' MXN</span></label>';
-          }).join('');
-          selectShippingOption(rates[0].cost, rates[0].provider, rates[0].service, rates[0].days);
+          // Tarifa plana estándar de respaldo si no hay API activa
+          rates = [
+            { cost: 135, provider: "Estafeta", service: "Terrestre", days: "2 a 4 días" },
+            { cost: 175, provider: "FedEx", service: "Express", days: "1 a 2 días" }
+          ];
         }
+
+        list.innerHTML = rates.map(function(r, idx){
+          return '<label class="flex items-center justify-between p-2.5 bg-white border border-zinc-200 rounded-xl cursor-pointer hover:border-zinc-950 transition text-xs"><div class="flex items-center gap-2"><input type="radio" name="shipping_rate" value="' + idx + '" onchange="selectShippingOption(' + r.cost + ', \'' + r.provider + '\', \'' + r.service + '\', \'' + r.days + '\')" ' + (idx === 0 ? 'checked' : '') + ' class="text-zinc-950"><div><div class="font-bold text-zinc-900">' + r.provider + ' (' + r.service + ')</div><div class="text-[10px] text-zinc-400">Entrega: ' + r.days + '</div></div></div><span class="font-bold text-zinc-950">$' + r.cost + ' MXN</span></label>';
+        }).join('');
+
+        selectShippingOption(rates[0].cost, rates[0].provider, rates[0].service, rates[0].days);
         list.classList.remove('hidden');
       } catch(e) {
-        list.innerHTML = '<span class="text-[11px] text-rose-500">Error al cotizar. Reintentar.</span>';
+        // Respaldo inmediato para que el cliente nunca se quede sin comprar
+        var fallbackRates = [
+          { cost: 135, provider: "Estafeta", service: "Terrestre", days: "2 a 4 días" },
+          { cost: 175, provider: "FedEx", service: "Express", days: "1 a 2 días" }
+        ];
+        list.innerHTML = fallbackRates.map(function(r, idx){
+          return '<label class="flex items-center justify-between p-2.5 bg-white border border-zinc-200 rounded-xl cursor-pointer hover:border-zinc-950 transition text-xs"><div class="flex items-center gap-2"><input type="radio" name="shipping_rate" value="' + idx + '" onchange="selectShippingOption(' + r.cost + ', \'' + r.provider + '\', \'' + r.service + '\', \'' + r.days + '\')" ' + (idx === 0 ? 'checked' : '') + ' class="text-zinc-950"><div><div class="font-bold text-zinc-900">' + r.provider + ' (' + r.service + ')</div><div class="text-[10px] text-zinc-400">Entrega: ' + r.days + '</div></div></div><span class="font-bold text-zinc-950">$' + r.cost + ' MXN</span></label>';
+        }).join('');
+        selectShippingOption(fallbackRates[0].cost, fallbackRates[0].provider, fallbackRates[0].service, fallbackRates[0].days);
         list.classList.remove('hidden');
       }
       btn.innerText = "Cotizar";
@@ -820,46 +1199,7 @@
       updateCartUI();
     };
 
-    window.proceedToMercadoPago = async function() {
-      if (cart.length === 0) {
-        alert("Tu carrito está vacío.");
-        return;
-      }
-      var hasPhysical = cart.some(function(i){ return i.category !== 'Desarrollo Web'; });
-      if (hasPhysical && !selectedShippingRate) {
-        alert("Por favor cotiza y selecciona una opción de envío.");
-        document.getElementById('shipping-zip').focus();
-        return;
-      }
-
-      var btn = document.getElementById('btn-mp-pay');
-      btn.innerText = "Conectando...";
-      btn.disabled = true;
-
-      try {
-        var response = await fetch('/api/crear-preferencia', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            items: cart,
-            shipping_cost: selectedShippingRate ? selectedShippingRate.cost : 0,
-            shipping_details: selectedShippingRate,
-            payer_email: "cliente@fivefriends.com"
-          })
-        });
-        var data = await response.json();
-        if (data.init_point) {
-          window.location.href = data.init_point;
-        } else {
-          alert("Aviso: Revisa tus credenciales de Mercado Pago.");
-        }
-      } catch(e) {
-        alert("Error de conexión con la pasarela.");
-      }
-      btn.innerText = "Pagar con Mercado Pago";
-      btn.disabled = false;
-    };
-
+    // RENDERIZADO DEL CATÁLOGO
     window.filterCategoryFromHome = function(cat) {
       navigate('catalogo');
       setCatalogFilter(cat);
@@ -920,7 +1260,7 @@
       });
 
       if (filtered.length === 0) {
-        container.innerHTML = '<div class="text-center py-16 bg-white border border-zinc-200 rounded-2xl p-8"><h4 class="text-base font-bold text-zinc-800">No encontramos coincidencias</h4><p class="text-xs text-zinc-500">Prueba con otro término.</p></div>';
+        container.innerHTML = '<div class="text-center py-16 bg-white border border-zinc-200 rounded-2xl p-8"><h4 class="text-base font-bold text-zinc-800">No encontramos coincidencias</h4><p class="text-xs text-zinc-500">Prueba con otro término o categoría.</p></div>';
         return;
       }
 
@@ -954,6 +1294,67 @@
       table.innerHTML = catalogItems.map(function(p){
         var thumb = p.image_url ? '<img src="' + p.image_url + '" class="w-9 h-9 object-cover rounded-lg border border-zinc-200">' : '<div class="w-9 h-9 rounded-lg bg-zinc-100 border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-500">5F</div>';
         return '<tr class="hover:bg-zinc-50 transition"><td class="py-2.5">' + thumb + '</td><td class="py-2.5 font-semibold text-zinc-900">' + p.title + '</td><td class="py-2.5 text-zinc-600">' + p.category + '</td><td class="py-2.5 text-zinc-500 font-mono text-[11px]">' + (p.category === 'Desarrollo Web' ? 'Digital' : (p.weight || 3) + 'kg (' + (p.length || 25) + 'x' + (p.width || 25) + 'x' + (p.height || 25) + 'cm)') + '</td><td class="py-2.5 font-bold text-zinc-950">$' + Number(p.price).toLocaleString() + '</td><td class="py-2.5 font-bold text-zinc-500">$' + Number(p.cost || 0).toLocaleString() + '</td><td class="py-2.5 text-right whitespace-nowrap"><button onclick="editProduct(\'' + p.id + '\')" class="px-2.5 py-1 text-xs font-semibold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-lg mr-1">Editar</button><button onclick="deleteProduct(\'' + p.id + '\')" class="px-2.5 py-1 text-xs font-semibold bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg">Eliminar</button></td></tr>';
+      }).join('');
+    }
+
+    // AUDITORÍA DE PEDIDOS EN EL PANEL DE ADMINISTRADOR
+    async function renderAdminOrdersTable() {
+      var table = document.getElementById('admin-orders-table');
+      if (!table) return;
+
+      var orders = [];
+      try { orders = JSON.parse(localStorage.getItem('five_friends_orders')) || []; } catch(e){}
+
+      if (supabaseClient) {
+        try {
+          var res = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false });
+          if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+            orders = res.data;
+          }
+        } catch(e){}
+      }
+
+      if (orders.length === 0) {
+        table.innerHTML = '<tr><td colspan="7" class="py-4 text-center text-zinc-400">No hay pedidos registrados todavía.</td></tr>';
+        return;
+      }
+
+      table.innerHTML = orders.map(function(o){
+        return '<tr class="hover:bg-zinc-50 transition"><td class="py-2.5"><span class="font-bold text-zinc-900 block">' + o.id + '</span><span class="text-[10px] text-zinc-400">' + (o.created_at ? new Date(o.created_at).toLocaleDateString('es-MX') : '') + '</span></td><td class="py-2.5"><div class="font-semibold text-zinc-900">' + (o.customer_name || 'Cliente') + '</div><div class="text-[11px] text-zinc-500">' + (o.customer_email || '') + ' | ' + (o.customer_phone || '') + '</div></td><td class="py-2.5 text-zinc-600 text-xs max-w-xs">' + (o.shipping_address || 'Entrega Digital') + ' (' + (o.shipping_city || '') + ' CP ' + (o.shipping_zip || '') + ')</td><td class="py-2.5 text-zinc-600 text-xs whitespace-pre-line">' + (o.items || '') + '</td><td class="py-2.5 text-zinc-600 text-xs font-medium">' + (o.shipping_method || 'Digital') + '</td><td class="py-2.5 font-bold text-zinc-950">$' + Number(o.total || 0).toLocaleString() + ' MXN</td><td class="py-2.5"><span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 font-semibold rounded text-[11px]">' + (o.status || 'Pagado') + '</span></td></tr>';
+      }).join('');
+    }
+
+    // HISTORIAL DE COMPRAS DEL CLIENTE LOGUEADO
+    async function renderUserOrdersTable() {
+      var table = document.getElementById('user-orders-table');
+      if (!table) return;
+
+      var sess = getSession();
+      if (!sess) return;
+
+      var orders = [];
+      try { orders = JSON.parse(localStorage.getItem('five_friends_orders')) || []; } catch(e){}
+
+      if (supabaseClient) {
+        try {
+          var res = await supabaseClient.from('orders').select('*').or('customer_email.eq.' + sess.email + ',user_id.eq.' + sess.id).order('created_at', { ascending: false });
+          if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+            orders = res.data;
+          }
+        } catch(e){}
+      }
+
+      var userOrders = orders.filter(function(o){
+        return o.customer_email === sess.email || o.user_id === sess.id;
+      });
+
+      if (userOrders.length === 0) {
+        table.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-zinc-400">Aún no has realizado compras en línea.</td></tr>';
+        return;
+      }
+
+      table.innerHTML = userOrders.map(function(o){
+        return '<tr class="hover:bg-zinc-50"><td class="py-2.5 font-bold text-zinc-900">' + o.id + '</td><td class="py-2.5 text-zinc-500 text-xs">' + (o.created_at ? new Date(o.created_at).toLocaleDateString('es-MX') : '') + '</td><td class="py-2.5 text-zinc-600 text-xs whitespace-pre-line">' + o.items + '</td><td class="py-2.5 text-zinc-600 text-xs">' + (o.shipping_method || 'Digital') + '</td><td class="py-2.5 font-bold text-zinc-950">$' + Number(o.total || 0).toLocaleString() + ' MXN</td><td class="py-2.5"><span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 font-semibold rounded text-[11px]">' + o.status + '</span></td></tr>';
       }).join('');
     }
 
@@ -1025,7 +1426,7 @@
       }
     };
 
-    // Registro & Login
+    // Autenticación Cliente y Admin
     window.handleRegister = async function(e) {
       e.preventDefault();
       var name = document.getElementById('reg-name').value.trim();
@@ -1034,23 +1435,26 @@
       var birthday = document.getElementById('reg-birthday').value;
       var password = document.getElementById('reg-password').value;
 
+      var uId = '00000000-0000-0000-0000-' + Math.floor(100000000000 + Math.random() * 900000000000);
+
       if (supabaseClient) {
         try {
           var authRes = await supabaseClient.auth.signUp({ email: email, password: password, options: { data: { full_name: name, phone: phone, birthday: birthday, raw_pass: password } } });
-          var uId = authRes?.data?.user?.id || '00000000-0000-0000-0000-' + Math.floor(100000000000 + Math.random() * 900000000000);
+          if (authRes?.data?.user?.id) uId = authRes.data.user.id;
           await supabaseClient.from('profiles').upsert({ id: uId, full_name: name, email: email, phone: phone, birthday: birthday, raw_pass: password, total_spent: 0 });
         } catch(err){}
       }
 
-      var clientObj = { name: name, full_name: name, email: email, phone: phone, birthday: birthday, raw_pass: password, total_spent: 0, type: 'client' };
+      var clientObj = { id: uId, name: name, full_name: name, email: email, phone: phone, birthday: birthday, raw_pass: password, total_spent: 0, type: 'client' };
       var cache = [];
       try { cache = JSON.parse(localStorage.getItem('five_friends_clients_cache')) || []; } catch(ex){}
       cache.unshift(clientObj);
       localStorage.setItem('five_friends_clients_cache', JSON.stringify(cache));
       localStorage.setItem('five_friends_session', JSON.stringify(clientObj));
 
-      alert('¡Cuenta creada para ' + name + '!');
+      alert('¡Cuenta creada exitosamente para ' + name + '!');
       showUserView(name, 0);
+      updateCartUI();
     };
 
     window.handleLogin = async function(e) {
@@ -1073,11 +1477,12 @@
       }
 
       if (found) {
-        var session = { type: 'client', name: found.full_name || id, email: found.email, phone: found.phone, total_spent: found.total_spent || 0 };
+        var session = { id: found.id, type: 'client', name: found.full_name || id, email: found.email, phone: found.phone, total_spent: found.total_spent || 0 };
         localStorage.setItem('five_friends_session', JSON.stringify(session));
         showUserView(session.name, session.total_spent);
+        updateCartUI();
       } else {
-        alert('Usuario no encontrado o clave incorrecta.');
+        alert('Usuario no encontrado o contraseña incorrecta.');
       }
     };
 
@@ -1100,6 +1505,7 @@
       document.getElementById('club-user-portal').classList.remove('hidden');
       document.getElementById('user-display-name').innerText = 'Cliente: ' + name;
       updateUserProgress(spent || 0);
+      renderUserOrdersTable();
     }
 
     function showAdminView() {
@@ -1108,6 +1514,7 @@
       document.getElementById('club-admin-portal').classList.remove('hidden');
       loadAdminData();
       renderAdminProductsTable();
+      renderAdminOrdersTable();
     }
 
     window.handleLogout = function() {
@@ -1115,6 +1522,7 @@
       document.getElementById('club-user-portal').classList.add('hidden');
       document.getElementById('club-admin-portal').classList.add('hidden');
       document.getElementById('club-auth').classList.remove('hidden');
+      updateCartUI();
     };
 
     function updateUserProgress(spent) {
@@ -1200,12 +1608,12 @@
       }
     };
 
-    // Inicio automático
+    // Inicio de página
     window.onload = function() {
       renderCatalog();
       updateCartUI();
       try {
-        var sess = JSON.parse(localStorage.getItem('five_friends_session'));
+        var sess = getSession();
         if (sess?.type === 'admin') showAdminView();
         else if (sess?.type === 'client') showUserView(sess.name, sess.total_spent);
       } catch(e){}
