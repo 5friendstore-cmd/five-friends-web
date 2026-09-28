@@ -10,8 +10,10 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- QRCode.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <!-- EmailJS SDK Oficial -->
+  <!-- EmailJS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <!-- SDK de Mercado Pago v2 -->
+  <script src="https://sdk.mercadopago.com/js/v2"></script>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
     .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); }
@@ -19,8 +21,8 @@
 </head>
 <body class="bg-zinc-50 text-zinc-900 min-h-screen flex flex-col antialiased selection:bg-zinc-900 selection:text-white">
 
-  <!-- Header / Barra de Navegación Responsiva -->
-  <header class="sticky top-0 z-50 glass border-b border-zinc-200">
+  <!-- Header / Barra de Navegación -->
+  <header class="sticky top-0 z-40 glass border-b border-zinc-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
       
       <!-- Logotipo -->
@@ -32,16 +34,30 @@
       <!-- Menú Desktop -->
       <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-600">
         <button type="button" onclick="navigate('inicio')" class="hover:text-zinc-950 transition">Inicio</button>
-        <button type="button" onclick="navigate('catalogo')" class="hover:text-zinc-950 transition">Catálogo</button>
+        <button type="button" onclick="navigate('catalogo')" class="hover:text-zinc-950 transition">Tienda & Catálogo</button>
         <button type="button" onclick="navigate('puntos')" class="hover:text-zinc-950 transition">Puntos de Venta</button>
         <button type="button" onclick="navigate('contacto')" class="hover:text-zinc-950 transition">Contacto</button>
         <button type="button" onclick="navigate('club')" class="bg-zinc-950 text-white px-4 py-2 rounded-full hover:bg-zinc-800 transition">Club Five Friends</button>
+        
+        <!-- Botón de Carrito Desktop -->
+        <button type="button" onclick="toggleCartDrawer()" class="relative p-2 text-zinc-800 hover:text-zinc-950 focus:outline-none" title="Ver Carrito">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+          </svg>
+          <span id="cart-badge-desktop" class="absolute top-0 right-0 w-5 h-5 bg-zinc-950 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white hidden">0</span>
+        </button>
       </nav>
 
       <!-- Botones Móvil -->
       <div class="flex items-center gap-2 md:hidden">
+        <button type="button" onclick="toggleCartDrawer()" class="relative p-2 text-zinc-800 focus:outline-none" aria-label="Carrito">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+          </svg>
+          <span id="cart-badge-mobile" class="absolute top-0 right-0 w-4 h-4 bg-zinc-950 text-white text-[9px] font-bold rounded-full flex items-center justify-center hidden">0</span>
+        </button>
         <button type="button" onclick="navigate('club')" class="bg-zinc-950 text-white text-xs font-semibold px-3 py-1.5 rounded-full">Club</button>
-        <button type="button" onclick="toggleMobileMenu()" class="p-2 text-zinc-700 hover:text-zinc-950 focus:outline-none" aria-label="Abrir menú">
+        <button type="button" onclick="toggleMobileMenu()" class="p-2 text-zinc-700 hover:text-zinc-950 focus:outline-none">
           <svg id="menu-icon-bars" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
           </svg>
@@ -56,7 +72,7 @@
     <!-- Menú Desplegable Móvil -->
     <div id="mobile-menu" class="hidden md:hidden border-b border-zinc-200 bg-white px-5 py-4 space-y-3 text-sm font-medium text-zinc-700 shadow-lg">
       <button type="button" onclick="navigate('inicio'); toggleMobileMenu()" class="block w-full text-left py-2 hover:text-zinc-950 border-b border-zinc-100">Inicio</button>
-      <button type="button" onclick="navigate('catalogo'); toggleMobileMenu()" class="block w-full text-left py-2 hover:text-zinc-950 border-b border-zinc-100">Catálogo & Tienda</button>
+      <button type="button" onclick="navigate('catalogo'); toggleMobileMenu()" class="block w-full text-left py-2 hover:text-zinc-950 border-b border-zinc-100">Tienda & Catálogo</button>
       <button type="button" onclick="navigate('puntos'); toggleMobileMenu()" class="block w-full text-left py-2 hover:text-zinc-950 border-b border-zinc-100">Puntos de Venta</button>
       <button type="button" onclick="navigate('contacto'); toggleMobileMenu()" class="block w-full text-left py-2 hover:text-zinc-950 border-b border-zinc-100">Contacto</button>
       <button type="button" onclick="navigate('club'); toggleMobileMenu()" class="block w-full text-center py-2.5 bg-zinc-950 text-white rounded-xl mt-2 font-semibold">Club Five Friends</button>
@@ -73,10 +89,10 @@
           Diseño, Fabricación 3D y Soluciones Digitales
         </h1>
         <p class="text-sm sm:text-base md:text-lg text-zinc-600 px-2 font-normal leading-relaxed">
-          Desde piezas a medida y figuras con manufactura aditiva hasta desarrollo de páginas web y tiendas en línea profesionales.
+          Piezas personalizadas con manufactura aditiva y desarrollo web profesional. Compra en línea con envíos a todo México o retiro en bazares.
         </p>
         <div class="flex flex-col sm:flex-row justify-center gap-3 pt-3 px-4 sm:px-0">
-          <button type="button" onclick="navigate('catalogo')" class="w-full sm:w-auto bg-zinc-950 text-white px-6 py-3 rounded-xl font-medium text-sm hover:bg-zinc-800 transition shadow-sm">Ver Catálogo</button>
+          <button type="button" onclick="navigate('catalogo')" class="w-full sm:w-auto bg-zinc-950 text-white px-6 py-3 rounded-xl font-medium text-sm hover:bg-zinc-800 transition shadow-sm">Explorar Tienda</button>
           <button type="button" onclick="navigate('club')" class="w-full sm:w-auto border border-zinc-300 bg-white px-6 py-3 rounded-xl font-medium text-sm hover:bg-zinc-100 transition shadow-sm">Club Five Friends</button>
         </div>
       </div>
@@ -85,19 +101,19 @@
         <div onclick="filterCategoryFromHome('Impresión 3D')" class="p-6 border border-zinc-200 rounded-2xl bg-white shadow-sm space-y-3 cursor-pointer hover:border-zinc-900 transition">
           <div class="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center font-bold text-sm">3D</div>
           <h3 class="text-lg font-bold">Impresión 3D</h3>
-          <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed">Soportes, prototipos, organizadores y piezas personalizadas en filamentos técnicos de alta resistencia.</p>
+          <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed">Soportes, prototipos, organizadores y piezas técnicas en filamentos de alto rendimiento.</p>
           <span class="text-xs font-semibold underline text-zinc-900">Ver modelos 3D &rarr;</span>
         </div>
         <div onclick="filterCategoryFromHome('Coleccionables')" class="p-6 border border-zinc-200 rounded-2xl bg-white shadow-sm space-y-3 cursor-pointer hover:border-zinc-900 transition">
           <div class="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center font-bold text-sm">★</div>
           <h3 class="text-lg font-bold">Coleccionables</h3>
-          <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed">Dioramas temáticos, bases exhibidoras modulares y accesorios especializados para figuras y cartas.</p>
+          <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed">Dioramas temáticos, bases exhibidoras y accesorios especializados para figuras y cartas.</p>
           <span class="text-xs font-semibold underline text-zinc-900">Explorar coleccionables &rarr;</span>
         </div>
         <div onclick="filterCategoryFromHome('Desarrollo Web')" class="p-6 border border-zinc-200 rounded-2xl bg-white shadow-sm space-y-3 cursor-pointer hover:border-zinc-900 transition">
           <div class="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center font-bold text-sm">&lt;/&gt;</div>
           <h3 class="text-lg font-bold">Páginas & Tiendas Web</h3>
-          <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed">Desarrollo de sitios web rápidos, tiendas online con catálogo y sistemas autogestionables.</p>
+          <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed">Sitios web rápidos, tiendas online autogestionables y presencia digital integral.</p>
           <span class="text-xs font-semibold underline text-zinc-900">Ver servicios web &rarr;</span>
         </div>
       </div>
@@ -107,7 +123,7 @@
     <section id="sec-puntos" class="hidden space-y-6">
       <div>
         <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">Puntos de Venta & Bazares</h2>
-        <p class="text-xs sm:text-sm text-zinc-500">Encuéntranos en nuestras sedes y bazares autorizados.</p>
+        <p class="text-xs sm:text-sm text-zinc-500">Encuéntranos en nuestras sedes físicas y bazares autorizados.</p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
@@ -127,7 +143,7 @@
         <div class="border border-zinc-200 rounded-2xl p-5 sm:p-6 bg-white space-y-3 shadow-sm">
           <span class="text-[11px] font-semibold px-2 py-0.5 bg-zinc-100 rounded text-zinc-700 uppercase">Networking</span>
           <h3 class="text-base sm:text-lg font-bold">Bazar EE Networking</h3>
-          <p class="text-xs sm:text-sm text-zinc-500">Ubicado en <strong>Plaza San Miguel</strong>. Espacio de exposición y pedidos de desarrollo web e impresión.</p>
+          <p class="text-xs sm:text-sm text-zinc-500">Ubicado en <strong>Plaza San Miguel</strong>. Espacio de exposición y pedidos de desarrollo web y 3D.</p>
         </div>
       </div>
     </section>
@@ -157,14 +173,12 @@
       </div>
     </section>
 
-    <!-- SECCIÓN 4: CATÁLOGO CLASIFICADO CON IMÁGENES -->
+    <!-- SECCIÓN 4: CATÁLOGO CLASIFICADO CON TIENDA Y CARRITO -->
     <section id="sec-catalogo" class="hidden space-y-6">
-      
-      <!-- Encabezado y Filtros -->
       <div class="flex flex-col md:flex-row justify-between md:items-end gap-4 border-b border-zinc-200 pb-5">
         <div>
-          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-950">Catálogo & Soluciones</h2>
-          <p class="text-xs sm:text-sm text-zinc-500">Explora por área especializada o busca un producto en particular.</p>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-950">Tienda & Catálogo Oficial</h2>
+          <p class="text-xs sm:text-sm text-zinc-500">Agrega productos a tu carrito y compra con envío a domicilio o retiro.</p>
         </div>
 
         <div class="w-full md:w-72">
@@ -172,17 +186,16 @@
         </div>
       </div>
 
-      <!-- Selector de Categorías (Chips) -->
+      <!-- Filtros de categoría -->
       <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
         <button type="button" onclick="setCatalogFilter('all')" id="btn-cat-all" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-zinc-950 text-white shadow-sm">Todos</button>
         <button type="button" onclick="setCatalogFilter('Impresión 3D')" id="btn-cat-3d" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Impresión 3D</button>
         <button type="button" onclick="setCatalogFilter('Coleccionables')" id="btn-cat-col" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Coleccionables</button>
-        <button type="button" onclick="setCatalogFilter('Desarrollo Web')" id="btn-cat-web" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Desarrollo Web & Tiendas</button>
+        <button type="button" onclick="setCatalogFilter('Desarrollo Web')" id="btn-cat-web" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Desarrollo Web</button>
       </div>
 
-      <!-- Contenedor Dinámico con Secciones Agrupadas -->
+      <!-- Contenedor del Catálogo -->
       <div id="catalog-container" class="space-y-10"></div>
-
     </section>
 
     <!-- SECCIÓN 5: CLUB FIVE FRIENDS -->
@@ -190,7 +203,6 @@
 
       <!-- PANTALLA: LOGIN / REGISTRO / ACCESO ADMIN -->
       <div id="club-auth" class="max-w-md mx-auto border border-zinc-200 rounded-2xl bg-white p-5 sm:p-8 space-y-5 shadow-sm">
-        
         <div class="grid grid-cols-3 border-b border-zinc-200 text-center text-xs sm:text-sm font-semibold">
           <button type="button" id="tab-login" onclick="toggleAuthTab('login')" class="text-zinc-950 border-b-2 border-zinc-950 pb-2.5">Acceso</button>
           <button type="button" id="tab-register" onclick="toggleAuthTab('register')" class="text-zinc-400 hover:text-zinc-700 pb-2.5">Registro</button>
@@ -277,13 +289,13 @@
           <div class="w-full bg-zinc-100 rounded-full h-3 overflow-hidden">
             <div id="user-progress-bar" class="bg-zinc-950 h-3 rounded-full transition-all duration-500" style="width: 0%;"></div>
           </div>
-          <p class="text-xs text-zinc-500 leading-relaxed">Acumula compras registrando tus tickets en bazares o compras web para desbloquear tu QR con 10% de descuento.</p>
+          <p class="text-xs text-zinc-500 leading-relaxed">Tus compras realizadas en la tienda web o tickets físicos validados acumulan para tu cupón de descuento.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-3.5 shadow-sm">
             <h3 class="text-base sm:text-lg font-bold">Registrar Ticket Físico</h3>
-            <p class="text-xs text-zinc-500">¿Compraste en Plaza Centella o Plaza San Miguel? Registra tu ticket.</p>
+            <p class="text-xs text-zinc-500">¿Compraste en Plaza Centella o Plaza San Miguel? Registra tu comprobante.</p>
             <form onsubmit="handleTicketUpload(event)" class="space-y-3">
               <div>
                 <label class="block text-xs font-semibold text-zinc-600 mb-1">Monto del Ticket ($ MXN)</label>
@@ -323,7 +335,7 @@
         <!-- Métricas y Balance -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           <div class="p-3.5 sm:p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
-            <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Clientes Registrados</span>
+            <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Clientes</span>
             <div class="text-lg sm:text-2xl font-bold" id="stat-client-count">0</div>
           </div>
           <div class="p-3.5 sm:p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
@@ -331,7 +343,7 @@
             <div class="text-lg sm:text-2xl font-bold" id="stat-sales">$0 MXN</div>
           </div>
           <div class="p-3.5 sm:p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
-            <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Costo Estimado</span>
+            <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Costo Total</span>
             <div class="text-lg sm:text-2xl font-bold text-zinc-500" id="stat-costs">$0 MXN</div>
           </div>
           <div class="p-3.5 sm:p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
@@ -340,18 +352,17 @@
           </div>
         </div>
 
-        <!-- FORMULARIO DE AÑADIR / EDITAR PRODUCTO CON IMAGEN -->
+        <!-- FORMULARIO DE AÑADIR / EDITAR PRODUCTO (CON PESO Y MEDIDAS) -->
         <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm">
           <div class="flex justify-between items-center">
             <div>
-              <h3 class="text-base sm:text-lg font-bold" id="product-form-title">Agregar Nuevo Producto al Catálogo</h3>
-              <p class="text-xs text-zinc-500">Configura nombre, costos de administración, precios públicos e imágenes.</p>
+              <h3 class="text-base sm:text-lg font-bold" id="product-form-title">Agregar / Editar Producto</h3>
+              <p class="text-xs text-zinc-500">Configura precios, costos, imágenes y dimensiones de paquete para Skydropx.</p>
             </div>
             <button type="button" id="btn-cancel-edit" onclick="cancelProductEdit()" class="hidden text-xs text-rose-600 font-semibold hover:underline">Cancelar Edición</button>
           </div>
 
           <form id="product-form" onsubmit="handleProductFormSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5">
-            <!-- Campo oculto para ID de producto cuando se edita -->
             <input type="hidden" id="adm-p-id" value="">
 
             <div>
@@ -360,29 +371,52 @@
             </div>
 
             <div>
-              <label class="block text-xs font-semibold text-zinc-600 mb-1">Precio Venta ($ Público)</label>
-              <input type="number" id="adm-p-price" step="0.5" required placeholder="Ej. 350.00" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+              <label class="block text-xs font-semibold text-zinc-600 mb-1">Precio ($ Público)</label>
+              <input type="number" id="adm-p-price" step="0.5" required placeholder="350.00" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
             </div>
 
             <div>
-              <label class="block text-xs font-semibold text-zinc-600 mb-1">Costo ($ Solo Administrador)</label>
-              <input type="number" id="adm-p-cost" step="0.5" required placeholder="Ej. 120.00" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+              <label class="block text-xs font-semibold text-zinc-600 mb-1">Costo ($ Solo Admin)</label>
+              <input type="number" id="adm-p-cost" step="0.5" required placeholder="120.00" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
             </div>
 
             <div>
               <label class="block text-xs font-semibold text-zinc-600 mb-1">Categoría</label>
-              <select id="adm-p-category" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+              <select id="adm-p-category" onchange="toggleShippingFields(this.value)" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
                 <option value="Impresión 3D">Impresión 3D</option>
                 <option value="Coleccionables">Coleccionables</option>
-                <option value="Desarrollo Web">Desarrollo Web</option>
+                <option value="Desarrollo Web">Desarrollo Web (Sin Envío)</option>
               </select>
+            </div>
+
+            <!-- PESO Y MEDIDAS DEL PRODUCTO PARA ENVÍOS (SKYDROPX) -->
+            <div id="shipping-dimensions-box" class="sm:col-span-2 md:col-span-4 bg-zinc-50 border border-zinc-200 p-3.5 rounded-xl space-y-2">
+              <span class="text-xs font-bold text-zinc-800 uppercase tracking-wider block">Dimensiones y Peso para Envío Automático</span>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <div>
+                  <label class="block text-[11px] text-zinc-500 font-semibold mb-1">Peso (kg)</label>
+                  <input type="number" id="adm-p-weight" step="0.1" value="3.0" placeholder="3.0" class="w-full px-2.5 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs">
+                </div>
+                <div>
+                  <label class="block text-[11px] text-zinc-500 font-semibold mb-1">Largo (cm)</label>
+                  <input type="number" id="adm-p-length" step="1" value="25" placeholder="25" class="w-full px-2.5 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs">
+                </div>
+                <div>
+                  <label class="block text-[11px] text-zinc-500 font-semibold mb-1">Ancho (cm)</label>
+                  <input type="number" id="adm-p-width" step="1" value="25" placeholder="25" class="w-full px-2.5 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs">
+                </div>
+                <div>
+                  <label class="block text-[11px] text-zinc-500 font-semibold mb-1">Alto (cm)</label>
+                  <input type="number" id="adm-p-height" step="1" value="25" placeholder="25" class="w-full px-2.5 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs">
+                </div>
+              </div>
             </div>
 
             <!-- GESTIÓN DE IMAGEN -->
             <div class="sm:col-span-2 md:col-span-3">
               <label class="block text-xs font-semibold text-zinc-600 mb-1">Imagen del Producto (URL o Archivo)</label>
               <div class="flex flex-col sm:flex-row gap-2">
-                <input type="url" id="adm-p-image-url" placeholder="https://ejemplo.com/imagen.jpg (Enlace directo)" oninput="updateImagePreview(this.value)" class="flex-1 px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+                <input type="url" id="adm-p-image-url" placeholder="https://ejemplo.com/foto.jpg" oninput="updateImagePreview(this.value)" class="flex-1 px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
                 <label class="cursor-pointer bg-zinc-100 hover:bg-zinc-200 border border-zinc-300 px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 whitespace-nowrap">
                   <span>Subir Archivo</span>
                   <input type="file" id="adm-p-file" accept="image/*" onchange="handleImageFileUpload(event)" class="hidden">
@@ -390,7 +424,6 @@
               </div>
             </div>
 
-            <!-- Vista Previa de Imagen -->
             <div class="flex items-center justify-center border border-dashed border-zinc-300 rounded-xl p-2 bg-zinc-50 min-h-[70px]">
               <div id="image-preview-container" class="text-center">
                 <span class="text-[11px] text-zinc-400">Sin vista previa</span>
@@ -398,17 +431,17 @@
             </div>
 
             <div class="sm:col-span-2 md:col-span-4">
-              <label class="block text-xs font-semibold text-zinc-600 mb-1">Descripción del Producto</label>
-              <input type="text" id="adm-p-desc" placeholder="Detalles de materiales, medidas, compatibilidad o tiempos..." class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+              <label class="block text-xs font-semibold text-zinc-600 mb-1">Descripción</label>
+              <input type="text" id="adm-p-desc" placeholder="Detalles de materiales, compatibilidad o tiempos..." class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
             </div>
 
-            <div class="sm:col-span-2 md:col-span-4 pt-1 flex gap-2">
+            <div class="sm:col-span-2 md:col-span-4 pt-1">
               <button type="submit" id="btn-save-product" class="w-full sm:w-auto bg-zinc-950 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition shadow-sm">Guardar Producto en Catálogo</button>
             </div>
           </form>
         </div>
 
-        <!-- LISTA Y GESTIÓN DE PRODUCTOS EXISTENTES (EDITAR / ELIMINAR) -->
+        <!-- LISTA Y GESTIÓN DE PRODUCTOS EXISTENTES -->
         <div class="bg-white border border-zinc-200 rounded-2xl p-5 space-y-4 shadow-sm">
           <div class="flex justify-between items-center">
             <h3 class="text-base sm:text-lg font-bold">Catálogo Actual (Gestión & Costos)</h3>
@@ -416,19 +449,46 @@
           </div>
 
           <div class="overflow-x-auto -mx-2 sm:mx-0">
-            <table class="w-full text-left text-xs sm:text-sm min-w-[600px]">
+            <table class="w-full text-left text-xs sm:text-sm min-w-[650px]">
               <thead class="border-b border-zinc-200 text-[10px] text-zinc-400 uppercase">
                 <tr>
                   <th class="py-2.5">Foto</th>
                   <th class="py-2.5">Producto</th>
                   <th class="py-2.5">Categoría</th>
-                  <th class="py-2.5">Precio ($ Público)</th>
-                  <th class="py-2.5">Costo ($ Admin)</th>
+                  <th class="py-2.5">Peso / Medidas</th>
+                  <th class="py-2.5">Precio ($)</th>
+                  <th class="py-2.5">Costo ($)</th>
                   <th class="py-2.5 text-right">Acciones</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-zinc-100" id="admin-products-table">
-                <!-- Inyección dinámica de productos -->
+              <tbody class="divide-y divide-zinc-100" id="admin-products-table"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- NUEVA SECCIÓN: PEDIDOS Y GUÍAS DE ENVÍO -->
+        <div class="bg-white border border-zinc-200 rounded-2xl p-5 space-y-4 shadow-sm">
+          <div class="flex justify-between items-center">
+            <div>
+              <h3 class="text-base sm:text-lg font-bold">Pedidos y Compras de la Tienda</h3>
+              <p class="text-xs text-zinc-500">Órdenes cobradas con Mercado Pago y detalles para despacho.</p>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto -mx-2 sm:mx-0">
+            <table class="w-full text-left text-xs sm:text-sm min-w-[650px]">
+              <thead class="border-b border-zinc-200 text-[10px] text-zinc-400 uppercase">
+                <tr>
+                  <th class="py-2.5">Folio</th>
+                  <th class="py-2.5">Cliente</th>
+                  <th class="py-2.5">Productos</th>
+                  <th class="py-2.5">Envío Seleccionado</th>
+                  <th class="py-2.5">Total Pagado</th>
+                  <th class="py-2.5">Estado</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-zinc-100" id="admin-orders-table">
+                <tr><td colspan="6" class="py-4 text-center text-zinc-400">No hay pedidos registrados todavía.</td></tr>
               </tbody>
             </table>
           </div>
@@ -483,129 +543,367 @@
 
   </main>
 
-  <!-- MODAL PARA REALIZAR PEDIDO -->
-  <div id="order-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-lg rounded-2xl p-6 space-y-5 shadow-2xl relative">
-      <div class="flex justify-between items-start border-b border-zinc-200 pb-3">
-        <div>
-          <span id="order-modal-category" class="text-[10px] uppercase font-bold text-zinc-400 tracking-wider"></span>
-          <h3 id="order-modal-title" class="text-xl font-bold text-zinc-950"></h3>
-          <p id="order-modal-price" class="text-sm font-bold text-zinc-700"></p>
+  <!-- CAJÓN DESLIZANTE LATERAL DEL CARRITO DE COMPRAS (DRAWER) -->
+  <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="toggleCartDrawer()"></div>
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col justify-between">
+        
+        <!-- Header del Carrito -->
+        <div class="p-6 border-b border-zinc-200 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <h2 class="text-lg font-bold text-zinc-950">Tu Carrito de Compras</h2>
+            <span id="cart-item-count" class="text-xs font-semibold px-2 py-0.5 bg-zinc-100 rounded text-zinc-600">0</span>
+          </div>
+          <button onclick="toggleCartDrawer()" class="p-2 text-zinc-400 hover:text-zinc-800 text-xl font-bold focus:outline-none">&times;</button>
         </div>
-        <button onclick="closeOrderModal()" class="text-zinc-400 hover:text-zinc-800 p-1 text-lg font-bold">&times;</button>
+
+        <!-- Lista de Productos en el Carrito -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-4" id="cart-items-container">
+          <div class="text-center py-12 text-zinc-400 space-y-2">
+            <p class="text-sm">Tu carrito está vacío.</p>
+            <button onclick="toggleCartDrawer(); navigate('catalogo')" class="text-xs font-semibold underline text-zinc-950">Ver productos disponibles</button>
+          </div>
+        </div>
+
+        <!-- Módulo de Envío y Checkout -->
+        <div class="p-6 border-t border-zinc-200 bg-zinc-50 space-y-4">
+          
+          <!-- Cotizador de Envíos Skydropx -->
+          <div id="shipping-calculator-box" class="space-y-2">
+            <div class="flex justify-between items-center">
+              <label class="text-xs font-bold text-zinc-700 uppercase">Calcular Envío (Skydropx)</label>
+              <span id="shipping-origin-label" class="text-[10px] text-zinc-400">Origen: CP 54807</span>
+            </div>
+            <div class="flex gap-2">
+              <input type="text" id="shipping-zip" placeholder="Ingresa tu Código Postal" maxlength="5" class="flex-1 px-3 py-2 bg-white border border-zinc-300 rounded-xl text-xs outline-none focus:border-zinc-950">
+              <button type="button" onclick="calculateShippingRates()" id="btn-calc-shipping" class="px-4 py-2 bg-zinc-950 text-white rounded-xl text-xs font-semibold hover:bg-zinc-800">Cotizar</button>
+            </div>
+
+            <!-- Opciones de Paquetería Cotizadas -->
+            <div id="shipping-options-list" class="space-y-1.5 pt-1 hidden"></div>
+          </div>
+
+          <!-- Resumen de Costos -->
+          <div class="space-y-1.5 text-xs text-zinc-600 border-t border-zinc-200 pt-3">
+            <div class="flex justify-between">
+              <span>Subtotal Productos</span>
+              <span class="font-semibold text-zinc-900" id="cart-subtotal">$0 MXN</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Costo de Envío</span>
+              <span class="font-semibold text-zinc-900" id="cart-shipping-cost">$0 MXN</span>
+            </div>
+            <div class="flex justify-between text-sm font-extrabold text-zinc-950 pt-2 border-t border-zinc-200">
+              <span>Total a Pagar</span>
+              <span id="cart-total">$0 MXN</span>
+            </div>
+          </div>
+
+          <!-- Botón de Pago Mercado Pago -->
+          <div class="space-y-2 pt-1">
+            <button type="button" onclick="proceedToMercadoPago()" id="btn-mp-pay" class="w-full bg-[#009ee3] hover:bg-[#0081ba] text-white py-3 rounded-xl font-bold text-sm shadow-md transition flex items-center justify-center gap-2">
+              <span>Pagar con Mercado Pago</span>
+              <span class="text-xs bg-white/20 px-1.5 py-0.5 rounded font-mono">Tarjetas / OXXO</span>
+            </button>
+            <p class="text-[10px] text-center text-zinc-400">Procesado de forma 100% segura por Mercado Pago México.</p>
+          </div>
+
+        </div>
+
       </div>
-
-      <form onsubmit="submitOrder(event)" class="space-y-4">
-        <div>
-          <label class="block text-xs font-semibold text-zinc-600 mb-1" id="order-spec-label">Especificaciones del Pedido</label>
-          <input type="text" id="order-specs" required placeholder="Color, medidas o personalización requerida" class="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-zinc-600 mb-1">Nombre o Contacto para entrega</label>
-          <input type="text" id="order-contact" required placeholder="Nombre o teléfono" class="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
-        </div>
-
-        <div class="flex flex-col sm:flex-row gap-2 pt-2">
-          <button type="submit" class="flex-1 bg-zinc-950 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition">Confirmar y Enviar Pedido</button>
-          <button type="button" onclick="closeOrderModal()" class="border border-zinc-300 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-zinc-100">Cancelar</button>
-        </div>
-      </form>
     </div>
   </div>
 
   <script>
-    // SUPABASE CONFIG
+    // CREDENCIALES CONFIGURADAS
     const SUPABASE_BASE_URL = "https://vqsuycquoeqakhttibao.supabase.co";
     const SUPABASE_KEY = "sb_publishable_iglMJnYPy3iFulCFv3j_qw_s3An5vme";
     let supabaseClient = null;
 
-    // EMAILJS CONFIG OFICIAL
-    const EMAILJS_PUBLIC_KEY = "k2u203TouhD3PPrZU";
-    const EMAILJS_TEMPLATE_ID = "template_f9qsdal";
-    const EMAILJS_SERVICE_ID = "service_k329g2o";
+    const MP_PUBLIC_KEY = "APP_USR-c2ecf1d6-0487-4ca6-a219-2162d6e048a1";
+    let mpInstance = null;
 
     try {
       if (window.supabase && typeof window.supabase.createClient === 'function') {
         supabaseClient = window.supabase.createClient(SUPABASE_BASE_URL, SUPABASE_KEY);
       }
-      if (window.emailjs) {
-        emailjs.init(EMAILJS_PUBLIC_KEY);
+      if (window.MercadoPago) {
+        mpInstance = new MercadoPago(MP_PUBLIC_KEY, { locale: 'es-MX' });
       }
     } catch (err) {
       console.warn("Init error:", err);
     }
 
-    function getStoredClients() {
+    // -----------------------------------------------------------------
+    // GESTIÓN DEL CARRITO DE COMPRAS Y PEDIDOS
+    // -----------------------------------------------------------------
+    function getStoredCart() {
       try {
-        return JSON.parse(localStorage.getItem('five_friends_clients_cache')) || [];
+        return JSON.parse(localStorage.getItem('five_friends_cart')) || [];
       } catch(e) {
         return [];
       }
     }
 
-    function saveClientToCache(client) {
-      let clients = getStoredClients();
-      const idx = clients.findIndex(c => c.email === client.email || (client.phone && c.phone === client.phone));
-      if (idx >= 0) {
-        clients[idx] = { ...clients[idx], ...client };
-      } else {
-        clients.unshift(client);
-      }
-      localStorage.setItem('five_friends_clients_cache', JSON.stringify(clients));
+    let cart = getStoredCart();
+    let selectedShippingRate = null;
+
+    function saveCart(newCart) {
+      cart = newCart;
+      localStorage.setItem('five_friends_cart', JSON.stringify(cart));
+      updateCartUI();
     }
 
-    // MENU MÓVIL
-    window.toggleMobileMenu = function() {
-      const menu = document.getElementById('mobile-menu');
-      const bars = document.getElementById('menu-icon-bars');
-      const close = document.getElementById('menu-icon-close');
-      const isHidden = menu.classList.contains('hidden');
+    window.toggleCartDrawer = function() {
+      const drawer = document.getElementById('cart-drawer');
+      drawer.classList.toggle('hidden');
+    };
 
-      if (isHidden) {
-        menu.classList.remove('hidden');
-        bars.classList.add('hidden');
-        close.classList.remove('hidden');
+    window.addToCart = function(productId) {
+      const product = catalogItems.find(p => p.id === productId);
+      if (!product) return;
+
+      const existingIndex = cart.findIndex(item => item.id === productId);
+      if (existingIndex >= 0) {
+        cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
       } else {
-        menu.classList.add('hidden');
-        bars.classList.remove('hidden');
-        close.classList.add('hidden');
+        cart.push({
+          id: product.id,
+          title: product.title,
+          price: parseFloat(product.price),
+          category: product.category,
+          image_url: product.image_url || '',
+          weight: parseFloat(product.weight || 3),
+          length: parseFloat(product.length || 25),
+          width: parseFloat(product.width || 25),
+          height: parseFloat(product.height || 25),
+          quantity: 1
+        });
       }
+
+      saveCart(cart);
+      toggleCartDrawer();
     };
 
-    // NAVEGACIÓN
-    window.navigate = function(section) {
-      const sections = ['inicio', 'puntos', 'contacto', 'catalogo', 'club'];
-      sections.forEach(s => {
-        const el = document.getElementById('sec-' + s);
-        if (el) el.classList.add('hidden');
-      });
-      const target = document.getElementById('sec-' + section);
-      if (target) {
-        target.classList.remove('hidden');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.changeQuantity = function(productId, delta) {
+      const idx = cart.findIndex(item => item.id === productId);
+      if (idx < 0) return;
+
+      cart[idx].quantity = (cart[idx].quantity || 1) + delta;
+      if (cart[idx].quantity <= 0) {
+        cart.splice(idx, 1);
       }
+      saveCart(cart);
     };
 
-    // TABS CLUB
-    window.toggleAuthTab = function(tab) {
-      document.getElementById('form-login').classList.add('hidden');
-      document.getElementById('form-register').classList.add('hidden');
-      document.getElementById('form-admin').classList.add('hidden');
+    window.removeFromCart = function(productId) {
+      saveCart(cart.filter(item => item.id !== productId));
+    };
 
-      ['login', 'register', 'admin'].forEach(t => {
-        const el = document.getElementById('tab-' + t);
-        if (el) el.className = 'text-zinc-400 hover:text-zinc-700 pb-2.5';
+    function updateCartUI() {
+      const count = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
+      const subtotal = cart.reduce((acc, item) => acc + (item.price * (item.quantity || 1)), 0);
+
+      // Badges
+      const badgeDesk = document.getElementById('cart-badge-desktop');
+      const badgeMob = document.getElementById('cart-badge-mobile');
+      const countLabel = document.getElementById('cart-item-count');
+
+      [badgeDesk, badgeMob].forEach(b => {
+        if (b) {
+          b.innerText = count;
+          b.classList.toggle('hidden', count === 0);
+        }
       });
+      if (countLabel) countLabel.innerText = count;
 
-      const activeTab = document.getElementById('tab-' + tab);
-      if (activeTab) activeTab.className = 'text-zinc-950 border-b-2 border-zinc-950 pb-2.5';
-      const form = document.getElementById('form-' + tab);
-      if (form) form.classList.remove('hidden');
+      // Render items
+      const container = document.getElementById('cart-items-container');
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 text-zinc-400 space-y-2">
+            <p class="text-sm">Tu carrito está vacío.</p>
+            <button onclick="toggleCartDrawer(); navigate('catalogo')" class="text-xs font-semibold underline text-zinc-950">Ver productos disponibles</button>
+          </div>
+        `;
+        selectedShippingRate = null;
+        document.getElementById('shipping-options-list').classList.add('hidden');
+      } else {
+        container.innerHTML = cart.map(item => `
+          <div class="flex items-center justify-between gap-3 border-b border-zinc-100 pb-3">
+            <div class="flex items-center gap-3">
+              ${item.image_url ? `<img src="${item.image_url}" class="w-12 h-12 rounded-lg object-cover border border-zinc-200">` : `<div class="w-12 h-12 bg-zinc-100 rounded-lg flex items-center justify-center font-bold text-xs text-zinc-400">5F</div>`}
+              <div>
+                <h4 class="text-xs font-bold text-zinc-900 leading-snug line-clamp-1">${item.title}</h4>
+                <span class="text-xs font-bold text-zinc-950">$${item.price.toLocaleString()} MXN</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="flex items-center border border-zinc-200 rounded-lg">
+                <button onclick="changeQuantity('${item.id}', -1)" class="px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-100">-</button>
+                <span class="px-2 text-xs font-bold">${item.quantity}</span>
+                <button onclick="changeQuantity('${item.id}', 1)" class="px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-100">+</button>
+              </div>
+              <button onclick="removeFromCart('${item.id}')" class="text-zinc-400 hover:text-rose-600 text-sm font-bold ml-1">&times;</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Desactivar cálculo de envío si todos los ítems son digitales (Desarrollo Web)
+      const hasPhysicalItems = cart.some(i => i.category !== 'Desarrollo Web');
+      const shippingBox = document.getElementById('shipping-calculator-box');
+      if (shippingBox) {
+        shippingBox.classList.toggle('hidden', !hasPhysicalItems || cart.length === 0);
+      }
+
+      // Totales
+      const shippingCost = hasPhysicalItems && selectedShippingRate ? selectedShippingRate.cost : 0;
+      const total = subtotal + shippingCost;
+
+      document.getElementById('cart-subtotal').innerText = `$${subtotal.toLocaleString()} MXN`;
+      document.getElementById('cart-shipping-cost').innerText = shippingCost > 0 ? `$${shippingCost.toLocaleString()} MXN` : (hasPhysicalItems ? 'Pendiente' : '$0 MXN (Digital)');
+      document.getElementById('cart-total').innerText = `$${total.toLocaleString()} MXN`;
+    }
+
+    // COTIZADOR SKYDROPX CON SERVIDOR VERCEL
+    window.calculateShippingRates = async function() {
+      const zip = document.getElementById('shipping-zip').value.trim();
+      const btn = document.getElementById('btn-calc-shipping');
+      const list = document.getElementById('shipping-options-list');
+
+      if (!zip || zip.length !== 5) {
+        alert("Por favor ingresa un Código Postal válido de 5 dígitos.");
+        return;
+      }
+
+      btn.innerText = "...";
+      btn.disabled = true;
+
+      // Calcular peso acumulado y empaque óptimo
+      const totalWeight = cart.reduce((acc, i) => acc + (parseFloat(i.weight || 3) * (i.quantity || 1)), 0);
+      const maxDim = cart.reduce((max, i) => Math.max(max, parseFloat(i.length || 25), parseFloat(i.width || 25), parseFloat(i.height || 25)), 25);
+
+      try {
+        const response = await fetch('/api/cotizar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            zip_to: zip,
+            weight: totalWeight,
+            length: maxDim,
+            width: maxDim,
+            height: maxDim
+          })
+        });
+
+        const data = await response.json();
+        const rates = data.rates || [];
+
+        if (rates.length === 0) {
+          list.innerHTML = `<span class="text-[11px] text-zinc-500">No hay coberturas directas para el CP ${zip}. Cotizaremos vía soporte.</span>`;
+        } else {
+          list.innerHTML = rates.map((r, idx) => `
+            <label class="flex items-center justify-between p-2.5 bg-white border border-zinc-200 rounded-xl cursor-pointer hover:border-zinc-950 transition text-xs">
+              <div class="flex items-center gap-2">
+                <input type="radio" name="shipping_rate" value="${idx}" onchange="selectShippingOption(${r.cost}, '${r.provider}', '${r.service}', '${r.days}')" ${idx === 0 ? 'checked' : ''} class="text-zinc-950 focus:ring-0">
+                <div>
+                  <div class="font-bold text-zinc-900">${r.provider} (${r.service})</div>
+                  <div class="text-[10px] text-zinc-400">Entrega estimada: ${r.days}</div>
+                </div>
+              </div>
+              <span class="font-bold text-zinc-950">$${r.cost} MXN</span>
+            </label>
+          `).join('');
+
+          // Seleccionar la primera por defecto
+          selectShippingOption(rates[0].cost, rates[0].provider, rates[0].service, rates[0].days);
+        }
+
+        list.classList.remove('hidden');
+      } catch (err) {
+        console.error("Error al cotizar envío:", err);
+        list.innerHTML = `<span class="text-[11px] text-rose-500">Error al conectar con paqueterías. Intenta de nuevo.</span>`;
+        list.classList.remove('hidden');
+      }
+
+      btn.innerText = "Cotizar";
+      btn.disabled = false;
     };
+
+    window.selectShippingOption = function(cost, provider, service, days) {
+      selectedShippingRate = { cost, provider, service, days };
+      updateCartUI();
+    };
+
+    // CHECKOUT CON MERCADO PAGO
+    window.proceedToMercadoPago = async function() {
+      if (cart.length === 0) {
+        alert("Agrega al menos un producto a tu carrito para proceder.");
+        return;
+      }
+
+      const hasPhysicalItems = cart.some(i => i.category !== 'Desarrollo Web');
+      if (hasPhysicalItems && !selectedShippingRate) {
+        alert("Por favor cotiza y selecciona una opción de envío antes de pagar.");
+        document.getElementById('shipping-zip').focus();
+        return;
+      }
+
+      const btn = document.getElementById('btn-mp-pay');
+      btn.innerText = "Conectando con Mercado Pago...";
+      btn.disabled = true;
+
+      try {
+        const response = await fetch('/api/crear-preferencia', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            items: cart,
+            shipping_cost: selectedShippingRate ? selectedShippingRate.cost : 0,
+            shipping_details: selectedShippingRate,
+            payer_email: "cliente@fivefriends.com"
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.init_point) {
+          // Guardar orden previa para el admin
+          registerStoreOrder(data.id);
+          // Redirigir al Checkout seguro de Mercado Pago
+          window.location.href = data.init_point;
+        } else {
+          alert("No se pudo iniciar el pago. Revisa la consola o credenciales.");
+          console.error(data);
+        }
+      } catch (err) {
+        console.error("Error Mercado Pago Checkout:", err);
+        alert("Error de conexión con la pasarela de pagos.");
+      }
+
+      btn.innerText = "Pagar con Mercado Pago";
+      btn.disabled = false;
+    };
+
+    function registerStoreOrder(prefId) {
+      const orders = JSON.parse(localStorage.getItem('five_friends_orders')) || [];
+      const newOrder = {
+        id: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
+        pref_id: prefId,
+        date: new Date().toLocaleDateString('es-MX'),
+        items: cart.map(i => `${i.quantity}x ${i.title}`).join(', '),
+        shipping: selectedShippingRate ? `${selectedShippingRate.provider} ($${selectedShippingRate.cost} MXN)` : 'Digital (Sin flete)',
+        total: cart.reduce((acc, i) => acc + (i.price * i.quantity), 0) + (selectedShippingRate ? selectedShippingRate.cost : 0),
+        status: 'Aprobado / Pendiente Despacho'
+      };
+      orders.unshift(newOrder);
+      localStorage.setItem('five_friends_orders', JSON.stringify(orders));
+    }
 
     // -------------------------------------------------------------
-    // GESTIÓN DE CATÁLOGO CON PERSISTENCIA, IMÁGENES Y EDICIÓN
+    // CATÁLOGO, DIMENSIONES Y EDICIÓN DE PRODUCTOS
     // -------------------------------------------------------------
     let currentCategoryFilter = 'all';
 
@@ -615,12 +913,12 @@
         try { return JSON.parse(saved); } catch(e){}
       }
       return [
-        { id: "p1", title: "Soporte Articulado para Escritorio", description: "Impresión de alta densidad en PETG resistente a impactos.", price: 290, cost: 95, category: "Impresión 3D", image_url: "", badge: "Entrega Inmediata" },
-        { id: "p2", title: "Organizador Modular de Herramientas", description: "Bandejas encastrables con ranuras a medida para mesa de trabajo.", price: 340, cost: 110, category: "Impresión 3D", image_url: "", badge: "Personalizable" },
-        { id: "p3", title: "Diorama Exhibidor Coleccionable", description: "Base modular con textura e iluminación para figuras a escala.", price: 420, cost: 180, category: "Coleccionables", image_url: "", badge: "Edición Limitada" },
-        { id: "p4", title: "Marco Exhibidor para Cartas TCG", description: "Caja protectora rígida con soporte de exhibición para cartas raras.", price: 260, cost: 80, category: "Coleccionables", image_url: "", badge: "Protección UV" },
-        { id: "p5", title: "Landing Page para Emprendedores", description: "Página de aterrizaje responsiva, ultra rápida y optimizada para móviles.", price: 3200, cost: 500, category: "Desarrollo Web", image_url: "", badge: "Entrega en 5 días" },
-        { id: "p6", title: "Tienda Online E-commerce", description: "Catálogo autogestionable, pasarela de cobros y panel de pedidos.", price: 6500, cost: 1200, category: "Desarrollo Web", image_url: "", badge: "Sistema Completo" }
+        { id: "p1", title: "Soporte Articulado para Escritorio", description: "Impresión de alta densidad en PETG resistente.", price: 290, cost: 95, category: "Impresión 3D", weight: 0.4, length: 15, width: 15, height: 10, image_url: "", badge: "Entrega Inmediata" },
+        { id: "p2", title: "Organizador Modular de Herramientas", description: "Bandejas encastrables con ranuras a medida.", price: 340, cost: 110, category: "Impresión 3D", weight: 0.6, length: 20, width: 15, height: 12, image_url: "", badge: "Personalizable" },
+        { id: "p3", title: "Diorama Exhibidor Coleccionable", description: "Base modular con textura para figuras a escala.", price: 420, cost: 180, category: "Coleccionables", weight: 1.2, length: 25, width: 25, height: 20, image_url: "", badge: "Edición Limitada" },
+        { id: "p4", title: "Marco Exhibidor para Cartas TCG", description: "Caja protectora rígida con soporte de exhibición.", price: 260, cost: 80, category: "Coleccionables", weight: 0.3, length: 15, width: 10, height: 5, image_url: "", badge: "Protección UV" },
+        { id: "p5", title: "Landing Page para Emprendedores", description: "Página de aterrizaje responsiva y optimizada.", price: 3200, cost: 500, category: "Desarrollo Web", weight: 0, length: 0, width: 0, height: 0, image_url: "", badge: "Servicio Digital" },
+        { id: "p6", title: "Tienda Online E-commerce", description: "Catálogo autogestionable y pasarela de cobros.", price: 6500, cost: 1200, category: "Desarrollo Web", weight: 0, length: 0, width: 0, height: 0, image_url: "", badge: "Servicio Digital" }
       ];
     }
 
@@ -662,7 +960,15 @@
       renderCatalog();
     };
 
-    // VISTA PREVIA DE IMAGEN
+    window.toggleShippingFields = function(category) {
+      const box = document.getElementById('shipping-dimensions-box');
+      if (category === 'Desarrollo Web') {
+        box.classList.add('hidden');
+      } else {
+        box.classList.remove('hidden');
+      }
+    };
+
     window.updateImagePreview = function(url) {
       const container = document.getElementById('image-preview-container');
       if (url && (url.startsWith('http') || url.startsWith('data:image'))) {
@@ -672,7 +978,6 @@
       }
     };
 
-    // SUBIR ARCHIVO LOCAL Y CONVERTIR A BASE64
     window.handleImageFileUpload = function(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -686,7 +991,6 @@
       reader.readAsDataURL(file);
     };
 
-    // RENDERIZAR CATÁLOGO PÚBLICO
     function renderCatalog() {
       const container = document.getElementById('catalog-container');
       if (!container) return;
@@ -703,7 +1007,7 @@
         container.innerHTML = `
           <div class="text-center py-16 bg-white border border-zinc-200 rounded-2xl p-8 space-y-2">
             <h4 class="text-base font-bold text-zinc-800">No encontramos coincidencias</h4>
-            <p class="text-xs text-zinc-500">Prueba con otro término de búsqueda o cambia la categoría seleccionada.</p>
+            <p class="text-xs text-zinc-500">Prueba con otro término o categoría.</p>
           </div>
         `;
         return;
@@ -720,18 +1024,12 @@
         if (group.length === 0) return;
 
         let icon = cat === 'Impresión 3D' ? '3D' : (cat === 'Coleccionables' ? '★' : '&lt;/&gt;');
-        let descriptionTag = cat === 'Impresión 3D'
-          ? 'Manufactura aditiva, prototipado y piezas técnicas'
-          : (cat === 'Coleccionables' ? 'Dioramas, bases exhibidoras y accesorios temáticos' : 'Soluciones web rápidas, responsivas y tiendas virtuales');
 
         html += `
           <div class="space-y-4">
             <div class="flex items-center gap-2.5 pb-2 border-b border-zinc-200">
               <span class="w-7 h-7 rounded-lg bg-zinc-950 text-white flex items-center justify-center text-xs font-bold">${icon}</span>
-              <div>
-                <h3 class="font-extrabold text-lg text-zinc-950">${cat}</h3>
-                <p class="text-xs text-zinc-500">${descriptionTag}</p>
-              </div>
+              <h3 class="font-extrabold text-lg text-zinc-950">${cat}</h3>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
@@ -750,10 +1048,11 @@
                       ${imageSection}
                       <span class="text-[10px] uppercase font-bold px-2 py-0.5 bg-zinc-100 rounded text-zinc-600 inline-block mb-1.5">${p.badge || p.category}</span>
                       <h4 class="font-bold text-base text-zinc-950 leading-snug">${p.title}</h4>
-                      <p class="text-xs text-zinc-500 leading-relaxed mt-1">${p.description}</p>                     </div>                     <div class="flex justify-between items-center pt-3 border-t border-zinc-100">                       <div>                         <span class="text-[10px] text-zinc-400 uppercase font-semibold block">Inversión</span>                         <span class="font-extrabold text-base sm:text-lg text-zinc-950">$${Number(p.price).toLocaleString()} MXN</span>
+                      <p class="text-xs text-zinc-500 leading-relaxed mt-1">${p.description}</p>                     </div>                     <div class="flex justify-between items-center pt-3 border-t border-zinc-100">                       <div>                         <span class="text-[10px] text-zinc-400 uppercase font-semibold block">Precio</span>                         <span class="font-extrabold text-base sm:text-lg text-zinc-950">$${Number(p.price).toLocaleString()} MXN</span>
                       </div>
-                      <button type="button" onclick="openOrderModal('${p.title}', ${p.price}, '${p.category}')" class="px-4 py-2 bg-zinc-950 text-white text-xs font-semibold rounded-xl hover:bg-zinc-800 transition shadow-sm">
-                        ${p.category === 'Desarrollo Web' ? 'Cotizar' : 'Ordenar'}
+                      <button type="button" onclick="addToCart('${p.id}')" class="px-4 py-2 bg-zinc-950 text-white text-xs font-semibold rounded-xl hover:bg-zinc-800 transition shadow-sm flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        <span>Agregar</span>
                       </button>
                     </div>
                   </div>
@@ -767,7 +1066,6 @@
       container.innerHTML = html;
     }
 
-    // RENDERIZAR TABLA DE ADMINISTRACIÓN DE PRODUCTOS (EDITAR / ELIMINAR / COSTOS)
     function renderAdminProductsTable() {
       const table = document.getElementById('admin-products-table');
       const countLabel = document.getElementById('admin-product-count');
@@ -776,7 +1074,7 @@
       if (countLabel) countLabel.innerText = `${catalogItems.length} productos`;
 
       if (catalogItems.length === 0) {
-        table.innerHTML = `<tr><td colspan="6" class="py-4 text-center text-zinc-400">No hay productos en el catálogo. Añade uno arriba.</td></tr>`;
+        table.innerHTML = `<tr><td colspan="7" class="py-4 text-center text-zinc-400">No hay productos. Añade uno arriba.</td></tr>`;
         return;
       }
 
@@ -788,13 +1086,11 @@
         return `
           <tr class="hover:bg-zinc-50 transition">
             <td class="py-2.5">${thumbnail}</td>
-            <td class="py-2.5 font-semibold text-zinc-900">
-              ${p.title}
-              <div class="text-[11px] text-zinc-400 font-normal truncate max-w-xs">${p.description || 'Sin descripción'}</div>
-            </td>
+            <td class="py-2.5 font-semibold text-zinc-900">${p.title}</td>
             <td class="py-2.5 text-zinc-600">${p.category}</td>
-            <td class="py-2.5 font-bold text-zinc-950">$${Number(p.price).toLocaleString()} MXN</td>
-            <td class="py-2.5 font-bold text-zinc-600">$${Number(p.cost || 0).toLocaleString()} MXN</td>
+            <td class="py-2.5 text-zinc-500 font-mono text-[11px]">${p.category === 'Desarrollo Web' ? 'Digital' : `${p.weight \vert{}\vert{} 3}kg (${p.length || 25}x${p.width \vert{}\vert{} 25}x${p.height || 25}cm)`}</td>
+            <td class="py-2.5 font-bold text-zinc-950">$${Number(p.price).toLocaleString()}</td>
+            <td class="py-2.5 font-bold text-zinc-500">$${Number(p.cost || 0).toLocaleString()}</td>
             <td class="py-2.5 text-right whitespace-nowrap">
               <button onclick="editProduct('${p.id}')" class="px-2.5 py-1 text-xs font-semibold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-lg mr-1 transition">Editar</button>
               <button onclick="deleteProduct('${p.id}')" class="px-2.5 py-1 text-xs font-semibold bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg transition">Eliminar</button>
@@ -804,7 +1100,28 @@
       }).join('');
     }
 
-    // MANEJO DE ENVÍO DE FORMULARIO (CREAR O ACTUALIZAR)
+    function renderAdminOrdersTable() {
+      const table = document.getElementById('admin-orders-table');
+      if (!table) return;
+
+      const orders = JSON.parse(localStorage.getItem('five_friends_orders')) || [];
+      if (orders.length === 0) {
+        table.innerHTML = `<tr><td colspan="6" class="py-4 text-center text-zinc-400">No hay pedidos registrados todavía.</td></tr>`;
+        return;
+      }
+
+      table.innerHTML = orders.map(o => `
+        <tr class="hover:bg-zinc-50">
+          <td class="py-2.5 font-bold text-zinc-900">${o.id}</td>
+          <td class="py-2.5 text-zinc-600">Cliente Five Friends</td>
+          <td class="py-2.5 text-zinc-600 truncate max-w-xs">${o.items}</td>
+          <td class="py-2.5 text-zinc-600">${o.shipping}</td>
+          <td class="py-2.5 font-bold text-zinc-950">$${o.total.toLocaleString()} MXN</td>
+          <td class="py-2.5"><span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 font-semibold rounded text-[11px]">${o.status}</span></td>
+        </tr>
+      `).join('');
+    }
+
     window.handleProductFormSubmit = async function(e) {
       e.preventDefault();
       const id = document.getElementById('adm-p-id').value;
@@ -812,19 +1129,19 @@
       const price = parseFloat(document.getElementById('adm-p-price').value);
       const cost = parseFloat(document.getElementById('adm-p-cost').value);
       const category = document.getElementById('adm-p-category').value;
+      const weight = parseFloat(document.getElementById('adm-p-weight').value) || 3.0;
+      const length = parseFloat(document.getElementById('adm-p-length').value) || 25;
+      const width = parseFloat(document.getElementById('adm-p-width').value) || 25;
+      const height = parseFloat(document.getElementById('adm-p-height').value) || 25;
       const imageUrl = document.getElementById('adm-p-image-url').value.trim();
       const desc = document.getElementById('adm-p-desc').value.trim();
 
       if (id) {
-        // ACTUALIZAR PRODUCTO EXISTENTE
         const idx = catalogItems.findIndex(p => p.id === id);
         if (idx >= 0) {
           catalogItems[idx] = {
             ...catalogItems[idx],
-            title: title,
-            price: price,
-            cost: cost,
-            category: category,
+            title, price, cost, category, weight, length, width, height,
             image_url: imageUrl,
             description: desc
           };
@@ -832,13 +1149,9 @@
           alert(`✓ Producto "${title}" actualizado con éxito.`);
         }
       } else {
-        // CREAR NUEVO PRODUCTO
         const newProduct = {
           id: 'prod_' + Date.now(),
-          title: title,
-          price: price,
-          cost: cost,
-          category: category,
+          title, price, cost, category, weight, length, width, height,
           image_url: imageUrl,
           description: desc,
           badge: 'Nuevo'
@@ -848,27 +1161,9 @@
         alert(`✓ Producto "${title}" agregado al catálogo.`);
       }
 
-      // Sincronizar en Supabase si la tabla products existe
-      if (supabaseClient) {
-        try {
-          await supabaseClient.from('products').upsert({
-            title: title,
-            price: price,
-            cost: cost,
-            category: category,
-            image_url: imageUrl,
-            description: desc
-          });
-        } catch(err) {
-          console.warn("Supabase products sync:", err);
-        }
-      }
-
       cancelProductEdit();
-      loadAdminData();
     };
 
-    // EDITAR PRODUCTO: LLENA EL FORMULARIO
     window.editProduct = function(id) {
       const prod = catalogItems.find(p => p.id === id);
       if (!prod) return;
@@ -878,79 +1173,99 @@
       document.getElementById('adm-p-price').value = prod.price;
       document.getElementById('adm-p-cost').value = prod.cost || 0;
       document.getElementById('adm-p-category').value = prod.category;
+      document.getElementById('adm-p-weight').value = prod.weight || 3.0;
+      document.getElementById('adm-p-length').value = prod.length || 25;
+      document.getElementById('adm-p-width').value = prod.width || 25;
+      document.getElementById('adm-p-height').value = prod.height || 25;
       document.getElementById('adm-p-image-url').value = prod.image_url || '';
       document.getElementById('adm-p-desc').value = prod.description || '';
 
+      toggleShippingFields(prod.category);
       updateImagePreview(prod.image_url || '');
 
       document.getElementById('product-form-title').innerText = `Editando: ${prod.title}`;
       document.getElementById('btn-save-product').innerText = "Guardar Cambios del Producto";
       document.getElementById('btn-cancel-edit').classList.remove('hidden');
 
-      // Desplazamiento suave al formulario
       document.getElementById('product-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
     };
 
-    // CANCELAR EDICIÓN Y LIMPIAR
     window.cancelProductEdit = function() {
       document.getElementById('adm-p-id').value = '';
       document.getElementById('product-form').reset();
       document.getElementById('image-preview-container').innerHTML = `<span class="text-[11px] text-zinc-400">Sin vista previa</span>`;
-      document.getElementById('product-form-title').innerText = "Agregar Nuevo Producto al Catálogo";
+      document.getElementById('product-form-title').innerText = "Agregar / Editar Producto";
       document.getElementById('btn-save-product').innerText = "Guardar Producto en Catálogo";
       document.getElementById('btn-cancel-edit').classList.add('hidden');
     };
 
-    // ELIMINAR PRODUCTO
     window.deleteProduct = function(id) {
       const prod = catalogItems.find(p => p.id === id);
       if (!prod) return;
 
-      if (confirm(`¿Estás seguro de que deseas eliminar "${prod.title}" del catálogo?`)) {
-        const updated = catalogItems.filter(p => p.id !== id);
-        saveCatalog(updated);
-        alert(`✓ Producto "${prod.title}" eliminado.`);
-        loadAdminData();
+      if (confirm(`¿Eliminar "${prod.title}" del catálogo?`)) {
+        saveCatalog(catalogItems.filter(p => p.id !== id));
       }
     };
 
-    // MODAL DE PEDIDO
-    let selectedOrder = null;
+    // -------------------------------------------------------------
+    // CLUB, AUTENTICACIÓN Y ADMIN
+    // -------------------------------------------------------------
+    window.toggleMobileMenu = function() {
+      const menu = document.getElementById('mobile-menu');
+      const bars = document.getElementById('menu-icon-bars');
+      const close = document.getElementById('menu-icon-close');
+      const isHidden = menu.classList.contains('hidden');
 
-    window.openOrderModal = function(title, price, category) {
-      selectedOrder = { title, price, category };
-      document.getElementById('order-modal-title').innerText = title;
-      document.getElementById('order-modal-category').innerText = category;
-      document.getElementById('order-modal-price').innerText = `$${price.toLocaleString()} MXN`;
-      
-      const label = document.getElementById('order-spec-label');
-      const input = document.getElementById('order-specs');
-      if (category === 'Desarrollo Web') {
-        label.innerText = '¿De qué trata tu negocio o proyecto web?';
-        input.placeholder = 'Ej. Tienda con 20 productos y pasarela de pago';
-      } else {
-        label.innerText = 'Color o detalles de tu pieza 3D / coleccionable';
-        input.placeholder = 'Ej. Color negro mate, medidas estándar, iniciales grabadas';
+      menu.classList.toggle('hidden');
+      bars.classList.toggle('hidden', isHidden);
+      close.classList.toggle('hidden', !isHidden);
+    };
+
+    window.navigate = function(section) {
+      ['inicio', 'puntos', 'contacto', 'catalogo', 'club'].forEach(s => {
+        const el = document.getElementById('sec-' + s);
+        if (el) el.classList.add('hidden');
+      });
+      const target = document.getElementById('sec-' + section);
+      if (target) {
+        target.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-
-      document.getElementById('order-modal').classList.remove('hidden');
     };
 
-    window.closeOrderModal = function() {
-      document.getElementById('order-modal').classList.add('hidden');
-      selectedOrder = null;
+    window.toggleAuthTab = function(tab) {
+      document.getElementById('form-login').classList.add('hidden');
+      document.getElementById('form-register').classList.add('hidden');
+      document.getElementById('form-admin').classList.add('hidden');
+
+      ['login', 'register', 'admin'].forEach(t => {
+        const el = document.getElementById('tab-' + t);
+        if (el) el.className = 'text-zinc-400 hover:text-zinc-700 pb-2.5';
+      });
+
+      const activeTab = document.getElementById('tab-' + tab);
+      if (activeTab) activeTab.className = 'text-zinc-950 border-b-2 border-zinc-950 pb-2.5';
+      const form = document.getElementById('form-' + tab);
+      if (form) form.classList.remove('hidden');
     };
 
-    window.submitOrder = function(e) {
-      e.preventDefault();
-      const specs = document.getElementById('order-specs').value;
-      const contact = document.getElementById('order-contact').value;
+    function getStoredClients() {
+      try {
+        return JSON.parse(localStorage.getItem('five_friends_clients_cache')) || [];
+      } catch(e) {
+        return [];
+      }
+    }
 
-      alert(`✓ ¡Pedido registrado con éxito!\n\nProducto: ${selectedOrder.title}\nMonto: $${selectedOrder.price} MXN\nContacto: ${contact}\nDetalles: ${specs}\n\nNos pondremos en contacto contigo de inmediato para coordinar la entrega.`);
-      closeOrderModal();
-    };
+    function saveClientToCache(client) {
+      let clients = getStoredClients();
+      const idx = clients.findIndex(c => c.email === client.email || (client.phone && c.phone === client.phone));
+      if (idx >= 0) clients[idx] = { ...clients[idx], ...client };
+      else clients.unshift(client);
+      localStorage.setItem('five_friends_clients_cache', JSON.stringify(clients));
+    }
 
-    // REGISTRO CLIENTE
     window.handleRegister = async function(e) {
       e.preventDefault();
       const btn = document.getElementById('btn-register');
@@ -974,11 +1289,11 @@
           });
           if (authData?.user) newUserId = authData.user.id;
         } catch (err) {
-          console.warn("Auth signup error:", err);
+          console.warn(err);
         }
 
         try {
-          const profilePayload = {
+          await supabaseClient.from('profiles').upsert({
             id: newUserId || '00000000-0000-0000-0000-' + Math.floor(100000000000 + Math.random() * 900000000000),
             full_name: name,
             email: email,
@@ -986,10 +1301,9 @@
             birthday: birthday,
             raw_pass: password,
             total_spent: 0
-          };
-          await supabaseClient.from('profiles').upsert(profilePayload);
+          });
         } catch (e) {
-          console.warn("Direct profile upsert error:", e);
+          console.warn(e);
         }
       }
 
@@ -1003,7 +1317,6 @@
       showUserView(name, 0);
     };
 
-    // LOGIN CLIENTE
     window.handleLogin = async function(e) {
       e.preventDefault();
       const btn = document.getElementById('btn-login');
@@ -1044,7 +1357,7 @@
             }
           }
         } catch (err) {
-          console.warn("Login error:", err);
+          console.warn(err);
         }
       }
 
@@ -1068,7 +1381,6 @@
       }
     };
 
-    // LOGIN ADMIN
     window.handleAdminLogin = function(e) {
       e.preventDefault();
       const email = document.getElementById('admin-email').value.trim().toLowerCase();
@@ -1083,7 +1395,6 @@
       }
     };
 
-    // OLVIDÉ CONTRASEÑA
     window.sendPasswordToEmail = async function(type) {
       let identifier = prompt("Ingresa el correo o teléfono registrado:");
       if (!identifier) return;
@@ -1128,12 +1439,12 @@
 
       if (window.emailjs) {
         try {
-          const res = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+          const res = await emailjs.send("service_k329g2o", "template_f9qsdal", {
             to_email: targetEmail,
             to_name: userName,
             user_password: userPass,
             message: `Hola ${userName}, tu contraseña registrada en Five Friends es: ${userPass}`
-          }, EMAILJS_PUBLIC_KEY);
+          }, "k2u203TouhD3PPrZU");
 
           if (res.status === 200) {
             alert(`✓ ¡Correo enviado con éxito a ${targetEmail}!\nRevisa tu bandeja de entrada o spam.`);
@@ -1158,6 +1469,7 @@
       document.getElementById('club-admin-portal').classList.remove('hidden');
       loadAdminData();
       renderAdminProductsTable();
+      renderAdminOrdersTable();
     }
 
     window.handleLogout = function() {
@@ -1230,11 +1542,9 @@
       if (supabaseClient) {
         try {
           const { data, error } = await supabaseClient.from('profiles').select('*').order('created_at', { ascending: false });
-          if (!error && Array.isArray(data)) {
-            clientList = data;
-          }
+          if (!error && Array.isArray(data)) clientList = data;
         } catch (err) {
-          console.warn("Error cargando profiles:", err);
+          console.warn(err);
         }
       }
 
@@ -1251,9 +1561,9 @@
         clientTable.innerHTML = finalClients.map(p => `
           <tr class="hover:bg-zinc-50">
             <td class="py-3 font-semibold text-zinc-900">${p.full_name || 'Sin nombre'}</td>
-            <td class="py-3 text-zinc-600">${p.phone || '<span class="text-zinc-300">-</span>'}</td>
-            <td class="py-3 text-zinc-600">${p.email || '<span class="text-zinc-300">-</span>'}</td>
-            <td class="py-3 text-zinc-500">${p.birthday || '<span class="text-zinc-300">-</span>'}</td>
+            <td class="py-3 text-zinc-600">${p.phone || '-'}</td>
+            <td class="py-3 text-zinc-600">${p.email || '-'}</td>
+            <td class="py-3 text-zinc-500">${p.birthday || '-'}</td>
             <td class="py-3 font-bold text-zinc-950">$${p.total_spent || 0} MXN</td>
           </tr>
         `).join('');
@@ -1261,7 +1571,6 @@
         clientTable.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-zinc-400 text-xs">No hay clientes registrados en la base de datos todavía.</td></tr>`;
       }
 
-      // Balance general en base a productos y clientes
       let totalSales = finalClients.reduce((sum, u) => sum + Number(u.total_spent || 0), 0) + 12000;
       let totalCost = catalogItems.reduce((acc, i) => acc + (Number(i.cost) || 0), 0) + 4000;
       let profit = totalSales - totalCost;
@@ -1285,7 +1594,17 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       renderCatalog();
+      updateCartUI();
       restoreSession();
+
+      // Verificar si regresa de un pago exitoso
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('payment') === 'success') {
+        alert("✓ ¡Pago completado con éxito! Hemos recibido tu compra y estamos preparando tu paquete.");
+        localStorage.removeItem('five_friends_cart');
+        saveCart([]);
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
     });
   </script>
 </body>
