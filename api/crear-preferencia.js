@@ -1,4 +1,4 @@
-// api/crear-preferencia.js - Endpoint Seguro de Mercado Pago
+// api/crear-preferencia.js - Estructura limpia idéntica a Link de Pago
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -11,9 +11,10 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'No items provided' });
     }
 
-    // TOKEN RENOVADO PROTEGIDO EN EL SERVIDOR
+    // TU ACCESS TOKEN RENOVADO
     const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN || "APP_USR-1421461334886474-100117-0102c2347cb5e980779a4578861bf85f-293350388";
 
+    // Formatear los productos
     const mpItems = items.map(i => ({
       title: String(i.title).substring(0, 100),
       quantity: Number(i.quantity || 1),
@@ -21,29 +22,26 @@ export default async function handler(req, res) {
       unit_price: Number(i.price)
     }));
 
+    // Agregar el flete si aplica
     if (shippingCost && Number(shippingCost) > 0) {
       mpItems.push({
-        title: 'Costo de Envío',
+        title: 'Costo de Envío por Paquetería',
         quantity: 1,
         currency_id: 'MXN',
         unit_price: Number(shippingCost)
       });
     }
 
-    const host = req.headers.host || 'five-friends-web.vercel.app';
-    const protocol = req.headers['x-forwarded-proto'] || 'https';
-    const baseUrl = `${protocol}://${host}`;
-
+    // Payload idéntico al Link de Pago manual (sin auto_return ni binary_mode conflictivos)
     const preferenceData = {
       items: mpItems,
       external_reference: String(orderId),
+      statement_descriptor: "FIVE FRIENDS",
       back_urls: {
-        success: `${baseUrl}?status=success&order=${orderId}`,
-        failure: `${baseUrl}?status=failure&order=${orderId}`,
-        pending: `${baseUrl}?status=pending&order=${orderId}`
-      },
-      auto_return: 'approved',
-      binary_mode: false
+        success: "https://five-friends-web.vercel.app",
+        failure: "https://five-friends-web.vercel.app",
+        pending: "https://five-friends-web.vercel.app"
+      }
     };
 
     const mpResponse = await fetch('https://api.mercadopago.com/checkout/preferences', {
