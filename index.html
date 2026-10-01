@@ -51,7 +51,7 @@
       } else {
         menu.classList.add('hidden');
         if (bars) bars.classList.remove('hidden');
-        if (close) close.classList.remove('hidden');
+        if (close) close.classList.add('hidden');
       }
     };
 
@@ -197,13 +197,13 @@
       </div>
     </section>
 
-    <!-- SECCIÓN NUEVA: COTIZADOR 3D RÁPIDO PARA CLIENTES (SOLO GRAMOS Y HORAS) -->
+    <!-- SECCIÓN: COTIZADOR 3D PARA CLIENTES (SOLO GRAMOS Y HORAS) -->
     <section id="sec-cotizador" class="hidden space-y-6">
       <div class="max-w-2xl mx-auto space-y-6">
         <div class="text-center space-y-2">
           <span class="px-3 py-1 bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-bold rounded-full uppercase tracking-wider">Calculadora Express</span>
           <h2 class="text-2xl sm:text-4xl font-extrabold text-zinc-950">Cotiza tu Pieza 3D al Instante</h2>
-          <p class="text-xs sm:text-sm text-zinc-500">¿Tienes el estimado de tu software laminador (Cura, PrusaSlicer o Bambu Studio)? Ingresa los gramos y el tiempo para obtener el precio exacto.</p>
+          <p class="text-xs sm:text-sm text-zinc-500">Ingresa los gramos de filamento y las horas estimadas de tu software laminador (Cura, PrusaSlicer o Bambu Studio) para conocer tu precio final.</p>
         </div>
 
         <div class="bg-white border border-zinc-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
@@ -235,7 +235,7 @@
           <div class="bg-gradient-to-br from-zinc-900 to-zinc-950 text-white rounded-2xl p-6 space-y-4 shadow-md">
             <div class="flex justify-between items-start">
               <div>
-                <span class="text-[11px] uppercase tracking-wider text-zinc-400 font-bold">Cotización Estimada</span>
+                <span class="text-[11px] uppercase tracking-wider text-zinc-400 font-bold">Cotización de Fabricación</span>
                 <div class="text-3xl sm:text-4xl font-extrabold text-white mt-0.5" id="calc-client-result">$0.00 MXN</div>
               </div>
               <span class="px-2.5 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold rounded-lg uppercase tracking-wide">Calidad Premium</span>
@@ -243,9 +243,9 @@
 
             <div class="border-t border-zinc-800 pt-3 text-xs text-zinc-400 grid grid-cols-2 gap-2">
               <div>Filamento técnico incluido</div>
-              <div class="text-right">Inspección de calidad 100%</div>
-              <div>Retiro de soportes básicos</div>
-              <div class="text-right">Envío nacional o retiro</div>
+              <div class="text-right">Inspección de tolerancias</div>
+              <div>Retiro de soportes y empaque</div>
+              <div class="text-right">Garantía Five Friends</div>
             </div>
 
             <button type="button" onclick="addCustomPrintToCart()" id="btn-add-custom-print" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3.5 rounded-xl font-bold text-sm shadow-md transition flex items-center justify-center gap-2">
@@ -255,7 +255,7 @@
           </div>
 
           <p class="text-[11px] text-zinc-400 text-center leading-relaxed">
-            * El precio incluye costo de material, energía y margen de tolerancia. Si tu modelo requiere resina o materiales especiales (TPU, PETG CF), contáctanos directamente.
+            * El precio incluye costo de filamento, energía, preparación y empaque. Si requieres materiales especiales (PETG, TPU, ABS o resina), contáctanos directamente.
           </p>
         </div>
       </div>
@@ -495,89 +495,202 @@
           </div>
         </div>
 
-        <!-- MÓDULO NUEVO: CALCULADORA MAESTRA COMPLETA (APRENDE3D / 3DCALC PARA ADMIN) -->
+        <!-- CALCULADORA APRENDE3D COMPLETA: TODOS LOS PARÁMETROS -->
         <div class="bg-white border-2 border-indigo-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
-          <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-zinc-100 pb-4">
+          <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-b border-zinc-200 pb-4">
             <div>
-              <span class="px-2.5 py-0.5 bg-indigo-50 text-indigo-700 text-[10px] font-bold rounded uppercase">Modelo Aprende3D</span>
-              <h3 class="text-lg sm:text-xl font-bold text-zinc-950 mt-1">Configuración Maestra de Costos del Taller 3D</h3>
-              <p class="text-xs text-zinc-500">Configura tus costos reales. Estos parámetros alimentan en automático el cotizador rápido de los clientes.</p>
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 bg-indigo-600 text-white text-[10px] font-extrabold rounded-md uppercase tracking-wider">Aprende 3D Oficial</span>
+                <h3 class="text-lg sm:text-xl font-bold text-zinc-950">Calculadora de Costos & Presupuesto Integral</h3>
+              </div>
+              <p class="text-xs text-zinc-500 mt-1">Configuración técnica completa de tu taller: filamento, máquina, desglose de mano de obra en minutos, empaquetado, gastos fijos y logística.</p>
             </div>
-            <button type="button" onclick="saveAdminCalculatorConfig()" class="self-start sm:self-auto bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-xl text-xs font-bold transition shadow-sm">
-              Guardar Parámetros de Taller
+            <button type="button" onclick="saveAdminCalculatorConfig()" class="self-start sm:self-auto bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+              <span>Guardar Configuración en Supabase</span>
             </button>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-zinc-50 p-3.5 rounded-xl border border-zinc-200 space-y-1">
-              <label class="block text-[11px] font-bold text-zinc-600 uppercase">Costo Filamento ($/kg)</label>
-              <input type="number" id="adm-calc-fil-cost" value="380" step="5" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm font-semibold">
-              <span class="text-[10px] text-zinc-400">Ej. $380 MXN la bobina PLA/PETG</span>
-            </div>
-
-            <div class="bg-zinc-50 p-3.5 rounded-xl border border-zinc-200 space-y-1">
-              <label class="block text-[11px] font-bold text-zinc-600 uppercase">Desperdicio / Fallos (%)</label>
-              <input type="number" id="adm-calc-waste" value="10" step="1" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm font-semibold">
-              <span class="text-[10px] text-zinc-400">10% estándar por soportes</span>
-            </div>
-
-            <div class="bg-zinc-50 p-3.5 rounded-xl border border-zinc-200 space-y-1">
-              <label class="block text-[11px] font-bold text-zinc-600 uppercase">Consumo Máquina (Watts)</label>
-              <input type="number" id="adm-calc-watts" value="120" step="10" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm font-semibold">
-              <span class="text-[10px] text-zinc-400">Bambu Lab A1/P1S promedio</span>
-            </div>
-
-            <div class="bg-zinc-50 p-3.5 rounded-xl border border-zinc-200 space-y-1">
-              <label class="block text-[11px] font-bold text-zinc-600 uppercase">Costo Energía ($/kWh)</label>
-              <input type="number" id="adm-calc-kwh" value="3.50" step="0.1" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm font-semibold">
-              <span class="text-[10px] text-zinc-400">Tarifa CFE Doméstica/Comercial</span>
-            </div>
-
-            <div class="bg-zinc-50 p-3.5 rounded-xl border border-zinc-200 space-y-1">
-              <label class="block text-[11px] font-bold text-zinc-600 uppercase">Desgaste Máquina ($/hora)</label>
-              <input type="number" id="adm-calc-wear" value="7.50" step="0.5" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm font-semibold">
-              <span class="text-[10px] text-zinc-400">Amortización boquillas/correas</span>
-            </div>
-
-            <div class="bg-zinc-50 p-3.5 rounded-xl border border-zinc-200 space-y-1">
-              <label class="block text-[11px] font-bold text-zinc-600 uppercase">Gastos Fijos Taller ($/hora)</label>
-              <input type="number" id="adm-calc-fixed" value="10.00" step="0.5" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm font-semibold">
-              <span class="text-[10px] text-zinc-400">Renta, internet y software</span>
-            </div>
-
-            <div class="bg-zinc-50 p-3.5 rounded-xl border border-zinc-200 space-y-1">
-              <label class="block text-[11px] font-bold text-zinc-600 uppercase">Mano de Obra Base ($/pieza)</label>
-              <input type="number" id="adm-calc-labor" value="30.00" step="5" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm font-semibold">
-              <span class="text-[10px] text-zinc-400">Preparación y retiro soportes</span>
-            </div>
-
-            <div class="bg-zinc-50 p-3.5 rounded-xl border border-zinc-200 space-y-1">
-              <label class="block text-[11px] font-bold text-zinc-600 uppercase">Margen / Markup (%)</label>
-              <input type="number" id="adm-calc-markup" value="80" step="5" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm font-semibold text-emerald-600">
-              <span class="text-[10px] text-zinc-400">80% = multiplica por 1.8 el costo</span>
+          <!-- BLOQUE 1: MATERIAL Y FILAMENTO -->
+          <div class="space-y-3">
+            <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider block border-l-4 border-indigo-600 pl-2">1. Material & Filamento</span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
+              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Costo por Carrete / Bobina ($ MXN)</label>
+                <input type="number" id="adm-calc-fil-cost" value="380" step="5" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                <span class="text-[10px] text-zinc-400">Precio promedio de bobina PLA / PETG</span>
+              </div>
+              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Peso del Carrete (Gramos)</label>
+                <input type="number" id="adm-calc-fil-weight" value="1000" step="50" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                <span class="text-[10px] text-zinc-400">Normalmente 1000g (1 kg)</span>
+              </div>
+              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Margen de Error / Merma / Fallos (%)</label>
+                <input type="number" id="adm-calc-waste" value="10" step="1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                <span class="text-[10px] text-zinc-400">10% estándar por purgas y soportes</span>
+              </div>
             </div>
           </div>
 
-          <!-- Simulador en Vivo para Admin -->
-          <div class="border-t border-zinc-200 pt-5 space-y-3">
-            <h4 class="text-xs font-bold text-zinc-800 uppercase tracking-wider">Simulador de Cotización Rápida en Vivo</h4>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <!-- BLOQUE 2: MÁQUINA, ELECTRICIDAD Y AMORTIZACIÓN -->
+          <div class="space-y-3">
+            <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider block border-l-4 border-indigo-600 pl-2">2. Electricidad, Máquina y Desgaste</span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5">
+              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Consumo Impresora (Watts)</label>
+                <input type="number" id="adm-calc-watts" value="120" step="10" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                <span class="text-[10px] text-zinc-400">120W Bambu Lab promedio</span>
+              </div>
+              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Costo de Energía ($/kWh CFE)</label>
+                <input type="number" id="adm-calc-kwh" value="3.50" step="0.1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                <span class="text-[10px] text-zinc-400">Tarifa de tu recibo de luz CFE</span>
+              </div>
+              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Costo de Impresora ($ Compra)</label>
+                <input type="number" id="adm-calc-printer-cost" value="14500" step="500" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                <span class="text-[10px] text-zinc-400">Precio de adquisición de la máquina</span>
+              </div>
+              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Vida Útil Estimada (Horas)</label>
+                <input type="number" id="adm-calc-printer-lifespan" value="3000" step="200" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                <span class="text-[10px] text-zinc-400">Horas antes de amortización total</span>
+              </div>
+              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200 sm:col-span-2 md:col-span-4">
+                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Mantenimiento y Refacciones por Hora ($/hora)</label>
+                <input type="number" id="adm-calc-wear" value="4.50" step="0.5" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                <span class="text-[10px] text-zinc-400">Boquillas, placas PEI, extrusores y lubricantes</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- BLOQUE 3: MANO DE OBRA Y TIEMPOS EN MINUTOS -->
+          <div class="space-y-3">
+            <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider block border-l-4 border-indigo-600 pl-2">3. Mano de Obra Desglosada (En Minutos)</span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3.5">
+              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Valor de tu Hora ($/h)</label>
+                <input type="number" id="adm-calc-hourly-rate" value="120" step="10" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold text-indigo-700">
+                <span class="text-[10px] text-zinc-400">Lo que cobras por tu tiempo</span>
+              </div>
+              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Minutos Preparación</label>
+                <input type="number" id="adm-calc-min-prep" value="10" step="1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                <span class="text-[10px] text-zinc-400">Laminado en slicer y archivo</span>
+              </div>
+              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Minutos Producción</label>
+                <input type="number" id="adm-calc-min-prod" value="5" step="1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                <span class="text-[10px] text-zinc-400">Arranque, retiro de placa</span>
+              </div>
+              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Minutos Postprocesado</label>
+                <input type="number" id="adm-calc-min-post" value="15" step="1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                <span class="text-[10px] text-zinc-400">Retiro de soportes y limpieza</span>
+              </div>
+              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Minutos Empaquetado</label>
+                <input type="number" id="adm-calc-min-pack" value="10" step="1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                <span class="text-[10px] text-zinc-400">Embalaje y preparación</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- BLOQUE 4: GASTOS FIJOS, EMPAQUE, CÓDIGO POSTAL Y ENVÍO -->
+          <div class="space-y-3">
+            <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider block border-l-4 border-indigo-600 pl-2">4. Empaque Físico, Gastos del Taller y Código Postal</span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5">
+              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Insumos de Empaque ($)</label>
+                <input type="number" id="adm-calc-pack-material" value="18" step="1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                <span class="text-[10px] text-zinc-400">Caja de cartón, burbuja y cinta</span>
+              </div>
+              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Gastos Fijos Taller ($/mes)</label>
+                <input type="number" id="adm-calc-monthly-fixed" value="2500" step="100" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                <span class="text-[10px] text-zinc-400">Renta, internet y suscripciones</span>
+              </div>
+              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Horas Taller al Mes</label>
+                <input type="number" id="adm-calc-monthly-hours" value="250" step="10" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                <span class="text-[10px] text-zinc-400">Prorrateo de gastos por hora</span>
+              </div>
+              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Código Postal de Origen</label>
+                <input type="text" id="adm-calc-zip-origin" value="54807" maxlength="5" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-bold text-zinc-900">
+                <span class="text-[10px] text-zinc-400">Tu taller (Cuautitlán Izcalli)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- BLOQUE 5: MARGEN COMERCIAL E IMPUESTO -->
+          <div class="space-y-3">
+            <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider block border-l-4 border-indigo-600 pl-2">5. Margen de Ganancia (Markup) & Precio Final</span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
+              <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200">
+                <label class="block text-[11px] font-bold text-emerald-800 uppercase mb-1">Margen de Beneficio / Markup (%)</label>
+                <input type="number" id="adm-calc-markup" value="80" step="5" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-emerald-300 rounded-lg text-sm font-extrabold text-emerald-700">
+                <span class="text-[10px] text-emerald-600">80% = multiplica por 1.80 el costo</span>
+              </div>
+              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Costo de Envío Base Sugerido ($)</label>
+                <input type="number" id="adm-calc-ship-base" value="135" step="5" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                <span class="text-[10px] text-zinc-400">Flete promedio nacional</span>
+              </div>
+              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Impuesto / IVA Opcional (%)</label>
+                <input type="number" id="adm-calc-tax" value="0" step="1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                <span class="text-[10px] text-zinc-400">0% si cobras neto, o 16% fiscal</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- DESGLOSE EN VIVO DEL SIMULADOR PARA ADMIN -->
+          <div class="bg-zinc-900 text-white p-5 rounded-2xl space-y-4 shadow-md">
+            <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-zinc-800 pb-3">
               <div>
-                <label class="block text-[10px] font-bold text-zinc-500 uppercase mb-1">Gramos prueba</label>
-                <input type="number" id="adm-sim-grams" value="100" oninput="runAdminSimulation()" class="w-full px-3 py-1.5 border border-zinc-300 rounded-lg text-xs font-bold">
+                <span class="text-[10px] uppercase font-bold tracking-wider text-indigo-400">Simulador de Pieza en Tiempo Real</span>
+                <h4 class="text-sm font-bold text-white">Desglose Financiero Unitario</h4>
               </div>
-              <div>
-                <label class="block text-[10px] font-bold text-zinc-500 uppercase mb-1">Horas prueba</label>
-                <input type="number" id="adm-sim-hours" value="5" oninput="runAdminSimulation()" class="w-full px-3 py-1.5 border border-zinc-300 rounded-lg text-xs font-bold">
+              <div class="flex items-center gap-3">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[11px] text-zinc-400">Gramos:</span>
+                  <input type="number" id="adm-sim-grams" value="100" oninput="runAdminSimulation()" class="w-16 px-2 py-1 bg-zinc-800 border border-zinc-700 rounded text-xs font-bold text-white text-center">
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[11px] text-zinc-400">Horas:</span>
+                  <input type="number" id="adm-sim-hours" value="5" oninput="runAdminSimulation()" class="w-16 px-2 py-1 bg-zinc-800 border border-zinc-700 rounded text-xs font-bold text-white text-center">
+                </div>
               </div>
-              <div class="bg-zinc-100 p-2.5 rounded-xl">
-                <span class="block text-[10px] text-zinc-500 font-semibold">Costo Real Fab.</span>
-                <span class="text-sm font-extrabold text-zinc-900" id="adm-sim-cost">$0.00 MXN</span>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs">
+              <div class="bg-zinc-800/80 p-2.5 rounded-xl border border-zinc-700/50">
+                <span class="text-[10px] text-zinc-400 block font-semibold">Costo Material</span>
+                <span class="font-bold text-zinc-200" id="sim-mat-breakdown">$0.00 MXN</span>
               </div>
-              <div class="bg-emerald-50 p-2.5 rounded-xl">
-                <span class="block text-[10px] text-emerald-700 font-semibold">Precio al Cliente</span>
-                <span class="text-sm font-extrabold text-emerald-700" id="adm-sim-price">$0.00 MXN</span>
+              <div class="bg-zinc-800/80 p-2.5 rounded-xl border border-zinc-700/50">
+                <span class="text-[10px] text-zinc-400 block font-semibold">Energía Eléctrica</span>
+                <span class="font-bold text-zinc-200" id="sim-elec-breakdown">$0.00 MXN</span>
               </div>
+              <div class="bg-zinc-800/80 p-2.5 rounded-xl border border-zinc-700/50">
+                <span class="text-[10px] text-zinc-400 block font-semibold">Máquina & Taller</span>
+                <span class="font-bold text-zinc-200" id="sim-mach-breakdown">$0.00 MXN</span>
+              </div>
+              <div class="bg-zinc-800/80 p-2.5 rounded-xl border border-zinc-700/50">
+                <span class="text-[10px] text-zinc-400 block font-semibold">Mano de Obra & Empaque</span>
+                <span class="font-bold text-zinc-200" id="sim-labor-breakdown">$0.00 MXN</span>
+              </div>
+              <div class="bg-indigo-950 p-2.5 rounded-xl border border-indigo-700 col-span-2 sm:col-span-1">
+                <span class="text-[10px] text-indigo-300 block font-semibold">Costo Total Fábrica</span>
+                <span class="font-extrabold text-indigo-300" id="adm-sim-cost">$0.00 MXN</span>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center pt-2 border-t border-zinc-800">
+              <span class="text-xs text-zinc-400">Precio Sugerido al Cliente (con Markup configurado):</span>
+              <span class="text-2xl font-extrabold text-emerald-400" id="adm-sim-price">$0.00 MXN</span>
             </div>
           </div>
         </div>
@@ -804,7 +917,6 @@
     <div class="fixed inset-y-0 right-0 max-w-full flex pl-6 sm:pl-10">
       <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col justify-between">
         
-        <!-- Header Carrito -->
         <div class="p-5 border-b border-zinc-200 flex items-center justify-between">
           <div class="flex items-center gap-2">
             <h2 class="text-lg font-bold text-zinc-950" id="cart-drawer-title">Tu Carrito de Compras</h2>
@@ -879,7 +991,6 @@
 
         <!-- Footer / Checkout y Acciones -->
         <div class="p-5 border-t border-zinc-200 bg-zinc-50 space-y-3">
-          
           <div id="shipping-calculator-box" class="space-y-2">
             <div class="flex justify-between items-center">
               <label class="text-xs font-bold text-zinc-700 uppercase">Cotizar Envío (Skydropx)</label>
@@ -929,7 +1040,6 @@
 
   <!-- SCRIPT DE DATOS Y LÓGICA DE NEGOCIO -->
   <script>
-    // CONFIGURACIÓN DE EMAILJS
     const EMAILJS_PASS_PUBLIC_KEY = "k2u203TouhD3PPrZU";
     const EMAILJS_PASS_SERVICE_ID = "service_k329g2o";
     const EMAILJS_PASS_TEMPLATE_ID = "template_f9qsdal";
@@ -939,7 +1049,6 @@
     const EMAILJS_ORDERS_TEMPLATE_ADMIN = "template_jfmj9i8";
     const EMAILJS_ORDERS_TEMPLATE_CLIENT = "template_5pk8lbk";
 
-    // PUBLIC KEY SEGURA PARA CLIENTE DE MERCADO PAGO
     const MP_PUBLIC_KEY = "APP_USR-c1b88801-4173-4b05-9b88-38c24b43b08f";
 
     try {
@@ -948,7 +1057,6 @@
       }
     } catch(e){}
 
-    // Configuración Supabase
     const SUPABASE_BASE_URL = "https://vqsuycquoeqakhttibao.supabase.co";
     const SUPABASE_KEY = "sb_publishable_iglMJnYPy3iFulCFv3j_qw_s3An5vme";
     let supabaseClient = null;
@@ -966,17 +1074,34 @@
     }
 
     // -------------------------------------------------------------
-    // PARÁMETROS MAESTROS DE COSTOS 3D (MODELO APRENDE3D)
+    // MODELO DE COSTOS APRENDE3D COMPLETO (TODOS LOS PARÁMETROS)
     // -------------------------------------------------------------
     var workshopConfig = {
-      filCostPerKg: 380, // $/kg
-      wastePct: 10,      // %
-      watts: 120,        // Watts consumo medio
-      costPerKwh: 3.50,  // $/kWh
-      wearPerHour: 7.50, // $/h desgaste amortización
-      fixedPerHour: 10.00, // $/h gastos fijos
-      laborBase: 30.00,  // $/pieza preparación/limpieza
-      markupPct: 80      // % ganancia (x1.8)
+      // 1. Material
+      filCostPerKg: 380,       // Costo carrete ($ MXN)
+      filWeightGrams: 1000,    // Peso carrete (g)
+      wastePct: 10,            // % merma / fallos
+      // 2. Máquina y Electricidad
+      watts: 120,              // Watts de la impresora
+      costPerKwh: 3.50,        // Tarifa CFE ($/kWh)
+      printerCost: 14500,      // Precio de compra impresora ($)
+      printerLifespanHours: 3000, // Vida útil impresora (horas)
+      wearPerHour: 4.50,       // Mantenimiento y repuestos ($/h)
+      // 3. Mano de Obra en Minutos
+      hourlyRate: 120,         // Costo de tu hora ($/h)
+      minPrep: 10,             // Minutos laminado / preparación
+      minProd: 5,              // Minutos supervisión / cama
+      minPost: 15,             // Minutos retiro soportes
+      minPack: 10,             // Minutos empaquetado
+      // 4. Empaque Físico y Gastos Taller
+      packMaterialCost: 18,    // Costo caja, cinta, burbuja ($)
+      monthlyFixed: 2500,      // Gastos fijos taller ($/mes)
+      monthlyHours: 250,       // Horas taller al mes (h/mes)
+      zipOrigin: "54807",      // CP Taller (Cuautitlán Izcalli)
+      // 5. Margen e Impuestos
+      markupPct: 80,           // Margen de beneficio / Markup (%)
+      taxPct: 0,               // IVA / Impuesto (%)
+      shipBase: 135            // Flete sugerido ($)
     };
 
     try {
@@ -984,48 +1109,68 @@
       if (savedConfig) workshopConfig = JSON.parse(savedConfig);
     } catch(e){}
 
-    function calculate3DPrice(grams, hours) {
+    // FÓRMULA MATEMÁTICA EXACTA DE APRENDE3D
+    function calculateFullAprende3DCost(grams, hours) {
       var g = parseFloat(grams) || 0;
       var h = parseFloat(hours) || 0;
-      if (g <= 0 || h <= 0) return { cost: 0, price: 0 };
+      if (g <= 0 || h <= 0) {
+        return { costMat: 0, costElec: 0, costMach: 0, costLabor: 0, totalCost: 0, finalPrice: 0 };
+      }
 
-      // 1. Costo Material (con % desperdicio)
-      var costMaterial = g * (workshopConfig.filCostPerKg / 1000.0) * (1 + (workshopConfig.wastePct / 100.0));
-      // 2. Costo Eléctrico
-      var costElectricity = h * (workshopConfig.watts / 1000.0) * workshopConfig.costPerKwh;
-      // 3. Desgaste y Gastos Fijos
-      var costMachine = h * (workshopConfig.wearPerHour + workshopConfig.fixedPerHour);
-      // 4. Costo Total de Producción
-      var totalCost = costMaterial + costElectricity + costMachine + workshopConfig.laborBase;
-      // 5. Precio Final al Público con Margen
-      var finalPrice = totalCost * (1 + (workshopConfig.markupPct / 100.0));
+      // 1. Costo de Filamento con merma
+      var weightTotal = workshopConfig.filWeightGrams || 1000;
+      var costPerGram = workshopConfig.filCostPerKg / weightTotal;
+      var costMat = g * costPerGram * (1 + (workshopConfig.wastePct / 100.0));
+
+      // 2. Costo de Electricidad
+      var costElec = h * (workshopConfig.watts / 1000.0) * workshopConfig.costPerKwh;
+
+      // 3. Amortización de Impresora + Desgaste + Gastos Fijos
+      var amortPerHour = (workshopConfig.printerCost || 14500) / (workshopConfig.printerLifespanHours || 3000);
+      var fixedPerHour = (workshopConfig.monthlyFixed || 2500) / (workshopConfig.monthlyHours || 250);
+      var costMach = h * (amortPerHour + (workshopConfig.wearPerHour || 4.5) + fixedPerHour);
+
+      // 4. Mano de Obra (desglose en minutos) + Material Físico de Empaque
+      var totalMinutes = (workshopConfig.minPrep || 0) + (workshopConfig.minProd || 0) + (workshopConfig.minPost || 0) + (workshopConfig.minPack || 0);
+      var laborCost = (totalMinutes / 60.0) * (workshopConfig.hourlyRate || 120);
+      var costLaborAndPackaging = laborCost + (workshopConfig.packMaterialCost || 18);
+
+      // 5. Costo Total de Producción
+      var totalCost = costMat + costElec + costMach + costLaborAndPackaging;
+
+      // 6. Precio al Público con Margen Comercial e Impuesto
+      var subtotalMarkup = totalCost * (1 + (workshopConfig.markupPct / 100.0));
+      var finalPrice = subtotalMarkup * (1 + ((workshopConfig.taxPct || 0) / 100.0));
 
       return {
-        cost: Math.round(totalCost * 100) / 100,
-        price: Math.round(finalPrice)
+        costMat: costMat,
+        costElec: costElec,
+        costMach: costMach,
+        costLabor: costLaborAndPackaging,
+        totalCost: Math.round(totalCost * 100) / 100,
+        finalPrice: Math.round(finalPrice)
       };
     }
 
-    // COTIZADOR DEL CLIENTE (SOLO GRAMOS Y HORAS)
+    // COTIZADOR PÚBLICO DEL CLIENTE (SOLO GRAMOS Y HORAS)
     window.calculateClientQuote = function() {
       var g = document.getElementById('calc-client-grams').value;
       var h = document.getElementById('calc-client-hours').value;
-      var res = calculate3DPrice(g, h);
+      var res = calculateFullAprende3DCost(g, h);
       var display = document.getElementById('calc-client-result');
-      if (res.price > 0) {
-        display.innerText = '$' + res.price.toLocaleString() + '.00 MXN';
+      if (res.finalPrice > 0) {
+        display.innerText = '$' + res.finalPrice.toLocaleString() + '.00 MXN';
       } else {
         display.innerText = '$0.00 MXN';
       }
     };
 
-    // AGREGAR PIEZA COTIZADA AL CARRITO
     window.addCustomPrintToCart = function() {
       var g = document.getElementById('calc-client-grams').value;
       var h = document.getElementById('calc-client-hours').value;
-      var res = calculate3DPrice(g, h);
+      var res = calculateFullAprende3DCost(g, h);
 
-      if (res.price <= 0) {
+      if (res.finalPrice <= 0) {
         alert("Por favor ingresa los gramos y las horas estimadas de tu pieza.");
         return;
       }
@@ -1033,8 +1178,8 @@
       var customProduct = {
         id: 'custom_3d_' + Date.now(),
         title: 'Pieza 3D Personalizada (' + g + 'g / ' + h + ' hrs)',
-        price: res.price,
-        cost: res.cost,
+        price: res.finalPrice,
+        cost: res.totalCost,
         category: 'Impresión 3D',
         image_url: '',
         weight: Math.max(parseFloat(g) / 1000.0, 0.2),
@@ -1050,50 +1195,98 @@
       goToCartStep(1);
     };
 
-    // PANEL ADMIN: GUARDAR PARÁMETROS DEL TALLER
-    window.saveAdminCalculatorConfig = function() {
+    // PANEL ADMIN: GUARDAR TODOS LOS PARÁMETROS DE APRENDE3D
+    window.saveAdminCalculatorConfig = async function() {
       workshopConfig = {
         filCostPerKg: parseFloat(document.getElementById('adm-calc-fil-cost').value) || 380,
+        filWeightGrams: parseFloat(document.getElementById('adm-calc-fil-weight').value) || 1000,
         wastePct: parseFloat(document.getElementById('adm-calc-waste').value) || 10,
         watts: parseFloat(document.getElementById('adm-calc-watts').value) || 120,
         costPerKwh: parseFloat(document.getElementById('adm-calc-kwh').value) || 3.5,
-        wearPerHour: parseFloat(document.getElementById('adm-calc-wear').value) || 7.5,
-        fixedPerHour: parseFloat(document.getElementById('adm-calc-fixed').value) || 10,
-        laborBase: parseFloat(document.getElementById('adm-calc-labor').value) || 30,
-        markupPct: parseFloat(document.getElementById('adm-calc-markup').value) || 80
+        printerCost: parseFloat(document.getElementById('adm-calc-printer-cost').value) || 14500,
+        printerLifespanHours: parseFloat(document.getElementById('adm-calc-printer-lifespan').value) || 3000,
+        wearPerHour: parseFloat(document.getElementById('adm-calc-wear').value) || 4.5,
+        hourlyRate: parseFloat(document.getElementById('adm-calc-hourly-rate').value) || 120,
+        minPrep: parseFloat(document.getElementById('adm-calc-min-prep').value) || 10,
+        minProd: parseFloat(document.getElementById('adm-calc-min-prod').value) || 5,
+        minPost: parseFloat(document.getElementById('adm-calc-min-post').value) || 15,
+        minPack: parseFloat(document.getElementById('adm-calc-min-pack').value) || 10,
+        packMaterialCost: parseFloat(document.getElementById('adm-calc-pack-material').value) || 18,
+        monthlyFixed: parseFloat(document.getElementById('adm-calc-monthly-fixed').value) || 2500,
+        monthlyHours: parseFloat(document.getElementById('adm-calc-monthly-hours').value) || 250,
+        zipOrigin: document.getElementById('adm-calc-zip-origin').value.trim() || "54807",
+        markupPct: parseFloat(document.getElementById('adm-calc-markup').value) || 80,
+        shipBase: parseFloat(document.getElementById('adm-calc-ship-base').value) || 135,
+        taxPct: parseFloat(document.getElementById('adm-calc-tax').value) || 0
       };
 
       try {
         localStorage.setItem('five_friends_workshop_config', JSON.stringify(workshopConfig));
       } catch(e){}
 
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from('settings').upsert({
+            id: 'aprende3d_config',
+            config_data: workshopConfig,
+            updated_at: new Date().toISOString()
+          });
+        } catch(err){}
+      }
+
       runAdminSimulation();
-      alert("✓ Parámetros de costos del taller actualizados. El cotizador del cliente ahora calcula con tus nuevos valores.");
+      alert("✓ Configuración completa de Aprende3D guardada exitosamente. El cotizador del cliente ahora calcula con tus parámetros de taller.");
     };
 
     window.runAdminSimulation = function() {
-      var g = document.getElementById('adm-sim-grams').value;
-      var h = document.getElementById('adm-sim-hours').value;
-      var res = calculate3DPrice(g, h);
-      document.getElementById('adm-sim-cost').innerText = '$' + res.cost.toFixed(2) + ' MXN';
-      document.getElementById('adm-sim-price').innerText = '$' + res.price.toFixed(2) + ' MXN';
+      var g = document.getElementById('adm-sim-grams')?.value || 100;
+      var h = document.getElementById('adm-sim-hours')?.value || 5;
+      var res = calculateFullAprende3DCost(g, h);
+
+      var simMat = document.getElementById('sim-mat-breakdown');
+      var simElec = document.getElementById('sim-elec-breakdown');
+      var simMach = document.getElementById('sim-mach-breakdown');
+      var simLabor = document.getElementById('sim-labor-breakdown');
+      var simCost = document.getElementById('adm-sim-cost');
+      var simPrice = document.getElementById('adm-sim-price');
+
+      if (simMat) simMat.innerText = '$' + res.costMat.toFixed(2) + ' MXN';
+      if (simElec) simElec.innerText = '$' + res.costElec.toFixed(2) + ' MXN';
+      if (simMach) simMach.innerText = '$' + res.costMach.toFixed(2) + ' MXN';
+      if (simLabor) simLabor.innerText = '$' + res.costLabor.toFixed(2) + ' MXN';
+      if (simCost) simCost.innerText = '$' + res.totalCost.toFixed(2) + ' MXN';
+      if (simPrice) simPrice.innerText = '$' + res.finalPrice.toLocaleString() + '.00 MXN';
     };
 
     function populateAdminCalculatorInputs() {
       var map = {
         'adm-calc-fil-cost': workshopConfig.filCostPerKg,
+        'adm-calc-fil-weight': workshopConfig.filWeightGrams,
         'adm-calc-waste': workshopConfig.wastePct,
         'adm-calc-watts': workshopConfig.watts,
         'adm-calc-kwh': workshopConfig.costPerKwh,
+        'adm-calc-printer-cost': workshopConfig.printerCost,
+        'adm-calc-printer-lifespan': workshopConfig.printerLifespanHours,
         'adm-calc-wear': workshopConfig.wearPerHour,
-        'adm-calc-fixed': workshopConfig.fixedPerHour,
-        'adm-calc-labor': workshopConfig.laborBase,
-        'adm-calc-markup': workshopConfig.markupPct
+        'adm-calc-hourly-rate': workshopConfig.hourlyRate,
+        'adm-calc-min-prep': workshopConfig.minPrep,
+        'adm-calc-min-prod': workshopConfig.minProd,
+        'adm-calc-min-post': workshopConfig.minPost,
+        'adm-calc-min-pack': workshopConfig.minPack,
+        'adm-calc-pack-material': workshopConfig.packMaterialCost,
+        'adm-calc-monthly-fixed': workshopConfig.monthlyFixed,
+        'adm-calc-monthly-hours': workshopConfig.monthlyHours,
+        'adm-calc-zip-origin': workshopConfig.zipOrigin,
+        'adm-calc-markup': workshopConfig.markupPct,
+        'adm-calc-ship-base': workshopConfig.shipBase,
+        'adm-calc-tax': workshopConfig.taxPct
       };
+
       Object.keys(map).forEach(function(id){
         var el = document.getElementById(id);
         if (el) el.value = map[id];
       });
+
       runAdminSimulation();
     }
 
@@ -2304,13 +2497,6 @@
         qrLbl.classList.remove('hidden');
       }
     }
-
-    window.handleTicketUpload = function(e) {
-      e.preventDefault();
-      alert('Ticket enviado a validación.');
-      document.getElementById('ticket-amount').value = '';
-      document.getElementById('ticket-url').value = '';
-    };
 
     window.sendPasswordToEmail = async function(type) {
       var id = prompt("Ingresa tu correo o teléfono registrado:");
