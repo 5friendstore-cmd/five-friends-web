@@ -51,7 +51,7 @@
       } else {
         menu.classList.add('hidden');
         if (bars) bars.classList.remove('hidden');
-        if (close) close.classList.add('hidden');
+        if (close) close.classList.remove('hidden');
       }
     };
 
@@ -365,7 +365,6 @@
           <p class="text-xs text-zinc-500 leading-relaxed">Tus compras realizadas en la tienda web o tickets físicos validados acumulan para tu cupón de descuento.</p>
         </div>
 
-        <!-- Módulos de Tickets y Cuponera -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-3.5 shadow-sm">
             <h3 class="text-base sm:text-lg font-bold">Registrar Ticket Físico</h3>
@@ -734,12 +733,12 @@
               </div>
               <div>
                 <label class="block font-semibold text-zinc-600 mb-1">Estado</label>
-                <input type="text" id="order-state" placeholder="Ej. Estado de México" required class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
+                <input type="text" id="order-state" placeholder="Ej. Estado de México" required class="w-full px-3 py-2 border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
               </div>
             </div>
             <div>
               <label class="block font-semibold text-zinc-600 mb-1">Referencias de Entrega</label>
-              <input type="text" id="order-notes" placeholder="Ej. Casa blanca con reja negra, entre calle A y B" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
+              <input type="text" id="order-notes" placeholder="Ej. Casa blanca con reja negra, entre calle A y B" class="w-full px-3 py-2 border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
             </div>
           </div>
         </div>
@@ -806,9 +805,8 @@
     const EMAILJS_ORDERS_TEMPLATE_ADMIN = "template_jfmj9i8";
     const EMAILJS_ORDERS_TEMPLATE_CLIENT = "template_5pk8lbk";
 
-    // CREDENCIALES DE PRODUCCIÓN OFICIALES DE MERCADO PAGO
+    // PUBLIC KEY SEGURA PARA CLIENTE DE MERCADO PAGO
     const MP_PUBLIC_KEY = "APP_USR-c1b88801-4173-4b05-9b88-38c24b43b08f";
-    const MP_ACCESS_TOKEN = "APP_USR-1421461334886474-092815-6de2dd5f02a9b1a68a925207101b7584-293350388";
 
     try {
       if (window.MercadoPago) {
@@ -866,6 +864,7 @@
       }
     }
 
+    // CARGA DE PRODUCTOS DE SUPABASE SIN PERDER LOCALSTORAGE
     window.fetchCatalogFromDatabase = async function() {
       if (supabaseClient) {
         try {
@@ -875,7 +874,7 @@
             try { localStorage.setItem('five_friends_catalog', JSON.stringify(catalogItems)); } catch(e){}
           }
         } catch(err) {
-          console.warn("Consulta Supabase fallback a local:", err);
+          console.warn("Consulta Supabase fallback:", err);
         }
       }
       renderSubcategoriesBar();
@@ -1095,61 +1094,31 @@
       goToCartStep(2);
     };
 
-    // GENERAR PREFERENCIA DE PAGO EN PRODUCCIÓN (SIN CONFLICTO DE PAYER)
-    async function createMercadoPagoCheckout(orderId, items, shippingCost, customer) {
-      var mpItems = items.map(function(i){
-        return {
-          title: String(i.title).substring(0, 100),
-          quantity: Number(i.quantity || 1),
-          currency_id: 'MXN',
-          unit_price: Number(i.price)
-        };
-      });
-
-      if (shippingCost > 0) {
-        mpItems.push({
-          title: 'Envío (' + (selectedShippingRate?.provider || 'Paquetería') + ')',
-          quantity: 1,
-          currency_id: 'MXN',
-          unit_price: Number(shippingCost)
-        });
-      }
-
-      var preferenceData = {
-        items: mpItems,
-        external_reference: String(orderId),
-        back_urls: {
-          success: window.location.origin + '?status=success&order=' + orderId,
-          failure: window.location.origin + '?status=failure&order=' + orderId,
-          pending: window.location.origin + '?status=pending&order=' + orderId
-        },
-        auto_return: 'approved'
-      };
-
+    // GENERACIÓN SEGURA VÍA SERVIDOR EN VERCEL (SIN EXPOSICIÓN DE CREDENCIALES)
+    async function createMercadoPagoCheckout(orderId, items, shippingCost) {
       try {
-        var response = await fetch('https://api.mercadopago.com/checkout/preferences', {
+        var response = await fetch('/api/crear-preferencia', {
           method: 'POST',
-          headers: {
-            'Authorization': 'Bearer ' + MP_ACCESS_TOKEN,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(preferenceData)
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderId: String(orderId),
+            items: items,
+            shippingCost: Number(shippingCost || 0)
+          })
         });
 
-        var resData = await response.json();
-        
-        // Exigir estrictamente init_point de producción
-        if (resData && resData.init_point) {
-          return resData.init_point;
+        var data = await response.json();
+        if (data && data.init_point) {
+          return data.init_point;
         } else {
-          console.error("Respuesta detallada de Mercado Pago:", resData);
-          if (resData && resData.message) {
-            alert("Aviso de Mercado Pago: " + resData.message);
+          console.error("Error en endpoint /api/crear-preferencia:", data);
+          if (data && data.error) {
+            alert("Aviso de Pago: " + data.error);
           }
           return null;
         }
       } catch(err) {
-        console.error("Error al conectar con Mercado Pago:", err);
+        console.error("Error de conexión al servidor de pagos:", err);
         return null;
       }
     }
@@ -1186,7 +1155,7 @@
       }
 
       var btn = document.getElementById('btn-confirm-pay');
-      btn.innerText = "Conectando con Mercado Pago...";
+      btn.innerText = "Conectando con pasarela segura...";
       btn.disabled = true;
 
       var orderId = 'FF-' + Math.floor(100000 + Math.random() * 900000);
@@ -1197,7 +1166,7 @@
       var shippingMethod = hasPhysical ? (selectedShippingRate ? (selectedShippingRate.provider + ' (' + selectedShippingRate.service + ')') : 'Paquetería') : 'Entrega Digital (Sin Envío)';
       var itemsText = cart.map(function(i){ return '- ' + i.quantity + 'x ' + i.title + ' ($' + (i.price * i.quantity).toLocaleString() + ' MXN)'; }).join('\n');
 
-      var checkoutUrl = await createMercadoPagoCheckout(orderId, cart, shippingCost, { name: name, email: email, phone: phone });
+      var checkoutUrl = await createMercadoPagoCheckout(orderId, cart, shippingCost);
 
       var orderRecord = {
         id: orderId,
@@ -1286,7 +1255,7 @@
       if (checkoutUrl) {
         window.location.href = checkoutUrl;
       } else {
-        alert("¡Orden registrada exitosamente con Folio: " + orderId + "!\n\nPuedes pulsar en 'Completar Pago' dentro de tu historial en cualquier momento.");
+        alert("¡Orden registrada con Folio: " + orderId + "!\nPuedes completar tu pago desde 'Mis Compras' en cuanto se actualice la sesión.");
       }
     };
 
@@ -1308,14 +1277,13 @@
           quantity: 1
         }];
 
-        var newUrl = await createMercadoPagoCheckout(order.id, singleItem, 0, {});
+        var newUrl = await createMercadoPagoCheckout(order.id, singleItem, 0);
         if (newUrl) {
           order.checkout_url = newUrl;
           localStorage.setItem('five_friends_orders', JSON.stringify(allOrders));
           window.location.href = newUrl;
         } else {
-          alert("Conectando con Mercado Pago para tu pedido " + order.id + "...");
-          window.open('https://www.mercadopago.com.mx', '_blank');
+          alert("Conectando con la pasarela de pagos para el pedido " + order.id);
         }
       }
     };
