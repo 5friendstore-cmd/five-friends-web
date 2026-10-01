@@ -23,7 +23,7 @@
 
   <script>
     window.navigate = function(section) {
-      var sections = ['inicio', 'puntos', 'contacto', 'catalogo', 'club'];
+      var sections = ['inicio', 'puntos', 'contacto', 'catalogo', 'cotizador', 'club'];
       for (var i = 0; i < sections.length; i++) {
         var el = document.getElementById('sec-' + sections[i]);
         if (el) el.classList.add('hidden');
@@ -96,6 +96,10 @@
       <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-600">
         <button type="button" onclick="navigate('inicio')" class="hover:text-zinc-950 transition">Inicio</button>
         <button type="button" onclick="navigate('catalogo')" class="hover:text-zinc-950 transition">Tienda & Catálogo</button>
+        <button type="button" onclick="navigate('cotizador')" class="text-indigo-600 font-semibold hover:text-indigo-800 transition flex items-center gap-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+          <span>Cotizador 3D</span>
+        </button>
         <button type="button" onclick="navigate('puntos')" class="hover:text-zinc-950 transition">Puntos de Venta</button>
         <button type="button" onclick="navigate('contacto')" class="hover:text-zinc-950 transition">Contacto</button>
         <button type="button" onclick="navigate('club')" class="bg-zinc-950 text-white px-4 py-2 rounded-full hover:bg-zinc-800 transition">Club Five Friends</button>
@@ -116,6 +120,7 @@
           </svg>
           <span id="cart-badge-mobile" class="absolute top-0 right-0 w-4 h-4 bg-zinc-950 text-white text-[9px] font-bold rounded-full flex items-center justify-center hidden">0</span>
         </button>
+        <button type="button" onclick="navigate('cotizador')" class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1.5 rounded-full border border-indigo-200">Cotizar</button>
         <button type="button" onclick="navigate('club')" class="bg-zinc-950 text-white text-xs font-semibold px-3 py-1.5 rounded-full">Club</button>
         <button type="button" onclick="toggleMobileMenu()" class="p-2 text-zinc-700 hover:text-zinc-950 focus:outline-none">
           <svg id="menu-icon-bars" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,6 +138,7 @@
     <div id="mobile-menu" class="hidden md:hidden border-b border-zinc-200 bg-white px-5 py-4 space-y-3 text-sm font-medium text-zinc-700 shadow-lg">
       <button type="button" onclick="navigate('inicio'); toggleMobileMenu()" class="block w-full text-left py-2 hover:text-zinc-950 border-b border-zinc-100">Inicio</button>
       <button type="button" onclick="navigate('catalogo'); toggleMobileMenu()" class="block w-full text-left py-2 hover:text-zinc-950 border-b border-zinc-100">Tienda & Catálogo</button>
+      <button type="button" onclick="navigate('cotizador'); toggleMobileMenu()" class="block w-full text-left py-2 text-indigo-600 font-bold border-b border-zinc-100">Cotizador 3D Rápido</button>
       <button type="button" onclick="navigate('puntos'); toggleMobileMenu()" class="block w-full text-left py-2 hover:text-zinc-950 border-b border-zinc-100">Puntos de Venta</button>
       <button type="button" onclick="navigate('contacto'); toggleMobileMenu()" class="block w-full text-left py-2 hover:text-zinc-950 border-b border-zinc-100">Contacto</button>
       <button type="button" onclick="navigate('club'); toggleMobileMenu()" class="block w-full text-center py-2.5 bg-zinc-950 text-white rounded-xl mt-2 font-semibold">Club Five Friends</button>
@@ -149,11 +155,14 @@
           Diseño, Fabricación 3D, Coleccionables y Soluciones Digitales
         </h1>
         <p class="text-sm sm:text-base md:text-lg text-zinc-600 px-2 font-normal leading-relaxed">
-          Manufactura aditiva, artículos para coleccionistas y desarrollo web profesional. Compra en línea con Mercado Pago, envíos a todo México o entrega en bazares físicos.
+          Manufactura aditiva, artículos para coleccionistas y desarrollo web profesional. Cotiza tus piezas personalizadas en segundos o compra con Mercado Pago.
         </p>
         <div class="flex flex-col sm:flex-row justify-center gap-3 pt-3 px-4 sm:px-0">
           <button type="button" onclick="navigate('catalogo')" class="w-full sm:w-auto bg-zinc-950 text-white px-6 py-3 rounded-xl font-medium text-sm hover:bg-zinc-800 transition shadow-sm">Explorar Catálogo</button>
-          <button type="button" onclick="navigate('club')" class="w-full sm:w-auto border border-zinc-300 bg-white px-6 py-3 rounded-xl font-medium text-sm hover:bg-zinc-100 transition shadow-sm">Club Five Friends</button>
+          <button type="button" onclick="navigate('cotizador')" class="w-full sm:w-auto bg-indigo-600 text-white px-6 py-3 rounded-xl font-medium text-sm hover:bg-indigo-700 transition shadow-sm flex items-center justify-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+            <span>Cotizar mi pieza STL</span>
+          </button>
         </div>
       </div>
 
@@ -184,6 +193,70 @@
             <p class="text-xs sm:text-sm text-zinc-500 leading-relaxed mt-1">Sitios web rápidos, landing pages y tiendas virtuales con catálogo autogestionable y pasarelas de pago (sin costo de envío).</p>
           </div>
           <span class="text-xs font-bold text-zinc-950 underline flex items-center gap-1">Ver soluciones web &rarr;</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN NUEVA: COTIZADOR 3D RÁPIDO PARA CLIENTES (SOLO GRAMOS Y HORAS) -->
+    <section id="sec-cotizador" class="hidden space-y-6">
+      <div class="max-w-2xl mx-auto space-y-6">
+        <div class="text-center space-y-2">
+          <span class="px-3 py-1 bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-bold rounded-full uppercase tracking-wider">Calculadora Express</span>
+          <h2 class="text-2xl sm:text-4xl font-extrabold text-zinc-950">Cotiza tu Pieza 3D al Instante</h2>
+          <p class="text-xs sm:text-sm text-zinc-500">¿Tienes el estimado de tu software laminador (Cura, PrusaSlicer o Bambu Studio)? Ingresa los gramos y el tiempo para obtener el precio exacto.</p>
+        </div>
+
+        <div class="bg-white border border-zinc-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-zinc-700 uppercase mb-1.5 flex items-center justify-between">
+                <span>Peso del Filamento</span>
+                <span class="text-indigo-600 font-normal text-[11px]">En gramos (g)</span>
+              </label>
+              <div class="relative">
+                <input type="number" id="calc-client-grams" oninput="calculateClientQuote()" placeholder="Ej. 65" min="1" step="0.5" class="w-full pl-4 pr-10 py-3 bg-zinc-50 border border-zinc-300 rounded-2xl text-base font-semibold outline-none focus:bg-white focus:border-indigo-600 transition">
+                <span class="absolute right-3.5 top-3.5 text-xs text-zinc-400 font-bold">g</span>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-zinc-700 uppercase mb-1.5 flex items-center justify-between">
+                <span>Tiempo de Impresión</span>
+                <span class="text-indigo-600 font-normal text-[11px]">En horas (h)</span>
+              </label>
+              <div class="relative">
+                <input type="number" id="calc-client-hours" oninput="calculateClientQuote()" placeholder="Ej. 3.5" min="0.1" step="0.1" class="w-full pl-4 pr-10 py-3 bg-zinc-50 border border-zinc-300 rounded-2xl text-base font-semibold outline-none focus:bg-white focus:border-indigo-600 transition">
+                <span class="absolute right-3.5 top-3.5 text-xs text-zinc-400 font-bold">hrs</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cuadro de Cotización Estimada -->
+          <div class="bg-gradient-to-br from-zinc-900 to-zinc-950 text-white rounded-2xl p-6 space-y-4 shadow-md">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-[11px] uppercase tracking-wider text-zinc-400 font-bold">Cotización Estimada</span>
+                <div class="text-3xl sm:text-4xl font-extrabold text-white mt-0.5" id="calc-client-result">$0.00 MXN</div>
+              </div>
+              <span class="px-2.5 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold rounded-lg uppercase tracking-wide">Calidad Premium</span>
+            </div>
+
+            <div class="border-t border-zinc-800 pt-3 text-xs text-zinc-400 grid grid-cols-2 gap-2">
+              <div>Filamento técnico incluido</div>
+              <div class="text-right">Inspección de calidad 100%</div>
+              <div>Retiro de soportes básicos</div>
+              <div class="text-right">Envío nacional o retiro</div>
+            </div>
+
+            <button type="button" onclick="addCustomPrintToCart()" id="btn-add-custom-print" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3.5 rounded-xl font-bold text-sm shadow-md transition flex items-center justify-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+              <span>Agregar Pieza Personalizada al Carrito</span>
+            </button>
+          </div>
+
+          <p class="text-[11px] text-zinc-400 text-center leading-relaxed">
+            * El precio incluye costo de material, energía y margen de tolerancia. Si tu modelo requiere resina o materiales especiales (TPU, PETG CF), contáctanos directamente.
+          </p>
         </div>
       </div>
     </section>
@@ -244,7 +317,6 @@
 
     <!-- SECCIÓN 4: CATÁLOGO Y TIENDA -->
     <section id="sec-catalogo" class="hidden space-y-6">
-      
       <div class="flex flex-col md:flex-row justify-between md:items-end gap-4 border-b border-zinc-200 pb-5">
         <div>
           <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-950">Tienda & Catálogo Oficial</h2>
@@ -365,32 +437,7 @@
           <p class="text-xs text-zinc-500 leading-relaxed">Tus compras realizadas en la tienda web o tickets físicos validados acumulan para tu cupón de descuento.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-          <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-3.5 shadow-sm">
-            <h3 class="text-base sm:text-lg font-bold">Registrar Ticket Físico</h3>
-            <p class="text-xs text-zinc-500">¿Compraste en Plaza Centella o Plaza San Miguel? Registra tu comprobante.</p>
-            <form onsubmit="handleTicketUpload(event)" class="space-y-3">
-              <div>
-                <label class="block text-xs font-semibold text-zinc-600 mb-1">Monto del Ticket ($ MXN)</label>
-                <input type="number" id="ticket-amount" required step="0.5" class="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-sm" placeholder="Ej. 350.00">
-              </div>
-              <div>
-                <label class="block text-xs font-semibold text-zinc-600 mb-1">Folio o Comprobante</label>
-                <input type="text" id="ticket-url" required class="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-sm" placeholder="Número de ticket o URL">
-              </div>
-              <button type="submit" class="w-full bg-zinc-950 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition">Enviar Ticket</button>
-            </form>
-          </div>
-
-          <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-3 shadow-sm flex flex-col items-center justify-center text-center">
-            <h3 class="text-base sm:text-lg font-bold">Tu Cuponera Digital</h3>
-            <div id="qr-wrapper" class="p-4 bg-zinc-50 border border-zinc-200 rounded-2xl my-1 flex items-center justify-center min-h-[150px] min-w-[150px]">
-              <span id="qr-empty-msg" class="text-xs text-zinc-400">Acumula $1,500 para activar tu QR</span>
-            </div>
-            <div id="qr-coupon-label" class="text-xs sm:text-sm font-mono font-bold tracking-wider hidden text-zinc-900"></div>
-          </div>
-        </div>
-
+        <!-- HISTORIAL DE COMPRAS DEL CLIENTE -->
         <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm">
           <div class="flex justify-between items-center">
             <h3 class="text-base sm:text-lg font-bold">Mis Compras & Pedidos en Tienda</h3>
@@ -417,10 +464,10 @@
       </div>
 
       <!-- PORTAL ADMINISTRADOR -->
-      <div id="club-admin-portal" class="hidden space-y-6">
+      <div id="club-admin-portal" class="hidden space-y-8">
         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-b border-zinc-200 pb-4">
           <div>
-            <h2 class="text-xl sm:text-2xl font-bold">Panel de Administrador</h2>
+            <h2 class="text-xl sm:text-2xl font-bold">Panel de Administrador Five Friends</h2>
             <p class="text-xs sm:text-sm text-zinc-500">Sesión activa: 5friendstore@gmail.com</p>
           </div>
           <div class="flex items-center gap-2">
@@ -445,6 +492,93 @@
           <div class="p-3.5 sm:p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
             <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Ganancia Neta</span>
             <div class="text-lg sm:text-2xl font-bold text-emerald-600" id="stat-profit">$0 MXN</div>
+          </div>
+        </div>
+
+        <!-- MÓDULO NUEVO: CALCULADORA MAESTRA COMPLETA (APRENDE3D / 3DCALC PARA ADMIN) -->
+        <div class="bg-white border-2 border-indigo-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+          <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-zinc-100 pb-4">
+            <div>
+              <span class="px-2.5 py-0.5 bg-indigo-50 text-indigo-700 text-[10px] font-bold rounded uppercase">Modelo Aprende3D</span>
+              <h3 class="text-lg sm:text-xl font-bold text-zinc-950 mt-1">Configuración Maestra de Costos del Taller 3D</h3>
+              <p class="text-xs text-zinc-500">Configura tus costos reales. Estos parámetros alimentan en automático el cotizador rápido de los clientes.</p>
+            </div>
+            <button type="button" onclick="saveAdminCalculatorConfig()" class="self-start sm:self-auto bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-xl text-xs font-bold transition shadow-sm">
+              Guardar Parámetros de Taller
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-zinc-50 p-3.5 rounded-xl border border-zinc-200 space-y-1">
+              <label class="block text-[11px] font-bold text-zinc-600 uppercase">Costo Filamento ($/kg)</label>
+              <input type="number" id="adm-calc-fil-cost" value="380" step="5" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm font-semibold">
+              <span class="text-[10px] text-zinc-400">Ej. $380 MXN la bobina PLA/PETG</span>
+            </div>
+
+            <div class="bg-zinc-50 p-3.5 rounded-xl border border-zinc-200 space-y-1">
+              <label class="block text-[11px] font-bold text-zinc-600 uppercase">Desperdicio / Fallos (%)</label>
+              <input type="number" id="adm-calc-waste" value="10" step="1" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm font-semibold">
+              <span class="text-[10px] text-zinc-400">10% estándar por soportes</span>
+            </div>
+
+            <div class="bg-zinc-50 p-3.5 rounded-xl border border-zinc-200 space-y-1">
+              <label class="block text-[11px] font-bold text-zinc-600 uppercase">Consumo Máquina (Watts)</label>
+              <input type="number" id="adm-calc-watts" value="120" step="10" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm font-semibold">
+              <span class="text-[10px] text-zinc-400">Bambu Lab A1/P1S promedio</span>
+            </div>
+
+            <div class="bg-zinc-50 p-3.5 rounded-xl border border-zinc-200 space-y-1">
+              <label class="block text-[11px] font-bold text-zinc-600 uppercase">Costo Energía ($/kWh)</label>
+              <input type="number" id="adm-calc-kwh" value="3.50" step="0.1" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm font-semibold">
+              <span class="text-[10px] text-zinc-400">Tarifa CFE Doméstica/Comercial</span>
+            </div>
+
+            <div class="bg-zinc-50 p-3.5 rounded-xl border border-zinc-200 space-y-1">
+              <label class="block text-[11px] font-bold text-zinc-600 uppercase">Desgaste Máquina ($/hora)</label>
+              <input type="number" id="adm-calc-wear" value="7.50" step="0.5" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm font-semibold">
+              <span class="text-[10px] text-zinc-400">Amortización boquillas/correas</span>
+            </div>
+
+            <div class="bg-zinc-50 p-3.5 rounded-xl border border-zinc-200 space-y-1">
+              <label class="block text-[11px] font-bold text-zinc-600 uppercase">Gastos Fijos Taller ($/hora)</label>
+              <input type="number" id="adm-calc-fixed" value="10.00" step="0.5" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm font-semibold">
+              <span class="text-[10px] text-zinc-400">Renta, internet y software</span>
+            </div>
+
+            <div class="bg-zinc-50 p-3.5 rounded-xl border border-zinc-200 space-y-1">
+              <label class="block text-[11px] font-bold text-zinc-600 uppercase">Mano de Obra Base ($/pieza)</label>
+              <input type="number" id="adm-calc-labor" value="30.00" step="5" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm font-semibold">
+              <span class="text-[10px] text-zinc-400">Preparación y retiro soportes</span>
+            </div>
+
+            <div class="bg-zinc-50 p-3.5 rounded-xl border border-zinc-200 space-y-1">
+              <label class="block text-[11px] font-bold text-zinc-600 uppercase">Margen / Markup (%)</label>
+              <input type="number" id="adm-calc-markup" value="80" step="5" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-sm font-semibold text-emerald-600">
+              <span class="text-[10px] text-zinc-400">80% = multiplica por 1.8 el costo</span>
+            </div>
+          </div>
+
+          <!-- Simulador en Vivo para Admin -->
+          <div class="border-t border-zinc-200 pt-5 space-y-3">
+            <h4 class="text-xs font-bold text-zinc-800 uppercase tracking-wider">Simulador de Cotización Rápida en Vivo</h4>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-500 uppercase mb-1">Gramos prueba</label>
+                <input type="number" id="adm-sim-grams" value="100" oninput="runAdminSimulation()" class="w-full px-3 py-1.5 border border-zinc-300 rounded-lg text-xs font-bold">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-500 uppercase mb-1">Horas prueba</label>
+                <input type="number" id="adm-sim-hours" value="5" oninput="runAdminSimulation()" class="w-full px-3 py-1.5 border border-zinc-300 rounded-lg text-xs font-bold">
+              </div>
+              <div class="bg-zinc-100 p-2.5 rounded-xl">
+                <span class="block text-[10px] text-zinc-500 font-semibold">Costo Real Fab.</span>
+                <span class="text-sm font-extrabold text-zinc-900" id="adm-sim-cost">$0.00 MXN</span>
+              </div>
+              <div class="bg-emerald-50 p-2.5 rounded-xl">
+                <span class="block text-[10px] text-emerald-700 font-semibold">Precio al Cliente</span>
+                <span class="text-sm font-extrabold text-emerald-700" id="adm-sim-price">$0.00 MXN</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -733,12 +867,12 @@
               </div>
               <div>
                 <label class="block font-semibold text-zinc-600 mb-1">Estado</label>
-                <input type="text" id="order-state" placeholder="Ej. Estado de México" required class="w-full px-3 py-2 border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
+                <input type="text" id="order-state" placeholder="Ej. Estado de México" required class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
               </div>
             </div>
             <div>
               <label class="block font-semibold text-zinc-600 mb-1">Referencias de Entrega</label>
-              <input type="text" id="order-notes" placeholder="Ej. Casa blanca con reja negra, entre calle A y B" class="w-full px-3 py-2 border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
+              <input type="text" id="order-notes" placeholder="Ej. Casa blanca con reja negra, entre calle A y B" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
             </div>
           </div>
         </div>
@@ -831,6 +965,138 @@
       return '3D';
     }
 
+    // -------------------------------------------------------------
+    // PARÁMETROS MAESTROS DE COSTOS 3D (MODELO APRENDE3D)
+    // -------------------------------------------------------------
+    var workshopConfig = {
+      filCostPerKg: 380, // $/kg
+      wastePct: 10,      // %
+      watts: 120,        // Watts consumo medio
+      costPerKwh: 3.50,  // $/kWh
+      wearPerHour: 7.50, // $/h desgaste amortización
+      fixedPerHour: 10.00, // $/h gastos fijos
+      laborBase: 30.00,  // $/pieza preparación/limpieza
+      markupPct: 80      // % ganancia (x1.8)
+    };
+
+    try {
+      var savedConfig = localStorage.getItem('five_friends_workshop_config');
+      if (savedConfig) workshopConfig = JSON.parse(savedConfig);
+    } catch(e){}
+
+    function calculate3DPrice(grams, hours) {
+      var g = parseFloat(grams) || 0;
+      var h = parseFloat(hours) || 0;
+      if (g <= 0 || h <= 0) return { cost: 0, price: 0 };
+
+      // 1. Costo Material (con % desperdicio)
+      var costMaterial = g * (workshopConfig.filCostPerKg / 1000.0) * (1 + (workshopConfig.wastePct / 100.0));
+      // 2. Costo Eléctrico
+      var costElectricity = h * (workshopConfig.watts / 1000.0) * workshopConfig.costPerKwh;
+      // 3. Desgaste y Gastos Fijos
+      var costMachine = h * (workshopConfig.wearPerHour + workshopConfig.fixedPerHour);
+      // 4. Costo Total de Producción
+      var totalCost = costMaterial + costElectricity + costMachine + workshopConfig.laborBase;
+      // 5. Precio Final al Público con Margen
+      var finalPrice = totalCost * (1 + (workshopConfig.markupPct / 100.0));
+
+      return {
+        cost: Math.round(totalCost * 100) / 100,
+        price: Math.round(finalPrice)
+      };
+    }
+
+    // COTIZADOR DEL CLIENTE (SOLO GRAMOS Y HORAS)
+    window.calculateClientQuote = function() {
+      var g = document.getElementById('calc-client-grams').value;
+      var h = document.getElementById('calc-client-hours').value;
+      var res = calculate3DPrice(g, h);
+      var display = document.getElementById('calc-client-result');
+      if (res.price > 0) {
+        display.innerText = '$' + res.price.toLocaleString() + '.00 MXN';
+      } else {
+        display.innerText = '$0.00 MXN';
+      }
+    };
+
+    // AGREGAR PIEZA COTIZADA AL CARRITO
+    window.addCustomPrintToCart = function() {
+      var g = document.getElementById('calc-client-grams').value;
+      var h = document.getElementById('calc-client-hours').value;
+      var res = calculate3DPrice(g, h);
+
+      if (res.price <= 0) {
+        alert("Por favor ingresa los gramos y las horas estimadas de tu pieza.");
+        return;
+      }
+
+      var customProduct = {
+        id: 'custom_3d_' + Date.now(),
+        title: 'Pieza 3D Personalizada (' + g + 'g / ' + h + ' hrs)',
+        price: res.price,
+        cost: res.cost,
+        category: 'Impresión 3D',
+        image_url: '',
+        weight: Math.max(parseFloat(g) / 1000.0, 0.2),
+        length: 15,
+        width: 15,
+        height: 10,
+        quantity: 1
+      };
+
+      cart.push(customProduct);
+      saveCart(cart);
+      toggleCartDrawer();
+      goToCartStep(1);
+    };
+
+    // PANEL ADMIN: GUARDAR PARÁMETROS DEL TALLER
+    window.saveAdminCalculatorConfig = function() {
+      workshopConfig = {
+        filCostPerKg: parseFloat(document.getElementById('adm-calc-fil-cost').value) || 380,
+        wastePct: parseFloat(document.getElementById('adm-calc-waste').value) || 10,
+        watts: parseFloat(document.getElementById('adm-calc-watts').value) || 120,
+        costPerKwh: parseFloat(document.getElementById('adm-calc-kwh').value) || 3.5,
+        wearPerHour: parseFloat(document.getElementById('adm-calc-wear').value) || 7.5,
+        fixedPerHour: parseFloat(document.getElementById('adm-calc-fixed').value) || 10,
+        laborBase: parseFloat(document.getElementById('adm-calc-labor').value) || 30,
+        markupPct: parseFloat(document.getElementById('adm-calc-markup').value) || 80
+      };
+
+      try {
+        localStorage.setItem('five_friends_workshop_config', JSON.stringify(workshopConfig));
+      } catch(e){}
+
+      runAdminSimulation();
+      alert("✓ Parámetros de costos del taller actualizados. El cotizador del cliente ahora calcula con tus nuevos valores.");
+    };
+
+    window.runAdminSimulation = function() {
+      var g = document.getElementById('adm-sim-grams').value;
+      var h = document.getElementById('adm-sim-hours').value;
+      var res = calculate3DPrice(g, h);
+      document.getElementById('adm-sim-cost').innerText = '$' + res.cost.toFixed(2) + ' MXN';
+      document.getElementById('adm-sim-price').innerText = '$' + res.price.toFixed(2) + ' MXN';
+    };
+
+    function populateAdminCalculatorInputs() {
+      var map = {
+        'adm-calc-fil-cost': workshopConfig.filCostPerKg,
+        'adm-calc-waste': workshopConfig.wastePct,
+        'adm-calc-watts': workshopConfig.watts,
+        'adm-calc-kwh': workshopConfig.costPerKwh,
+        'adm-calc-wear': workshopConfig.wearPerHour,
+        'adm-calc-fixed': workshopConfig.fixedPerHour,
+        'adm-calc-labor': workshopConfig.laborBase,
+        'adm-calc-markup': workshopConfig.markupPct
+      };
+      Object.keys(map).forEach(function(id){
+        var el = document.getElementById(id);
+        if (el) el.value = map[id];
+      });
+      runAdminSimulation();
+    }
+
     var defaultInitialCatalog = [
       { id: "p1", title: "Soporte Articulado para Escritorio", description: "Impresión en PETG de alta resistencia.", price: 290, cost: 95, category: "Llaveros y Portallaveros", weight: 0.4, length: 15, width: 15, height: 10, image_url: "", badge: "Impresión 3D" },
       { id: "p2", title: "Organizador Modular de Herramientas", description: "Bandejas encastrables con ranuras.", price: 340, cost: 110, category: "Estuches y Alcancias", weight: 0.6, length: 20, width: 15, height: 12, image_url: "", badge: "Impresión 3D" },
@@ -864,7 +1130,6 @@
       }
     }
 
-    // CARGA DE PRODUCTOS DE SUPABASE SIN PERDER LOCALSTORAGE
     window.fetchCatalogFromDatabase = async function() {
       if (supabaseClient) {
         try {
@@ -1094,7 +1359,6 @@
       goToCartStep(2);
     };
 
-    // GENERACIÓN SEGURA VÍA SERVIDOR EN VERCEL (SIN EXPOSICIÓN DE CREDENCIALES)
     async function createMercadoPagoCheckout(orderId, items, shippingCost) {
       try {
         var response = await fetch('/api/crear-preferencia', {
@@ -2015,6 +2279,7 @@
       loadAdminData();
       renderAdminProductsTable();
       renderAdminOrdersTable();
+      populateAdminCalculatorInputs();
     }
 
     window.handleLogout = function() {
