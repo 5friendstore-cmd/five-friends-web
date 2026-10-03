@@ -51,7 +51,7 @@
       } else {
         menu.classList.add('hidden');
         if (bars) bars.classList.remove('hidden');
-        if (close) close.classList.add('hidden');
+        if (close) close.classList.remove('hidden');
       }
     };
 
@@ -78,6 +78,27 @@
       if (activeTab) activeTab.className = 'text-zinc-950 border-b-2 border-zinc-950 pb-2.5';
       var form = document.getElementById('form-' + tab);
       if (form) form.classList.remove('hidden');
+    };
+
+    // NAVEGACIÓN MODULAR INTERNA DEL PANEL DE ADMINISTRADOR
+    window.switchAdminTab = function(tabKey) {
+      var adminTabs = ['orders', 'clients', 'calculator', 'products'];
+      for (var i = 0; i < adminTabs.length; i++) {
+        var panel = document.getElementById('adm-panel-' + adminTabs[i]);
+        var btn = document.getElementById('adm-nav-' + adminTabs[i]);
+        if (panel) panel.classList.add('hidden');
+        if (btn) btn.className = 'px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 transition whitespace-nowrap';
+      }
+
+      var activePanel = document.getElementById('adm-panel-' + tabKey);
+      var activeBtn = document.getElementById('adm-nav-' + tabKey);
+      if (activePanel) activePanel.classList.remove('hidden');
+      if (activeBtn) activeBtn.className = 'px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-zinc-950 text-white shadow-sm whitespace-nowrap';
+
+      if (tabKey === 'orders') renderAdminOrdersTable();
+      if (tabKey === 'clients') loadAdminData();
+      if (tabKey === 'calculator') populateAdminCalculatorInputs();
+      if (tabKey === 'products') renderAdminProductsTable();
     };
   </script>
 </head>
@@ -155,7 +176,7 @@
           Diseño, Fabricación 3D, Coleccionables y Soluciones Digitales
         </h1>
         <p class="text-sm sm:text-base md:text-lg text-zinc-600 px-2 font-normal leading-relaxed">
-          Manufactura aditiva, artículos para coleccionistas y desarrollo web profesional. Cotiza tus piezas personalizadas en segundos, retira en bazares sin costo de envío o paga en línea.
+          Manufactura aditiva, figuras coleccionables y desarrollo web profesional. Cotiza en segundos, recoge gratis en bazares físicos o compra con Mercado Pago.
         </p>
         <div class="flex flex-col sm:flex-row justify-center gap-3 pt-3 px-4 sm:px-0">
           <button type="button" onclick="navigate('catalogo')" class="w-full sm:w-auto bg-zinc-950 text-white px-6 py-3 rounded-xl font-medium text-sm hover:bg-zinc-800 transition shadow-sm">Explorar Catálogo</button>
@@ -203,7 +224,7 @@
         <div class="text-center space-y-2">
           <span class="px-3 py-1 bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-bold rounded-full uppercase tracking-wider">Calculadora Express</span>
           <h2 class="text-2xl sm:text-4xl font-extrabold text-zinc-950">Cotiza tu Pieza 3D al Instante</h2>
-          <p class="text-xs sm:text-sm text-zinc-500">Ingresa los gramos de filamento y las horas estimadas de tu software laminador (Cura, PrusaSlicer o Bambu Studio) para conocer tu precio final.</p>
+          <p class="text-xs sm:text-sm text-zinc-500">Ingresa los gramos de filamento y las horas estimadas de tu laminador para conocer el costo exacto de producción.</p>
         </div>
 
         <div class="bg-white border border-zinc-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
@@ -231,7 +252,6 @@
             </div>
           </div>
 
-          <!-- Cuadro de Cotización Estimada -->
           <div class="bg-gradient-to-br from-zinc-900 to-zinc-950 text-white rounded-2xl p-6 space-y-4 shadow-md">
             <div class="flex justify-between items-start">
               <div>
@@ -253,10 +273,6 @@
               <span>Agregar Pieza Personalizada al Carrito</span>
             </button>
           </div>
-
-          <p class="text-[11px] text-zinc-400 text-center leading-relaxed">
-            * El precio incluye costo de filamento, energía, preparación y empaque. Si requieres materiales especiales (PETG, TPU, ABS o resina), contáctanos directamente.
-          </p>
         </div>
       </div>
     </section>
@@ -265,7 +281,7 @@
     <section id="sec-puntos" class="hidden space-y-6">
       <div>
         <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">Puntos de Venta & Bazares</h2>
-        <p class="text-xs sm:text-sm text-zinc-500">Encuéntranos en nuestras sedes físicas y bazares autorizados sin pagar costo de envío.</p>
+        <p class="text-xs sm:text-sm text-zinc-500">Recoge tus pedidos sin pagar costo de envío en nuestras sedes físicas y bazares.</p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
@@ -279,7 +295,7 @@
         <div class="border border-zinc-200 rounded-2xl p-5 sm:p-6 bg-white space-y-3 shadow-sm">
           <span class="text-[11px] font-semibold px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded uppercase font-bold">Entrega Gratis</span>
           <h3 class="text-base sm:text-lg font-bold">Plaza Centella (Bazar Revolución)</h3>
-          <p class="text-xs sm:text-sm text-zinc-500">Encuéntranos en el bazar físico. Puedes elegir recoger tu pedido aquí con <strong>$0 MXN</strong> de flete.</p>
+          <p class="text-xs sm:text-sm text-zinc-500">Recoge tus piezas en nuestro stand físico sin cargo de flete.</p>
         </div>
 
         <div class="border border-zinc-200 rounded-2xl p-5 sm:p-6 bg-white space-y-3 shadow-sm">
@@ -343,7 +359,7 @@
       <div id="catalog-container" class="space-y-10"></div>
     </section>
 
-    <!-- SECCIÓN 5: CLUB FIVE FRIENDS -->
+    <!-- SECCIÓN 5: CLUB FIVE FRIENDS & PANELES -->
     <section id="sec-club" class="space-y-6">
 
       <!-- PANTALLA: LOGIN / REGISTRO / ADMIN -->
@@ -397,23 +413,20 @@
 
         <!-- FORMULARIO ADMIN -->
         <form id="form-admin" class="space-y-3.5 hidden" onsubmit="handleAdminLogin(event)">
-          <div class="bg-zinc-100 p-2.5 rounded-xl text-xs text-zinc-600">Acceso restringido a administradores de Five Friends.</div>
+          <div class="bg-zinc-100 p-2.5 rounded-xl text-xs text-zinc-600">Acceso exclusivo a administradores de Five Friends.</div>
           <div>
-            <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Correo de Administrador</label>
-            <input type="email" id="admin-email" required placeholder="Ingresa tu correo institucional" class="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-sm">
+            <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Correo Institucional</label>
+            <input type="email" id="admin-email" required placeholder="5friendstore@gmail.com" class="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-sm">
           </div>
           <div>
-            <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Clave de Seguridad</label>
+            <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Clave Maestra</label>
             <input type="password" id="admin-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-sm">
           </div>
-          <div class="flex justify-end">
-            <button type="button" onclick="sendPasswordToEmail('admin')" class="text-xs text-zinc-500 hover:underline">¿Olvidaste tu contraseña?</button>
-          </div>
-          <button type="submit" class="w-full bg-zinc-950 text-white py-3 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition">Entrar al Panel</button>
+          <button type="submit" class="w-full bg-zinc-950 text-white py-3 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition">Entrar al Panel Modular</button>
         </form>
       </div>
 
-      <!-- PORTAL CLIENTE CON RASTREO EN TIEMPO REAL -->
+      <!-- PORTAL CLIENTE CON RASTREO VISUAL DE ÓRDENES (FÍSICAS Y WEB) -->
       <div id="club-user-portal" class="hidden space-y-8">
         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-b border-zinc-200 pb-4">
           <div>
@@ -434,336 +447,412 @@
           <div class="w-full bg-zinc-100 rounded-full h-3 overflow-hidden">
             <div id="user-progress-bar" class="bg-zinc-950 h-3 rounded-full transition-all duration-500" style="width: 0%;"></div>
           </div>
-          <p class="text-xs text-zinc-500 leading-relaxed">Tus compras realizadas en la tienda web o tickets físicos validados acumulan para tu cupón de descuento.</p>
+          <p class="text-xs text-zinc-500 leading-relaxed">Tus compras físicas y en línea acumulan puntos para tu cupón de descuento permanente.</p>
         </div>
 
-        <!-- HISTORIAL DE COMPRAS CON RASTREO EN TIEMPO REAL (5 ETAPAS) -->
+        <!-- RASTREO EN 5 ETAPAS (APLICA A PRODUCTOS 3D Y DESARROLLO WEB) -->
         <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-5 shadow-sm">
           <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-1 border-b border-zinc-100 pb-3">
             <div>
-              <h3 class="text-base sm:text-lg font-bold">Mis Pedidos & Estado en Tiempo Real</h3>
-              <p class="text-xs text-zinc-500">Rastrea la fabricación y entrega de tus piezas 3D y pedidos.</p>
+              <h3 class="text-base sm:text-lg font-bold">Mis Pedidos & Seguimiento en Vivo</h3>
+              <p class="text-xs text-zinc-500">Monitorea el avance de tus piezas 3D y desarrollos web contratados.</p>
             </div>
-            <button onclick="renderUserOrdersTable()" class="self-start sm:self-auto text-xs font-semibold text-indigo-600 hover:underline">↻ Actualizar estado</button>
+            <button onclick="renderUserOrdersTable()" class="self-start sm:self-auto text-xs font-semibold text-indigo-600 hover:underline">↻ Refrescar estado</button>
           </div>
 
           <div class="space-y-4" id="user-orders-timeline-container">
-            <div class="text-center py-8 text-zinc-400 text-xs">Aún no has realizado compras en línea.</div>
+            <div class="text-center py-8 text-zinc-400 text-xs">Cargando tus órdenes activas...</div>
           </div>
         </div>
       </div>
 
-      <!-- PORTAL ADMINISTRADOR CON GESTIÓN DE ESTADOS EN VIVO -->
-      <div id="club-admin-portal" class="hidden space-y-8">
-        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-b border-zinc-200 pb-4">
+      <!-- PORTAL ADMINISTRADOR CON MENÚ MODULAR EXCLUSIVO -->
+      <div id="club-admin-portal" class="hidden space-y-6">
+        
+        <!-- Header Admin & Salir -->
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 bg-white p-5 rounded-2xl border border-zinc-200 shadow-sm">
           <div>
-            <h2 class="text-xl sm:text-2xl font-bold">Panel de Administrador Five Friends</h2>
-            <p class="text-xs sm:text-sm text-zinc-500">Sesión activa: 5friendstore@gmail.com</p>
+            <span class="px-2.5 py-0.5 bg-zinc-950 text-white text-[10px] font-extrabold rounded-md uppercase">Administración Central</span>
+            <h2 class="text-xl sm:text-2xl font-black text-zinc-950 tracking-tight mt-1">Panel de Control Five Friends</h2>
+            <p class="text-xs text-zinc-500">Sesión activa: 5friendstore@gmail.com</p>
           </div>
           <div class="flex items-center gap-2">
-            <button type="button" onclick="loadAdminData()" class="text-xs font-medium border border-zinc-300 px-3 py-1.5 rounded-lg hover:bg-zinc-100 flex items-center gap-1">↻ Actualizar</button>
-            <button type="button" onclick="handleLogout()" class="text-xs font-medium bg-zinc-950 text-white px-3 py-1.5 rounded-lg hover:bg-zinc-800">Salir</button>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-          <div class="p-3.5 sm:p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
-            <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Clientes</span>
-            <div class="text-lg sm:text-2xl font-bold" id="stat-client-count">0</div>
-          </div>
-          <div class="p-3.5 sm:p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
-            <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Ventas Totales</span>
-            <div class="text-lg sm:text-2xl font-bold" id="stat-sales">$0 MXN</div>
-          </div>
-          <div class="p-3.5 sm:p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
-            <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Costo Total</span>
-            <div class="text-lg sm:text-2xl font-bold text-zinc-500" id="stat-costs">$0 MXN</div>
-          </div>
-          <div class="p-3.5 sm:p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
-            <span class="text-[10px] sm:text-xs font-semibold text-zinc-400 uppercase">Ganancia Neta</span>
-            <div class="text-lg sm:text-2xl font-bold text-emerald-600" id="stat-profit">$0 MXN</div>
-          </div>
-        </div>
-
-        <!-- AUDITORÍA Y CONTROL DE ESTADOS DE PEDIDOS (ADMIN) -->
-        <div class="bg-white border border-zinc-200 rounded-2xl p-5 space-y-4 shadow-sm">
-          <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-b border-zinc-100 pb-3">
-            <div>
-              <h3 class="text-base sm:text-lg font-bold">Gestión de Estados de Pedidos en Vivo</h3>
-              <p class="text-xs text-zinc-500">Cambia el estatus de cada orden. Se actualiza en tiempo real para el cliente.</p>
-            </div>
-            
-            <label class="flex items-center gap-2 cursor-pointer bg-zinc-50 border border-zinc-200 px-3 py-1.5 rounded-xl text-xs font-semibold text-zinc-700">
-              <input type="checkbox" id="adm-filter-hide-delivered" onchange="renderAdminOrdersTable()" checked class="rounded text-zinc-950">
-              <span>Ocultar pedidos entregados</span>
-            </label>
-          </div>
-
-          <div class="overflow-x-auto -mx-2 sm:mx-0">
-            <table class="w-full text-left text-xs sm:text-sm min-w-[850px]">
-              <thead class="border-b border-zinc-200 text-[10px] text-zinc-400 uppercase">
-                <tr>
-                  <th class="py-2.5">Folio / Fecha</th>
-                  <th class="py-2.5">Cliente & Contacto</th>
-                  <th class="py-2.5">Modalidad de Entrega</th>
-                  <th class="py-2.5">Productos</th>
-                  <th class="py-2.5">Total</th>
-                  <th class="py-2.5">Estado en Tiempo Real (Cambiar)</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-zinc-100" id="admin-orders-table">
-                <tr><td colspan="6" class="py-4 text-center text-zinc-400">No hay pedidos registrados todavía.</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- CALCULADORA APRENDE3D COMPLETA EN ADMIN -->
-        <div class="bg-white border-2 border-indigo-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
-          <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-b border-zinc-200 pb-4">
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="px-2.5 py-0.5 bg-indigo-600 text-white text-[10px] font-extrabold rounded-md uppercase tracking-wider">Aprende 3D Oficial</span>
-                <h3 class="text-lg sm:text-xl font-bold text-zinc-950">Calculadora de Costos & Presupuesto Integral</h3>
-              </div>
-              <p class="text-xs text-zinc-500 mt-1">Configuración técnica completa de tu taller: filamento, máquina, desglose de mano de obra en minutos, empaquetado, gastos fijos y logística.</p>
-            </div>
-            <button type="button" onclick="saveAdminCalculatorConfig()" class="self-start sm:self-auto bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
-              <span>Guardar Parámetros de Taller</span>
+            <button type="button" onclick="syncAllAdminData()" class="text-xs font-semibold border border-zinc-300 px-3.5 py-2 rounded-xl hover:bg-zinc-100 flex items-center gap-1.5 transition">
+              <svg class="w-3.5 h-3.5 text-zinc-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+              <span>Sincronizar Todo</span>
             </button>
-          </div>
-
-          <div class="space-y-3">
-            <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider block border-l-4 border-indigo-600 pl-2">1. Material & Filamento</span>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
-              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
-                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Costo por Bobina ($ MXN)</label>
-                <input type="number" id="adm-calc-fil-cost" value="380" step="5" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
-              </div>
-              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
-                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Peso del Carrete (Gramos)</label>
-                <input type="number" id="adm-calc-fil-weight" value="1000" step="50" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
-              </div>
-              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
-                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Margen de Error / Merma (%)</label>
-                <input type="number" id="adm-calc-waste" value="10" step="1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
-              </div>
-            </div>
-          </div>
-
-          <div class="space-y-3">
-            <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider block border-l-4 border-indigo-600 pl-2">2. Electricidad, Máquina y Desgaste</span>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5">
-              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
-                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Consumo Impresora (Watts)</label>
-                <input type="number" id="adm-calc-watts" value="120" step="10" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
-              </div>
-              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
-                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Costo de Energía ($/kWh CFE)</label>
-                <input type="number" id="adm-calc-kwh" value="3.50" step="0.1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
-              </div>
-              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
-                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Costo Impresora ($ Compra)</label>
-                <input type="number" id="adm-calc-printer-cost" value="14500" step="500" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
-              </div>
-              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
-                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Vida Útil (Horas)</label>
-                <input type="number" id="adm-calc-printer-lifespan" value="3000" step="200" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
-              </div>
-              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200 sm:col-span-2 md:col-span-4">
-                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Mantenimiento y Repuestos ($/hora)</label>
-                <input type="number" id="adm-calc-wear" value="4.50" step="0.5" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
-              </div>
-            </div>
-          </div>
-
-          <div class="space-y-3">
-            <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider block border-l-4 border-indigo-600 pl-2">3. Mano de Obra en Minutos</span>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3.5">
-              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
-                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Valor de tu Hora ($/h)</label>
-                <input type="number" id="adm-calc-hourly-rate" value="120" step="10" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold text-indigo-700">
-              </div>
-              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
-                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Min. Preparación</label>
-                <input type="number" id="adm-calc-min-prep" value="10" step="1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
-              </div>
-              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
-                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Min. Producción</label>
-                <input type="number" id="adm-calc-min-prod" value="5" step="1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
-              </div>
-              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
-                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Min. Postprocesado</label>
-                <input type="number" id="adm-calc-min-post" value="15" step="1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
-              </div>
-              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
-                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Min. Empaquetado</label>
-                <input type="number" id="adm-calc-min-pack" value="10" step="1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
-              </div>
-            </div>
-          </div>
-
-          <div class="space-y-3">
-            <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider block border-l-4 border-indigo-600 pl-2">4. Empaque Físico, Gastos Fijos y Margen</span>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5">
-              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
-                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Insumos de Caja ($)</label>
-                <input type="number" id="adm-calc-pack-material" value="18" step="1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
-              </div>
-              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
-                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Gastos Fijos ($/mes)</label>
-                <input type="number" id="adm-calc-monthly-fixed" value="2500" step="100" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
-              </div>
-              <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
-                <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Horas Taller al Mes</label>
-                <input type="number" id="adm-calc-monthly-hours" value="250" step="10" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
-              </div>
-              <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200">
-                <label class="block text-[11px] font-bold text-emerald-800 uppercase mb-1">Margen / Markup (%)</label>
-                <input type="number" id="adm-calc-markup" value="80" step="5" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-emerald-300 rounded-lg text-xs font-extrabold text-emerald-700">
-              </div>
-            </div>
+            <button type="button" onclick="handleLogout()" class="text-xs font-semibold bg-zinc-950 text-white px-4 py-2 rounded-xl hover:bg-zinc-800 transition">Salir</button>
           </div>
         </div>
 
-        <!-- FORMULARIO PRODUCTO + BOTÓN IMPORTAR CSV/EXCEL DE MERCADO PAGO -->
-        <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm">
-          <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
-            <div>
-              <h3 class="text-base sm:text-lg font-bold" id="product-form-title">Agregar / Editar Producto</h3>
-              <p class="text-xs text-zinc-500">Configura precios, costos, imágenes o importa masivamente tu catálogo de Mercado Pago.</p>
-            </div>
-            
-            <div class="flex items-center gap-2">
-              <label class="cursor-pointer bg-zinc-100 hover:bg-zinc-200 border border-zinc-300 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
-                <svg class="w-4 h-4 text-zinc-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                <span>Importar Catálogo (CSV)</span>
-                <input type="file" id="import-csv-file" accept=".csv,text/csv" onchange="handleBulkCSVImport(event)" class="hidden">
-              </label>
-              <button type="button" onclick="downloadCSVTemplate()" class="text-xs text-zinc-500 hover:underline font-medium" title="Descargar formato base de columnas">Plantilla</button>
-              <button type="button" id="btn-cancel-edit" onclick="cancelProductEdit()" class="hidden text-xs text-rose-600 font-semibold hover:underline ml-2">Cancelar Edición</button>
-            </div>
-          </div>
+        <!-- BARRA DE PESTAÑAS DEL PANEL DE ADMINISTRADOR -->
+        <div class="flex gap-2 overflow-x-auto pb-1 border-b border-zinc-200 scrollbar-none">
+          <button type="button" id="adm-nav-orders" onclick="switchAdminTab('orders')" class="px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-zinc-950 text-white shadow-sm whitespace-nowrap">📦 Pedidos & Estatus</button>
+          <button type="button" id="adm-nav-clients" onclick="switchAdminTab('clients')" class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 transition whitespace-nowrap">👥 Clientes & Cupones</button>
+          <button type="button" id="adm-nav-calculator" onclick="switchAdminTab('calculator')" class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 transition whitespace-nowrap">⚙️ Calculadora 3D (Aprende3D)</button>
+          <button type="button" id="adm-nav-products" onclick="switchAdminTab('products')" class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 transition whitespace-nowrap">🏷️ Catálogo & Productos</button>
+        </div>
 
-          <form id="product-form" onsubmit="handleProductFormSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5">
-            <input type="hidden" id="adm-p-id" value="">
-
-            <div>
-              <label class="block text-xs font-semibold text-zinc-600 mb-1">Título del Producto</label>
-              <input type="text" id="adm-p-title" required placeholder="Ej. Separador Samurai" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-zinc-600 mb-1">Precio ($ Público)</label>
-              <input type="number" id="adm-p-price" step="0.5" required placeholder="350.00" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-zinc-600 mb-1">Costo ($ Solo Admin)</label>
-              <input type="number" id="adm-p-cost" step="0.5" required placeholder="120.00" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-zinc-600 mb-1">Categoría / Pilar</label>
-              <select id="adm-p-category" onchange="toggleShippingFields(this.value)" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
-                <optgroup label="Pilar: Coleccionables">
-                  <option value="Coleccionables">Coleccionables (General)</option>
-                  <option value="Figuras y Mas">Figuras y Mas (Coleccionables)</option>
-                  <option value="Dioramas y Bases">Dioramas y Bases</option>
-                  <option value="TCG y Cartas">TCG y Cartas</option>
-                </optgroup>
-                <optgroup label="Pilar: Impresión 3D">
-                  <option value="Impresión 3D">Impresión 3D (General)</option>
-                  <option value="Posavasos, Platos y Portalatas">Posavasos, Platos y Portalatas</option>
-                  <option value="Llaveros y Portallaveros">Llaveros y Portallaveros</option>
-                  <option value="Videojuegos y Juegos de Mesa">Videojuegos y Juegos de Mesa</option>
-                  <option value="Estuches y Alcancias">Estuches y Alcancias</option>
-                  <option value="Exhibidores y Joyeros">Exhibidores y Joyeros</option>
-                  <option value="Separadores y Accesorios para Libros">Separadores y Accesorios para Libros</option>
-                  <option value="Lámparas y Lítofanias">Lámparas y Lítofanias</option>
-                  <option value="Macetas y Floreros">Macetas y Floreros</option>
-                  <option value="Mascaras y Mas">Mascaras y Mas</option>
-                  <option value="Equipos y Deportes">Equipos y Deportes</option>
-                  <option value="Jaboneras y Bandejas">Jaboneras y Bandejas</option>
-                </optgroup>
-                <optgroup label="Pilar: Servicios Digitales">
-                  <option value="Desarrollo Web">Desarrollo Web (Sin Envío)</option>
-                </optgroup>
-              </select>
-            </div>
-
-            <div id="shipping-dimensions-box" class="sm:col-span-2 md:col-span-4 bg-zinc-50 border border-zinc-200 p-3.5 rounded-xl space-y-2">
-              <span class="text-xs font-bold text-zinc-800 uppercase tracking-wider block">Dimensiones y Peso para Envío</span>
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                <div>
-                  <label class="block text-[11px] text-zinc-500 font-semibold mb-1">Peso (kg)</label>
-                  <input type="number" id="adm-p-weight" step="0.1" value="0.5" class="w-full px-2.5 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs">
-                </div>
-                <div>
-                  <label class="block text-[11px] text-zinc-500 font-semibold mb-1">Largo (cm)</label>
-                  <input type="number" id="adm-p-length" step="1" value="15" class="w-full px-2.5 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs">
-                </div>
-                <div>
-                  <label class="block text-[11px] text-zinc-500 font-semibold mb-1">Ancho (cm)</label>
-                  <input type="number" id="adm-p-width" step="1" value="15" class="w-full px-2.5 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs">
-                </div>
-                <div>
-                  <label class="block text-[11px] text-zinc-500 font-semibold mb-1">Alto (cm)</label>
-                  <input type="number" id="adm-p-height" step="1" value="10" class="w-full px-2.5 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs">
-                </div>
+        <!-- MÓDULO 1: PEDIDOS & ESTATUS EN TIEMPO REAL -->
+        <div id="adm-panel-orders" class="space-y-5">
+          <div class="bg-white border border-zinc-200 rounded-2xl p-5 space-y-4 shadow-sm">
+            <div class="flex flex-col md:flex-row justify-between md:items-center gap-3 border-b border-zinc-100 pb-3">
+              <div>
+                <h3 class="text-base sm:text-lg font-bold text-zinc-950">Gestión de Pedidos & Estatus en Vivo</h3>
+                <p class="text-xs text-zinc-500">Actualiza las etapas. Las órdenes se mantienen visibles hasta que las marques como Entregado.</p>
               </div>
-            </div>
 
-            <div class="sm:col-span-2 md:col-span-3">
-              <label class="block text-xs font-semibold text-zinc-600 mb-1">Imagen (URL o Archivo)</label>
-              <div class="flex flex-col sm:flex-row gap-2">
-                <input type="url" id="adm-p-image-url" placeholder="https://ejemplo.com/foto.jpg" oninput="updateImagePreview(this.value)" class="flex-1 px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
-                <label class="cursor-pointer bg-zinc-100 hover:bg-zinc-200 border border-zinc-300 px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 whitespace-nowrap">
-                  <span>Subir Archivo</span>
-                  <input type="file" id="adm-p-file" accept="image/*" onchange="handleImageFileUpload(event)" class="hidden">
+              <div class="flex flex-wrap items-center gap-2">
+                <label class="flex items-center gap-2 cursor-pointer bg-zinc-50 border border-zinc-200 px-3 py-1.5 rounded-xl text-xs font-semibold text-zinc-700">
+                  <input type="checkbox" id="adm-filter-hide-delivered" onchange="renderAdminOrdersTable()" checked class="rounded text-zinc-950">
+                  <span>Ocultar entregados</span>
                 </label>
+                <button type="button" onclick="promptManualOrderLookup()" class="text-xs bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold px-3 py-1.5 rounded-xl hover:bg-indigo-100 transition">+ Buscar / Forzar Folio</button>
               </div>
             </div>
 
-            <div class="flex items-center justify-center border border-dashed border-zinc-300 rounded-xl p-2 bg-zinc-50 min-h-[70px]">
-              <div id="image-preview-container" class="text-center">
-                <span class="text-[11px] text-zinc-400">Sin vista previa</span>
-              </div>
+            <div class="overflow-x-auto -mx-2 sm:mx-0">
+              <table class="w-full text-left text-xs sm:text-sm min-w-[850px]">
+                <thead class="border-b border-zinc-200 text-[10px] text-zinc-400 uppercase">
+                  <tr>
+                    <th class="py-2.5">Folio / Fecha</th>
+                    <th class="py-2.5">Cliente & Contacto</th>
+                    <th class="py-2.5">Tipo / Entrega</th>
+                    <th class="py-2.5">Artículos</th>
+                    <th class="py-2.5">Total ($)</th>
+                    <th class="py-2.5">Estatus en Vivo (Cambiar)</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-100" id="admin-orders-table">
+                  <tr><td colspan="6" class="py-8 text-center text-zinc-400">Cargando pedidos de Supabase...</td></tr>
+                </tbody>
+              </table>
             </div>
-
-            <div class="sm:col-span-2 md:col-span-4">
-              <label class="block text-xs font-semibold text-zinc-600 mb-1">Descripción</label>
-              <input type="text" id="adm-p-desc" placeholder="Detalles de materiales, medidas o tiempos..." class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
-            </div>
-
-            <div class="sm:col-span-2 md:col-span-4 pt-1">
-              <button type="submit" id="btn-save-product" class="w-full sm:w-auto bg-zinc-950 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition shadow-sm">Guardar Producto en Catálogo</button>
-            </div>
-          </form>
+          </div>
         </div>
 
-        <!-- LISTA GESTIÓN PRODUCTOS -->
-        <div class="bg-white border border-zinc-200 rounded-2xl p-5 space-y-4 shadow-sm">
-          <div class="flex justify-between items-center">
-            <h3 class="text-base sm:text-lg font-bold">Catálogo Actual (Gestión & Costos)</h3>
-            <span class="text-xs text-zinc-500" id="admin-product-count">0 productos</span>
+        <!-- MÓDULO 2: CLIENTES, VALIDACIÓN DE TICKETS Y CUPONES -->
+        <div id="adm-panel-clients" class="hidden space-y-6">
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
+              <span class="text-[10px] font-bold text-zinc-400 uppercase">Clientes Registrados</span>
+              <div class="text-xl sm:text-2xl font-extrabold text-zinc-950 mt-1" id="stat-client-count">0</div>
+            </div>
+            <div class="p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
+              <span class="text-[10px] font-bold text-zinc-400 uppercase">Total Ventas</span>
+              <div class="text-xl sm:text-2xl font-extrabold text-zinc-950 mt-1" id="stat-sales">$0 MXN</div>
+            </div>
+            <div class="p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
+              <span class="text-[10px] font-bold text-zinc-400 uppercase">Costo Estimado</span>
+              <div class="text-xl sm:text-2xl font-extrabold text-zinc-500 mt-1" id="stat-costs">$0 MXN</div>
+            </div>
+            <div class="p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm">
+              <span class="text-[10px] font-bold text-zinc-400 uppercase">Utilidad Estimada</span>
+              <div class="text-xl sm:text-2xl font-extrabold text-emerald-600 mt-1" id="stat-profit">$0 MXN</div>
+            </div>
           </div>
 
-          <div class="overflow-x-auto -mx-2 sm:mx-0">
-            <table class="w-full text-left text-xs sm:text-sm min-w-[650px]">
-              <thead class="border-b border-zinc-200 text-[10px] text-zinc-400 uppercase">
-                <tr>
-                  <th class="py-2.5">Foto</th>
-                  <th class="py-2.5">Producto</th>
-                  <th class="py-2.5">Pilar / Categoría</th>
-                  <th class="py-2.5">Peso / Medidas</th>
-                  <th class="py-2.5">Precio ($)</th>
-                  <th class="py-2.5">Costo ($)</th>
-                  <th class="py-2.5 text-right">Acciones</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-zinc-100" id="admin-products-table"></tbody>
-            </table>
+          <!-- Directorio de Clientes -->
+          <div class="bg-white border border-zinc-200 rounded-2xl p-5 space-y-3 shadow-sm">
+            <h3 class="text-base font-bold text-zinc-950">Directorio de Clientes Registrados</h3>
+            <div class="overflow-x-auto -mx-2 sm:mx-0">
+              <table class="w-full text-left text-xs sm:text-sm min-w-[550px]">
+                <thead class="border-b border-zinc-200 text-[10px] text-zinc-400 uppercase">
+                  <tr>
+                    <th class="py-2.5">Nombre</th>
+                    <th class="py-2.5">Teléfono</th>
+                    <th class="py-2.5">Correo</th>
+                    <th class="py-2.5">Cumpleaños</th>
+                    <th class="py-2.5">Gasto Acumulado</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-100" id="admin-client-table">
+                  <tr><td colspan="5" class="py-6 text-center text-zinc-400">Cargando clientes...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Módulos de Validación de Tickets Físicos y Cupones QR -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white border border-zinc-200 rounded-2xl p-5 space-y-3 shadow-sm">
+              <h3 class="text-base font-bold text-zinc-950">Validación de Tickets Físicos</h3>
+              <p class="text-xs text-zinc-500">Valida los comprobantes registrados en bazares para acumular puntos.</p>
+              <div id="admin-tickets-container" class="space-y-2">
+                <div class="text-xs text-zinc-400 py-3 text-center bg-zinc-50 rounded-xl">No hay comprobantes pendientes de validar.</div>
+              </div>
+            </div>
+
+            <div class="bg-white border border-zinc-200 rounded-2xl p-5 space-y-3 shadow-sm">
+              <h3 class="text-base font-bold text-zinc-950">Validador de Cupones QR en Bazar</h3>
+              <p class="text-xs text-zinc-500">Ingresa o escanea el código presentado por el cliente para aplicar su 10% OFF.</p>
+              <div class="flex gap-2">
+                <input type="text" id="admin-coupon-code" placeholder="Código (Ej. FF10-VIP-REWARD)" class="flex-1 px-3 py-2 border border-zinc-300 rounded-xl text-xs outline-none focus:border-zinc-950">
+                <button type="button" onclick="handleAdminValidateCoupon()" class="bg-zinc-950 text-white px-4 py-2 rounded-xl text-xs font-bold">Validar</button>
+              </div>
+              <div id="admin-coupon-result" class="text-xs font-semibold pt-1"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MÓDULO 3: CALCULADORA MAESTRA COMPLETA (APRENDE3D) -->
+        <div id="adm-panel-calculator" class="hidden space-y-6">
+          <div class="bg-white border-2 border-indigo-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+            <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-b border-zinc-200 pb-4">
+              <div>
+                <span class="px-2.5 py-0.5 bg-indigo-600 text-white text-[10px] font-extrabold rounded-md uppercase tracking-wider">Aprende 3D Oficial</span>
+                <h3 class="text-lg sm:text-xl font-bold text-zinc-950 mt-1">Configuración Maestra de Costos del Taller</h3>
+                <p class="text-xs text-zinc-500">Modifica tus parámetros operativos. Alimentan automáticamente el cotizador express de los clientes.</p>
+              </div>
+              <button type="button" onclick="saveAdminCalculatorConfig()" class="self-start sm:self-auto bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition shadow-sm">
+                Guardar Configuración en Supabase
+              </button>
+            </div>
+
+            <div class="space-y-3">
+              <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider block border-l-4 border-indigo-600 pl-2">1. Material & Filamento</span>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                  <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Costo Bobina ($/kg)</label>
+                  <input type="number" id="adm-calc-fil-cost" value="380" step="5" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                </div>
+                <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                  <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Peso Carrete (g)</label>
+                  <input type="number" id="adm-calc-fil-weight" value="1000" step="50" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                </div>
+                <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                  <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Merma / Fallos (%)</label>
+                  <input type="number" id="adm-calc-waste" value="10" step="1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider block border-l-4 border-indigo-600 pl-2">2. Electricidad, Máquina y Desgaste</span>
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5">
+                <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                  <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Consumo (Watts)</label>
+                  <input type="number" id="adm-calc-watts" value="120" step="10" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                </div>
+                <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                  <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Luz CFE ($/kWh)</label>
+                  <input type="number" id="adm-calc-kwh" value="3.50" step="0.1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                </div>
+                <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                  <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Costo Impresora ($)</label>
+                  <input type="number" id="adm-calc-printer-cost" value="14500" step="500" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                </div>
+                <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                  <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Vida Útil (Horas)</label>
+                  <input type="number" id="adm-calc-printer-lifespan" value="3000" step="200" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider block border-l-4 border-indigo-600 pl-2">3. Mano de Obra (Minutos) & Empaque</span>
+              <div class="grid grid-cols-2 sm:grid-cols-5 gap-3.5">
+                <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                  <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Hora Mano Obra ($)</label>
+                  <input type="number" id="adm-calc-hourly-rate" value="120" step="10" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-bold text-indigo-700">
+                </div>
+                <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                  <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Min. Prep.</label>
+                  <input type="number" id="adm-calc-min-prep" value="10" step="1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                </div>
+                <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                  <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Min. Prod.</label>
+                  <input type="number" id="adm-calc-min-prod" value="5" step="1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                </div>
+                <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                  <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Min. Postproc.</label>
+                  <input type="number" id="adm-calc-min-post" value="15" step="1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                </div>
+                <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                  <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Min. Empaque</label>
+                  <input type="number" id="adm-calc-min-pack" value="10" step="1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider block border-l-4 border-indigo-600 pl-2">4. Gastos Taller, Empaque y Margen Comercial</span>
+              <div class="grid grid-cols-1 sm:grid-cols-4 gap-3.5">
+                <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                  <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Insumos Caja/Empaque ($)</label>
+                  <input type="number" id="adm-calc-pack-material" value="18" step="1" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                </div>
+                <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                  <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Gastos Fijos ($/mes)</label>
+                  <input type="number" id="adm-calc-monthly-fixed" value="2500" step="100" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                </div>
+                <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                  <label class="block text-[11px] font-bold text-zinc-700 uppercase mb-1">Horas Taller / Mes</label>
+                  <input type="number" id="adm-calc-monthly-hours" value="250" step="10" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs font-semibold">
+                </div>
+                <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200">
+                  <label class="block text-[11px] font-bold text-emerald-800 uppercase mb-1">Margen / Markup (%)</label>
+                  <input type="number" id="adm-calc-markup" value="80" step="5" oninput="runAdminSimulation()" class="w-full px-3 py-2 bg-white border border-emerald-300 rounded-lg text-sm font-extrabold text-emerald-700">
+                </div>
+              </div>
+            </div>
+
+            <!-- Simulador Unitario en Vivo -->
+            <div class="bg-zinc-900 text-white p-5 rounded-2xl space-y-3">
+              <div class="flex justify-between items-center border-b border-zinc-800 pb-2">
+                <span class="text-xs font-bold text-indigo-400 uppercase">Simulación Rápida de Pieza</span>
+                <div class="flex gap-2">
+                  <input type="number" id="adm-sim-grams" value="100" oninput="runAdminSimulation()" placeholder="g" class="w-16 px-2 py-1 bg-zinc-800 border border-zinc-700 rounded text-xs font-bold text-center">
+                  <input type="number" id="adm-sim-hours" value="5" oninput="runAdminSimulation()" placeholder="hrs" class="w-16 px-2 py-1 bg-zinc-800 border border-zinc-700 rounded text-xs font-bold text-center">
+                </div>
+              </div>
+              <div class="flex justify-between items-center pt-1">
+                <div>
+                  <span class="text-[10px] text-zinc-400 uppercase block">Costo Fábrica:</span>
+                  <span class="text-sm font-bold text-zinc-200" id="adm-sim-cost">$0.00 MXN</span>
+                </div>
+                <div class="text-right">
+                  <span class="text-[10px] text-emerald-400 uppercase block">Precio al Cliente:</span>
+                  <span class="text-xl sm:text-2xl font-black text-emerald-400" id="adm-sim-price">$0.00 MXN</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MÓDULO 4: AGREGAR & EDITAR PRODUCTOS DEL CATÁLOGO -->
+        <div id="adm-panel-products" class="hidden space-y-6">
+          <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm">
+            <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-b border-zinc-100 pb-3">
+              <div>
+                <h3 class="text-base sm:text-lg font-bold text-zinc-950" id="product-form-title">Agregar / Editar Producto</h3>
+                <p class="text-xs text-zinc-500">Configura piezas 3D, coleccionables o servicios web.</p>
+              </div>
+              
+              <div class="flex items-center gap-2">
+                <label class="cursor-pointer bg-zinc-100 hover:bg-zinc-200 border border-zinc-300 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
+                  <svg class="w-4 h-4 text-zinc-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                  <span>Importar CSV</span>
+                  <input type="file" id="import-csv-file" accept=".csv,text/csv" onchange="handleBulkCSVImport(event)" class="hidden">
+                </label>
+                <button type="button" onclick="downloadCSVTemplate()" class="text-xs text-zinc-500 hover:underline">Plantilla</button>
+                <button type="button" id="btn-cancel-edit" onclick="cancelProductEdit()" class="hidden text-xs text-rose-600 font-bold hover:underline ml-2">Cancelar Edición</button>
+              </div>
+            </div>
+
+            <form id="product-form" onsubmit="handleProductFormSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5">
+              <input type="hidden" id="adm-p-id" value="">
+
+              <div>
+                <label class="block text-xs font-semibold text-zinc-600 mb-1">Título del Producto / Servicio</label>
+                <input type="text" id="adm-p-title" required placeholder="Ej. Separador Samurai" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-zinc-600 mb-1">Precio ($ Público)</label>
+                <input type="number" id="adm-p-price" step="0.5" required placeholder="350.00" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-zinc-600 mb-1">Costo ($ Interno)</label>
+                <input type="number" id="adm-p-cost" step="0.5" required placeholder="120.00" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-zinc-600 mb-1">Categoría / Pilar</label>
+                <select id="adm-p-category" onchange="toggleShippingFields(this.value)" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+                  <optgroup label="Pilar: Servicios Digitales">
+                    <option value="Desarrollo Web">Desarrollo Web (Sin Envío)</option>
+                  </optgroup>
+                  <optgroup label="Pilar: Coleccionables">
+                    <option value="Coleccionables">Coleccionables (General)</option>
+                    <option value="Figuras y Mas">Figuras y Mas (Coleccionables)</option>
+                    <option value="Dioramas y Bases">Dioramas y Bases</option>
+                    <option value="TCG y Cartas">TCG y Cartas</option>
+                  </optgroup>
+                  <optgroup label="Pilar: Impresión 3D">
+                    <option value="Impresión 3D">Impresión 3D (General)</option>
+                    <option value="Posavasos, Platos y Portalatas">Posavasos, Platos y Portalatas</option>
+                    <option value="Llaveros y Portallaveros">Llaveros y Portallaveros</option>
+                    <option value="Videojuegos y Juegos de Mesa">Videojuegos y Juegos de Mesa</option>
+                    <option value="Estuches y Alcancias">Estuches y Alcancias</option>
+                    <option value="Exhibidores y Joyeros">Exhibidores y Joyeros</option>
+                    <option value="Separadores y Accesorios para Libros">Separadores y Accesorios para Libros</option>
+                    <option value="Lámparas y Lítofanias">Lámparas y Lítofanias</option>
+                    <option value="Macetas y Floreros">Macetas y Floreros</option>
+                  </optgroup>
+                </select>
+              </div>
+
+              <div id="shipping-dimensions-box" class="sm:col-span-2 md:col-span-4 bg-zinc-50 border border-zinc-200 p-3.5 rounded-xl space-y-2">
+                <span class="text-xs font-bold text-zinc-800 uppercase tracking-wider block">Dimensiones de Empaque para Envío</span>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  <div>
+                    <label class="block text-[11px] text-zinc-500 font-semibold mb-1">Peso (kg)</label>
+                    <input type="number" id="adm-p-weight" step="0.1" value="0.5" class="w-full px-2.5 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] text-zinc-500 font-semibold mb-1">Largo (cm)</label>
+                    <input type="number" id="adm-p-length" step="1" value="15" class="w-full px-2.5 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] text-zinc-500 font-semibold mb-1">Ancho (cm)</label>
+                    <input type="number" id="adm-p-width" step="1" value="15" class="w-full px-2.5 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] text-zinc-500 font-semibold mb-1">Alto (cm)</label>
+                    <input type="number" id="adm-p-height" step="1" value="10" class="w-full px-2.5 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs">
+                  </div>
+                </div>
+              </div>
+
+              <div class="sm:col-span-2 md:col-span-3">
+                <label class="block text-xs font-semibold text-zinc-600 mb-1">Imagen (URL o Subir Archivo)</label>
+                <div class="flex gap-2">
+                  <input type="url" id="adm-p-image-url" placeholder="https://ejemplo.com/foto.jpg" oninput="updateImagePreview(this.value)" class="flex-1 px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+                  <label class="cursor-pointer bg-zinc-100 hover:bg-zinc-200 border border-zinc-300 px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center justify-center">
+                    <span>Subir</span>
+                    <input type="file" id="adm-p-file" accept="image/*" onchange="handleImageFileUpload(event)" class="hidden">
+                  </label>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-center border border-dashed border-zinc-300 rounded-xl p-2 bg-zinc-50 min-h-[70px]">
+                <div id="image-preview-container"><span class="text-[11px] text-zinc-400">Sin vista previa</span></div>
+              </div>
+
+              <div class="sm:col-span-2 md:col-span-4">
+                <label class="block text-xs font-semibold text-zinc-600 mb-1">Descripción</label>
+                <input type="text" id="adm-p-desc" placeholder="Detalles de materiales, medidas o tiempos..." class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
+              </div>
+
+              <div class="sm:col-span-2 md:col-span-4 pt-1">
+                <button type="submit" id="btn-save-product" class="bg-zinc-950 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition">Guardar Producto en Catálogo</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Tabla de Productos del Catálogo -->
+          <div class="bg-white border border-zinc-200 rounded-2xl p-5 space-y-4 shadow-sm">
+            <div class="flex justify-between items-center">
+              <h3 class="text-base font-bold text-zinc-950">Inventario y Productos Activos</h3>
+              <span class="text-xs text-zinc-500" id="admin-product-count">0 productos</span>
+            </div>
+            <div class="overflow-x-auto -mx-2 sm:mx-0">
+              <table class="w-full text-left text-xs sm:text-sm min-w-[650px]">
+                <thead class="border-b border-zinc-200 text-[10px] text-zinc-400 uppercase">
+                  <tr>
+                    <th class="py-2.5">Foto</th>
+                    <th class="py-2.5">Producto</th>
+                    <th class="py-2.5">Categoría</th>
+                    <th class="py-2.5">Precio ($)</th>
+                    <th class="py-2.5">Costo ($)</th>
+                    <th class="py-2.5 text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-100" id="admin-products-table"></tbody>
+              </table>
+            </div>
           </div>
         </div>
 
@@ -962,7 +1051,7 @@
       }
     } catch(e){}
 
-    // LISTA DE LAS 5 ETAPAS OFICIALES
+    // LISTA DE LAS 5 ETAPAS OFICIALES (VÁLIDAS PARA 3D, COLECCIONABLES Y DESARROLLO WEB)
     const ORDER_STAGES = [
       "Recibido",
       "En preparación",
@@ -1054,7 +1143,7 @@
     try { var savedCart = localStorage.getItem('five_friends_cart'); if (savedCart) cart = JSON.parse(savedCart); } catch(e){}
 
     var selectedShippingRate = null;
-    var selectedDeliveryType = "pickup"; // "pickup" ($0) o "shipping" (con costo)
+    var selectedDeliveryType = "pickup";
     var currentMacroFilter = 'all';
     var currentSubFilter = 'all';
 
@@ -1163,8 +1252,8 @@
       } else {
         container.innerHTML = cart.map(function(item){
           var isWeb = item.category === 'Desarrollo Web';
-          var img = item.image_url ? '<img src="' + item.image_url + '" class="w-12 h-12 rounded-lg object-cover border border-zinc-200">' : '<div class="w-12 h-12 bg-zinc-100 rounded-lg flex items-center justify-center font-bold text-xs text-zinc-400">3D</div>';
-          return '<div class="flex items-center justify-between gap-3 border-b border-zinc-100 pb-3"><div class="flex items-center gap-3">' + img + '<div><h4 class="text-xs font-bold text-zinc-900 leading-snug line-clamp-1">' + item.title + '</h4><span class="text-xs font-bold text-zinc-950">$' + item.price.toLocaleString() + ' MXN</span>' + (isWeb ? '<span class="text-[10px] text-emerald-600 font-semibold block">Servicio Digital</span>' : '') + '</div></div><div class="flex items-center gap-2"><div class="flex items-center border border-zinc-200 rounded-lg"><button onclick="changeQuantity(\'' + item.id + '\', -1)" class="px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-100">-</button><span class="px-2 text-xs font-bold">' + item.quantity + '</span><button onclick="changeQuantity(\'' + item.id + '\', 1)" class="px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-100">+</button></div><button onclick="removeFromCart(\'' + item.id + '\')" class="text-zinc-400 hover:text-rose-600 text-sm font-bold ml-1">&times;</button></div></div>';
+          var img = item.image_url ? '<img src="' + item.image_url + '" class="w-12 h-12 rounded-lg object-cover border border-zinc-200">' : '<div class="w-12 h-12 bg-zinc-100 rounded-lg flex items-center justify-center font-bold text-xs text-zinc-400">' + (isWeb ? '</>' : '3D') + '</div>';
+          return '<div class="flex items-center justify-between gap-3 border-b border-zinc-100 pb-3"><div class="flex items-center gap-3">' + img + '<div><h4 class="text-xs font-bold text-zinc-900 leading-snug line-clamp-1">' + item.title + '</h4><span class="text-xs font-bold text-zinc-950">$' + item.price.toLocaleString() + ' MXN</span>' + (isWeb ? '<span class="text-[10px] text-emerald-600 font-semibold block">Servicio Digital (Sin Envío)</span>' : '') + '</div></div><div class="flex items-center gap-2"><div class="flex items-center border border-zinc-200 rounded-lg"><button onclick="changeQuantity(\'' + item.id + '\', -1)" class="px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-100">-</button><span class="px-2 text-xs font-bold">' + item.quantity + '</span><button onclick="changeQuantity(\'' + item.id + '\', 1)" class="px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-100">+</button></div><button onclick="removeFromCart(\'' + item.id + '\')" class="text-zinc-400 hover:text-rose-600 text-sm font-bold ml-1">&times;</button></div></div>';
         }).join('');
       }
 
@@ -1184,7 +1273,7 @@
 
       if (subLabel) subLabel.innerText = '$' + subtotal.toLocaleString() + ' MXN';
       if (shipLabel) {
-        if (!hasPhysical) shipLabel.innerText = '$0 MXN (Digital)';
+        if (!hasPhysical) shipLabel.innerText = '$0 MXN (Servicio Digital)';
         else if (selectedDeliveryType === 'pickup') shipLabel.innerText = '$0 MXN (Punto de Entrega)';
         else if (selectedShippingRate) shipLabel.innerText = '$' + shippingCost.toLocaleString() + ' MXN';
         else shipLabel.innerText = 'Pendiente de cotizar';
@@ -1245,7 +1334,7 @@
       } catch(err){ return null; }
     }
 
-    // FINALIZAR PEDIDO CON RASTREO INICIAL EN "Recibido"
+    // FINALIZAR PEDIDO (CON ESTADO INICIAL "Recibido" PARA CUALQUIER TIPO DE COMPRA)
     window.finalizeOrderAndPay = async function() {
       var sess = getSession();
       var name = document.getElementById('order-customer-name').value.trim();
@@ -1254,11 +1343,13 @@
       if (!name || !email || !phone) { alert("Completa tus datos de contacto."); return; }
 
       var hasPhysical = cart.some(function(i){ return i.category !== 'Desarrollo Web'; });
+      var isWebDevOnly = !hasPhysical;
       var deliveryInfo = "";
       var shippingCost = 0;
 
-      if (!hasPhysical) {
-        deliveryInfo = "Servicio Digital";
+      if (isWebDevOnly) {
+        deliveryInfo = "Servicio Digital Web (Sin Flete)";
+        shippingCost = 0;
       } else if (selectedDeliveryType === 'pickup') {
         deliveryInfo = "Punto de Entrega: " + document.getElementById('order-pickup-spot').value;
         shippingCost = 0;
@@ -1289,16 +1380,17 @@
         customer_email: email,
         customer_phone: phone,
         shipping_address: deliveryInfo,
-        shipping_method: selectedDeliveryType === 'pickup' ? 'Punto de Entrega (Gratis)' : (hasPhysical ? 'Envío Paquetería' : 'Digital'),
+        shipping_method: isWebDevOnly ? 'Servicio Digital Web' : (selectedDeliveryType === 'pickup' ? 'Punto de Entrega (Gratis)' : 'Envío Paquetería'),
         items: itemsText,
         subtotal: subtotal,
         shipping_cost: shippingCost,
         total: total,
-        status: 'Recibido', // ETAPA 1 INICIAL
+        status: 'Recibido', // ETAPA INICIAL
         checkout_url: checkoutUrl || '',
         created_at: new Date().toISOString()
       };
 
+      // GUARDAR EN SUPABASE DE INMEDIATO
       if (supabaseClient) {
         try { await supabaseClient.from('orders').insert([orderRecord]); } catch(e){}
       }
@@ -1319,13 +1411,11 @@
       if (checkoutUrl) {
         window.location.href = checkoutUrl;
       } else {
-        alert("¡Orden " + orderId + " registrada! Puedes rastrear su estatus en tiempo real en tu perfil del Club.");
+        alert("¡Orden " + orderId + " registrada con éxito! Puedes consultar su estatus en tiempo real en tu perfil del Club.");
       }
     };
 
-    // -------------------------------------------------------------
-    // RASTREO VISUAL DE PEDIDOS EN 5 ETAPAS (CLIENTE)
-    // -------------------------------------------------------------
+    // RASTREO VISUAL DE PEDIDOS EN 5 ETAPAS (PORTAL DEL CLIENTE)
     async function renderUserOrdersTable() {
       var container = document.getElementById('user-orders-timeline-container');
       if (!container) return;
@@ -1352,7 +1442,7 @@
       container.innerHTML = userOrders.map(function(order){
         var currentStage = order.status || "Recibido";
         var stageIndex = ORDER_STAGES.indexOf(currentStage);
-        if (stageIndex === -1) stageIndex = 0; // Por defecto "Recibido"
+        if (stageIndex === -1) stageIndex = 0;
 
         var progressPct = Math.round((stageIndex / (ORDER_STAGES.length - 1)) * 100);
 
@@ -1360,12 +1450,14 @@
           var isDone = idx <= stageIndex;
           var isCurrent = idx === stageIndex;
           var circleClass = isDone ? 'bg-indigo-600 text-white font-bold ring-4 ring-indigo-100' : 'bg-zinc-200 text-zinc-500';
-          return '<div class="flex flex-col items-center flex-1 text-center"><div class="w-7 h-7 rounded-full flex items-center justify-center text-xs ' + circleClass + '">' + (idx + 1) + '</div><span class="text-[10px] mt-1.5 font-semibold ' + (isCurrent ? 'text-indigo-600 font-bold' : 'text-zinc-500') + '">' + st + '</span></div>';
+          return '<div class="flex flex-col items-center flex-1 text-center"><div class="w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-xs ' + circleClass + '">' + (idx + 1) + '</div><span class="text-[9px] sm:text-[10px] mt-1.5 font-semibold ' + (isCurrent ? 'text-indigo-600 font-bold' : 'text-zinc-500') + '">' + st + '</span></div>';
         }).join('');
+
+        var isWeb = order.shipping_method && order.shipping_method.indexOf('Web') !== -1;
 
         return '<div class="border border-zinc-200 bg-zinc-50 rounded-2xl p-5 space-y-4 shadow-sm">' +
                '  <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-zinc-200 pb-3">' +
-               '    <div><span class="text-xs font-bold text-zinc-950 font-mono">Folio: ' + order.id + '</span><span class="text-[11px] text-zinc-500 ml-2">' + new Date(order.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) + '</span></div>' +
+               '    <div><span class="text-xs font-bold text-zinc-950 font-mono">Folio: ' + order.id + '</span><span class="text-[11px] text-zinc-500 ml-2">' + new Date(order.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) + '</span>' + (isWeb ? '<span class="ml-2 px-2 py-0.5 bg-blue-50 text-blue-700 text-[10px] font-bold rounded">Desarrollo Web</span>' : '') + '</div>' +
                '    <div class="text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-3 py-1 rounded-full self-start sm:self-auto">Estatus: ' + currentStage + '</div>' +
                '  </div>' +
                '  <div class="py-2">' +
@@ -1373,29 +1465,32 @@
                '    <div class="flex justify-between items-start gap-1">' + stepsHtml + '</div>' +
                '  </div>' +
                '  <div class="bg-white p-3 rounded-xl border border-zinc-200 text-xs text-zinc-600 space-y-1">' +
-               '    <div class="font-semibold text-zinc-800">Detalle: <span class="font-normal whitespace-pre-line">' + order.items + '</span></div>' +
-               '    <div><strong>Entrega:</strong> ' + order.shipping_address + '</div>' +
-               '    <div><strong>Total:</strong> $' + Number(order.total || 0).toLocaleString() + ' MXN</div>' +
+               '    <div class="font-semibold text-zinc-800">Servicios/Artículos: <span class="font-normal whitespace-pre-line">' + order.items + '</span></div>' +
+               '    <div><strong>Entrega / Modalidad:</strong> ' + order.shipping_address + '</div>' +
+               '    <div><strong>Monto Total:</strong> $' + Number(order.total || 0).toLocaleString() + ' MXN</div>' +
                '  </div>' +
                '</div>';
       }).join('');
     }
 
-    // -------------------------------------------------------------
-    // GESTIÓN DE ESTADOS EN EL PANEL DE ADMINISTRADOR
-    // -------------------------------------------------------------
+    // GESTIÓN DE PEDIDOS EN EL PANEL DE ADMINISTRADOR (SINCRONIZADO CON SUPABASE)
     async function renderAdminOrdersTable() {
       var table = document.getElementById('admin-orders-table');
       if (!table) return;
 
       var orders = [];
-      try { orders = JSON.parse(localStorage.getItem('five_friends_orders')) || []; } catch(e){}
-
       if (supabaseClient) {
         try {
           var res = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false });
-          if (res?.data && Array.isArray(res.data)) orders = res.data;
+          if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+            orders = res.data;
+            localStorage.setItem('five_friends_orders', JSON.stringify(orders));
+          }
         } catch(e){}
+      }
+
+      if (orders.length === 0) {
+        try { orders = JSON.parse(localStorage.getItem('five_friends_orders')) || []; } catch(e){}
       }
 
       var hideDelivered = document.getElementById('adm-filter-hide-delivered')?.checked;
@@ -1405,7 +1500,7 @@
       }
 
       if (filteredOrders.length === 0) {
-        table.innerHTML = '<tr><td colspan="6" class="py-6 text-center text-zinc-400">No hay pedidos pendientes de entrega.</td></tr>';
+        table.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-zinc-400">No hay pedidos pendientes de entrega.</td></tr>';
         return;
       }
 
@@ -1415,16 +1510,18 @@
           return '<option value="' + st + '" ' + sel + '>' + st + '</option>';
         }).join('');
 
+        var isWeb = o.shipping_method && o.shipping_method.indexOf('Web') !== -1;
+
         return '<tr class="hover:bg-zinc-50 transition"><td class="py-3"><span class="font-bold text-zinc-900 block font-mono">' + o.id + '</span><span class="text-[10px] text-zinc-400">' + (o.created_at ? new Date(o.created_at).toLocaleDateString('es-MX') : '') + '</span></td>' +
                '<td class="py-3"><div class="font-bold text-zinc-900">' + (o.customer_name || 'Cliente') + '</div><div class="text-[11px] text-zinc-500">' + (o.customer_phone || '') + ' | ' + (o.customer_email || '') + '</div></td>' +
-               '<td class="py-3 text-xs text-zinc-600 max-w-xs">' + (o.shipping_address || 'Punto de Entrega') + '</td>' +
+               '<td class="py-3 text-xs text-zinc-600 max-w-xs">' + (isWeb ? '<span class="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-bold text-[10px] block w-fit mb-1">Servicio Web</span>' : '') + (o.shipping_address || 'Punto de Entrega') + '</td>' +
                '<td class="py-3 text-xs text-zinc-600 whitespace-pre-line">' + (o.items || '') + '</td>' +
                '<td class="py-3 font-bold text-zinc-950">$' + Number(o.total || 0).toLocaleString() + '</td>' +
                '<td class="py-3"><select onchange="updateOrderStatus(\'' + o.id + '\', this.value)" class="px-2.5 py-1.5 bg-white border-2 border-indigo-200 text-indigo-900 font-bold rounded-xl text-xs outline-none focus:border-indigo-600 shadow-sm">' + optionsHtml + '</select></td></tr>';
       }).join('');
     }
 
-    // CAMBIO DE ESTADO EN TIEMPO REAL DESDE ADMIN
+    // CAMBIAR ESTATUS EN TIEMPO REAL DESDE ADMIN
     window.updateOrderStatus = async function(orderId, newStatus) {
       if (supabaseClient) {
         try {
@@ -1442,6 +1539,39 @@
 
       renderAdminOrdersTable();
       renderUserOrdersTable();
+    };
+
+    // BÚSQUEDA / RESCATE MANUAL DE PEDIDO POR FOLIO
+    window.promptManualOrderLookup = async function() {
+      var folio = prompt("Ingresa el Folio de la orden a consultar (Ej. FF-123456):");
+      if (!folio) return;
+      folio = folio.trim();
+
+      if (supabaseClient) {
+        try {
+          var res = await supabaseClient.from('orders').select('*').eq('id', folio);
+          if (res?.data && res.data.length > 0) {
+            var order = res.data[0];
+            var allOrders = [];
+            try { allOrders = JSON.parse(localStorage.getItem('five_friends_orders')) || []; } catch(e){}
+            if (!allOrders.some(function(o){ return o.id === order.id; })) {
+              allOrders.unshift(order);
+              localStorage.setItem('five_friends_orders', JSON.stringify(allOrders));
+            }
+            renderAdminOrdersTable();
+            alert("✓ Pedido encontrado y cargado en el panel: " + order.customer_name + " - " + order.items);
+            return;
+          }
+        } catch(e){}
+      }
+      alert("No se encontró ningún pedido en la base de datos con el folio: " + folio);
+    };
+
+    window.syncAllAdminData = async function() {
+      await renderAdminOrdersTable();
+      await loadAdminData();
+      await window.fetchCatalogFromDatabase();
+      alert("✓ Panel sincronizado con la base de datos en tiempo real.");
     };
 
     window.calculateShippingRates = async function() {
@@ -1563,7 +1693,7 @@
 
         group.forEach(function(p){
           var isWeb = p.category === 'Desarrollo Web';
-          var img = p.image_url ? '<div class="w-full h-44 rounded-xl overflow-hidden bg-zinc-100 mb-3 border border-zinc-100"><img src="' + p.image_url + '" class="w-full h-full object-cover"></div>' : '<div class="w-full h-24 rounded-xl bg-zinc-100/70 mb-3 border border-dashed border-zinc-200 flex items-center justify-center text-zinc-400 text-xs font-semibold">' + icon + ' ' + p.category + '</div>';
+          var img = p.image_url ? '<div class="w-full h-44 rounded-xl overflow-hidden bg-zinc-100 mb-3 border border-zinc-100"><img src="' + p.image_url + '" class="w-full h-full object-cover"></div>' : '<div class="w-full h-24 rounded-xl bg-zinc-100/70 mb-3 border border-dashed border-zinc-200 flex items-center justify-center text-zinc-400 text-xs font-semibold">' + (isWeb ? '</>' : '3D') + '</div>';
           var badgeColor = isWeb ? 'bg-emerald-50 text-emerald-700' : (macro === 'Coleccionables' ? 'bg-amber-50 text-amber-700' : 'bg-zinc-100 text-zinc-600');
 
           html += '<div class="border border-zinc-200 bg-white p-5 rounded-2xl flex flex-col justify-between space-y-3 shadow-sm hover:border-zinc-400 transition"><div>' + img + '<span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded inline-block mb-1.5 ' + badgeColor + '">' + (p.badge || p.category) + '</span><h4 class="font-bold text-base text-zinc-950 leading-snug">' + p.title + '</h4><p class="text-xs text-zinc-500 leading-relaxed mt-1 line-clamp-2">' + (p.description || '') + '</p></div><div class="flex justify-between items-center pt-3 border-t border-zinc-100"><div><span class="text-[10px] text-zinc-400 uppercase font-semibold block">Precio</span><span class="font-extrabold text-base sm:text-lg text-zinc-950">$' + Number(p.price).toLocaleString() + ' MXN</span></div><button type="button" onclick="addToCart(\'' + p.id + '\')" class="px-4 py-2 bg-zinc-950 text-white text-xs font-semibold rounded-xl hover:bg-zinc-800 transition shadow-sm flex items-center gap-1.5"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg><span>Agregar</span></button></div></div>';
@@ -1580,8 +1710,9 @@
       if (countLabel) countLabel.innerText = catalogItems.length + ' productos';
 
       table.innerHTML = catalogItems.map(function(p){
-        var thumb = p.image_url ? '<img src="' + p.image_url + '" class="w-9 h-9 object-cover rounded-lg border border-zinc-200">' : '<div class="w-9 h-9 rounded-lg bg-zinc-100 border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-500">3D</div>';
-        return '<tr class="hover:bg-zinc-50 transition"><td class="py-2.5">' + thumb + '</td><td class="py-2.5 font-semibold text-zinc-900">' + p.title + '</td><td class="py-2.5 text-zinc-600 font-medium">' + p.category + '</td><td class="py-2.5 text-zinc-500 font-mono text-[11px]">' + (p.category === 'Desarrollo Web' ? 'Digital' : (p.weight || 0.5) + 'kg') + '</td><td class="py-2.5 font-bold text-zinc-950">$' + Number(p.price).toLocaleString() + '</td><td class="py-2.5 font-bold text-zinc-500">$' + Number(p.cost || 0).toLocaleString() + '</td><td class="py-2.5 text-right whitespace-nowrap"><button onclick="editProduct(\'' + p.id + '\')" class="px-2.5 py-1 text-xs font-semibold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-lg mr-1">Editar</button><button onclick="deleteProduct(\'' + p.id + '\')" class="px-2.5 py-1 text-xs font-semibold bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg">Eliminar</button></td></tr>';
+        var isWeb = p.category === 'Desarrollo Web';
+        var thumb = p.image_url ? '<img src="' + p.image_url + '" class="w-9 h-9 object-cover rounded-lg border border-zinc-200">' : '<div class="w-9 h-9 rounded-lg bg-zinc-100 border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-500">' + (isWeb ? '</>' : '3D') + '</div>';
+        return '<tr class="hover:bg-zinc-50 transition"><td class="py-2.5">' + thumb + '</td><td class="py-2.5 font-semibold text-zinc-900">' + p.title + '</td><td class="py-2.5 text-zinc-600 font-medium">' + p.category + '</td><td class="py-2.5 font-bold text-zinc-950">$' + Number(p.price).toLocaleString() + '</td><td class="py-2.5 font-bold text-zinc-500">$' + Number(p.cost || 0).toLocaleString() + '</td><td class="py-2.5 text-right whitespace-nowrap"><button onclick="editProduct(\'' + p.id + '\')" class="px-2.5 py-1 text-xs font-semibold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-lg mr-1">Editar</button><button onclick="deleteProduct(\'' + p.id + '\')" class="px-2.5 py-1 text-xs font-semibold bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg">Eliminar</button></td></tr>';
       }).join('');
     }
 
@@ -1717,9 +1848,7 @@
       document.getElementById('club-auth').classList.add('hidden');
       document.getElementById('club-user-portal').classList.add('hidden');
       document.getElementById('club-admin-portal').classList.remove('hidden');
-      loadAdminData();
-      renderAdminProductsTable();
-      renderAdminOrdersTable();
+      switchAdminTab('orders');
     }
 
     window.handleLogout = function() {
@@ -1743,10 +1872,87 @@
       if (supabaseClient) { try { var res = await supabaseClient.from('profiles').select('*'); if (res?.data) clients = res.data; } catch(e){} }
       clients = clients.filter(function(c){ return c.email !== '5friendstore@gmail.com'; });
       document.getElementById('stat-client-count').innerText = clients.length;
-      var totalSales = 12000; var totalCost = 4000;
+      
+      var orders = [];
+      try { orders = JSON.parse(localStorage.getItem('five_friends_orders')) || []; } catch(e){}
+      var totalSales = orders.reduce(function(acc, o){ return acc + Number(o.total || 0); }, 0);
+      var totalCost = Math.round(totalSales * 0.35);
+
       document.getElementById('stat-sales').innerText = '$' + totalSales.toLocaleString() + ' MXN';
       document.getElementById('stat-costs').innerText = '$' + totalCost.toLocaleString() + ' MXN';
       document.getElementById('stat-profit').innerText = '$' + (totalSales - totalCost).toLocaleString() + ' MXN';
+
+      var table = document.getElementById('admin-client-table');
+      if (table) {
+        if (clients.length === 0) {
+          table.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-zinc-400">No hay clientes registrados aún.</td></tr>';
+        } else {
+          table.innerHTML = clients.map(function(c){
+            return '<tr class="hover:bg-zinc-50"><td class="py-2.5 font-bold text-zinc-900">' + (c.full_name || c.name || 'Sin nombre') + '</td><td class="py-2.5 text-zinc-600">' + (c.phone || '-') + '</td><td class="py-2.5 text-zinc-600">' + (c.email || '-') + '</td><td class="py-2.5 text-zinc-500">' + (c.birthday || '-') + '</td><td class="py-2.5 font-bold text-zinc-950">$' + Number(c.total_spent || 0).toLocaleString() + ' MXN</td></tr>';
+          }).join('');
+        }
+      }
+    }
+
+    window.handleAdminValidateCoupon = function() {
+      var code = document.getElementById('admin-coupon-code').value.trim();
+      var res = document.getElementById('admin-coupon-result');
+      if (code.toUpperCase().indexOf('FF10') !== -1) {
+        res.className = 'text-xs font-semibold text-emerald-600';
+        res.innerText = '✓ Cupón verificado: 10% de descuento aplicable.';
+      } else {
+        res.className = 'text-xs font-semibold text-rose-600';
+        res.innerText = '✕ Código de cupón inválido o expirado.';
+      }
+    };
+
+    window.saveAdminCalculatorConfig = async function() {
+      workshopConfig = {
+        filCostPerKg: parseFloat(document.getElementById('adm-calc-fil-cost').value) || 380,
+        filWeightGrams: parseFloat(document.getElementById('adm-calc-fil-weight').value) || 1000,
+        wastePct: parseFloat(document.getElementById('adm-calc-waste').value) || 10,
+        watts: parseFloat(document.getElementById('adm-calc-watts').value) || 120,
+        costPerKwh: parseFloat(document.getElementById('adm-calc-kwh').value) || 3.5,
+        printerCost: parseFloat(document.getElementById('adm-calc-printer-cost').value) || 14500,
+        printerLifespanHours: parseFloat(document.getElementById('adm-calc-printer-lifespan').value) || 3000,
+        wearPerHour: 4.5,
+        hourlyRate: parseFloat(document.getElementById('adm-calc-hourly-rate').value) || 120,
+        minPrep: parseFloat(document.getElementById('adm-calc-min-prep').value) || 10,
+        minProd: parseFloat(document.getElementById('adm-calc-min-prod').value) || 5,
+        minPost: parseFloat(document.getElementById('adm-calc-min-post').value) || 15,
+        minPack: parseFloat(document.getElementById('adm-calc-min-pack').value) || 10,
+        packMaterialCost: parseFloat(document.getElementById('adm-calc-pack-material').value) || 18,
+        monthlyFixed: parseFloat(document.getElementById('adm-calc-monthly-fixed').value) || 2500,
+        monthlyHours: parseFloat(document.getElementById('adm-calc-monthly-hours').value) || 250,
+        markupPct: parseFloat(document.getElementById('adm-calc-markup').value) || 80
+      };
+      localStorage.setItem('five_friends_workshop_config', JSON.stringify(workshopConfig));
+      alert("✓ Parámetros guardados correctamente.");
+    };
+
+    window.runAdminSimulation = function() {
+      var g = document.getElementById('adm-sim-grams')?.value || 100;
+      var h = document.getElementById('adm-sim-hours')?.value || 5;
+      var res = calculateFullAprende3DCost(g, h);
+      var costEl = document.getElementById('adm-sim-cost');
+      var priceEl = document.getElementById('adm-sim-price');
+      if (costEl) costEl.innerText = '$' + res.totalCost.toFixed(2) + ' MXN';
+      if (priceEl) priceEl.innerText = '$' + res.finalPrice.toLocaleString() + '.00 MXN';
+    };
+
+    function populateAdminCalculatorInputs() {
+      var map = {
+        'adm-calc-fil-cost': workshopConfig.filCostPerKg, 'adm-calc-fil-weight': workshopConfig.filWeightGrams,
+        'adm-calc-waste': workshopConfig.wastePct, 'adm-calc-watts': workshopConfig.watts,
+        'adm-calc-kwh': workshopConfig.costPerKwh, 'adm-calc-printer-cost': workshopConfig.printerCost,
+        'adm-calc-printer-lifespan': workshopConfig.printerLifespanHours, 'adm-calc-hourly-rate': workshopConfig.hourlyRate,
+        'adm-calc-min-prep': workshopConfig.minPrep, 'adm-calc-min-prod': workshopConfig.minProd,
+        'adm-calc-min-post': workshopConfig.minPost, 'adm-calc-min-pack': workshopConfig.minPack,
+        'adm-calc-pack-material': workshopConfig.packMaterialCost, 'adm-calc-monthly-fixed': workshopConfig.monthlyFixed,
+        'adm-calc-monthly-hours': workshopConfig.monthlyHours, 'adm-calc-markup': workshopConfig.markupPct
+      };
+      Object.keys(map).forEach(function(id){ var el = document.getElementById(id); if (el) el.value = map[id]; });
+      runAdminSimulation();
     }
 
     window.onload = function() {
