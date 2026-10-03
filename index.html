@@ -51,7 +51,7 @@
       } else {
         menu.classList.add('hidden');
         if (bars) bars.classList.remove('hidden');
-        if (close) close.classList.close.remove('hidden');
+        if (close) close.classList.add('hidden');
       }
     };
 
@@ -277,7 +277,7 @@
             </div>
 
             <button type="button" onclick="addCustomPrintToCart()" id="btn-add-custom-print" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3.5 rounded-xl font-bold text-sm shadow-md transition flex items-center justify-center gap-2">
-              <svg class="w-4 h-4 fill-none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
               <span>Agregar Pieza Personalizada al Carrito</span>
             </button>
           </div>
@@ -874,7 +874,7 @@
 
   </main>
 
-  <!-- MODAL: CREAR Y ASIGNAR FOLIO MANUAL A UN CLIENTE (CONSULTA EN VIVO A SUPABASE) -->
+  <!-- MODAL: CREAR Y ASIGNAR FOLIO MANUAL A UN CLIENTE -->
   <div id="modal-manual-order" class="fixed inset-0 z-50 overflow-y-auto hidden">
     <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" onclick="toggleManualOrderModal()"></div>
     <div class="flex items-center justify-center min-h-screen p-4">
@@ -953,6 +953,166 @@
             <button type="submit" id="btn-save-manual-order" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition shadow-md">Crear y Asignar Orden</button>
           </div>
         </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAJÓN DEL CARRITO DE COMPRAS CON PASOS Y OPCIÓN DE RETIRO EN PUNTOS -->
+  <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="toggleCartDrawer()"></div>
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-6 sm:pl-10">
+      <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col justify-between">
+        
+        <div class="p-5 border-b border-zinc-200 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <h2 class="text-lg font-bold text-zinc-950" id="cart-drawer-title">Tu Carrito de Compras</h2>
+            <span id="cart-item-count" class="text-xs font-semibold px-2 py-0.5 bg-zinc-100 rounded text-zinc-600">0</span>
+          </div>
+          <button onclick="toggleCartDrawer()" class="p-2 text-zinc-400 hover:text-zinc-800 text-xl font-bold focus:outline-none">&times;</button>
+        </div>
+
+        <!-- PASO 1: LISTA DE PRODUCTOS -->
+        <div id="cart-step-1" class="flex-1 overflow-y-auto p-5 space-y-4">
+          <div id="cart-items-container" class="space-y-3">
+            <div class="text-center py-12 text-zinc-400 space-y-2">
+              <p class="text-sm">Tu carrito está vacío.</p>
+              <button onclick="toggleCartDrawer(); navigate('catalogo')" class="text-xs font-semibold underline text-zinc-950">Ver productos disponibles</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PASO 2: SELECCIÓN DE ENTREGA Y DATOS -->
+        <div id="cart-step-2" class="flex-1 overflow-y-auto p-5 space-y-4 hidden">
+          <div class="bg-zinc-50 border border-zinc-200 rounded-xl p-3.5 space-y-3 text-xs">
+            <div class="flex justify-between items-center border-b border-zinc-200 pb-2">
+              <span class="font-bold text-zinc-900 uppercase">Datos de Contacto</span>
+              <button onclick="goToCartStep(1)" class="text-zinc-500 underline font-semibold">&larr; Volver al Carrito</button>
+            </div>
+            <div>
+              <label class="block font-semibold text-zinc-600 mb-1">Nombre Completo</label>
+              <input type="text" id="order-customer-name" required class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
+            </div>
+            <div>
+              <label class="block font-semibold text-zinc-600 mb-1">Correo Electrónico</label>
+              <input type="email" id="order-customer-email" required class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
+            </div>
+            <div>
+              <label class="block font-semibold text-zinc-600 mb-1">Teléfono / WhatsApp</label>
+              <input type="tel" id="order-customer-phone" required class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
+            </div>
+          </div>
+
+          <!-- SELECTOR DE MODALIDAD: PAQUETERÍA VS RECOGER EN PUNTO -->
+          <div id="delivery-mode-container" class="bg-white border border-zinc-200 rounded-xl p-3.5 space-y-3 text-xs">
+            <span class="font-bold text-zinc-900 uppercase block border-b border-zinc-100 pb-1.5">Método de Recepción del Pedido</span>
+            
+            <div class="space-y-2">
+              <label class="flex items-start gap-2.5 p-2.5 border border-zinc-200 rounded-xl cursor-pointer hover:border-zinc-950 transition">
+                <input type="radio" name="delivery_method" value="pickup" id="deliv-pickup" onchange="toggleDeliveryMode('pickup')" checked class="mt-0.5 text-zinc-950">
+                <div>
+                  <div class="font-bold text-zinc-900 flex items-center gap-1.5">
+                    <span>Recoger en Punto de Entrega / Bazar</span>
+                    <span class="px-1.5 py-0.2 bg-emerald-100 text-emerald-800 text-[9px] font-extrabold rounded uppercase">Envío $0 MXN</span>
+                  </div>
+                  <p class="text-[11px] text-zinc-500 mt-0.5">Retira tu pedido personalmente sin costo adicional.</p>
+                </div>
+              </label>
+
+              <label class="flex items-start gap-2.5 p-2.5 border border-zinc-200 rounded-xl cursor-pointer hover:border-zinc-950 transition">
+                <input type="radio" name="delivery_method" value="shipping" id="deliv-shipping" onchange="toggleDeliveryMode('shipping')" class="mt-0.5 text-zinc-950">
+                <div>
+                  <div class="font-bold text-zinc-900">Envío a Domicilio por Paquetería</div>
+                  <p class="text-[11px] text-zinc-500 mt-0.5">Enviamos a cualquier parte de México mediante Skydropx.</p>
+                </div>
+              </label>
+            </div>
+
+            <!-- Selector de Sucursal/Bazar Físico -->
+            <div id="pickup-location-box" class="pt-2">
+              <label class="block font-semibold text-zinc-700 mb-1">Selecciona el Punto de Entrega:</label>
+              <select id="order-pickup-spot" class="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs font-semibold outline-none">
+                <option value="Plaza Centella (Bazar Revolución)">Plaza Centella (Bazar Revolución)</option>
+                <option value="Plaza San Miguel (Bazar EE Networking)">Plaza San Miguel (Bazar EE Networking)</option>
+                <option value="Taller Central (Cuautitlán Izcalli)">Taller Central (Cuautitlán Izcalli)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Formulario Dirección de Paquetería -->
+          <div id="checkout-address-section" class="bg-zinc-50 border border-zinc-200 rounded-xl p-3.5 space-y-3 text-xs hidden">
+            <span class="font-bold text-zinc-900 uppercase block border-b border-zinc-200 pb-2">Dirección Completa de Envío</span>
+            <div>
+              <label class="block font-semibold text-zinc-600 mb-1">Calle y Número</label>
+              <input type="text" id="order-address" placeholder="Ej. Av. Siempre Viva 742" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block font-semibold text-zinc-600 mb-1">Colonia</label>
+                <input type="text" id="order-colonia" placeholder="Colonia" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none">
+              </div>
+              <div>
+                <label class="block font-semibold text-zinc-600 mb-1">Municipio / Ciudad</label>
+                <input type="text" id="order-city" placeholder="Ciudad" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none">
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block font-semibold text-zinc-600 mb-1">Código Postal</label>
+                <input type="text" id="order-zip" placeholder="5 dígitos" maxlength="5" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none">
+              </div>
+              <div>
+                <label class="block font-semibold text-zinc-600 mb-1">Estado</label>
+                <input type="text" id="order-state" placeholder="Estado" class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer / Resumen de Costos y Botón Mercado Pago -->
+        <div class="p-5 border-t border-zinc-200 bg-zinc-50 space-y-3">
+          <div id="shipping-calculator-box" class="space-y-2 hidden">
+            <div class="flex justify-between items-center">
+              <label class="text-xs font-bold text-zinc-700 uppercase">Cotizar Envío (Skydropx)</label>
+              <span class="text-[10px] text-zinc-400">Origen: CP 54807</span>
+            </div>
+            <div class="flex gap-2">
+              <input type="text" id="shipping-zip" placeholder="CP de Destino (5 dígitos)" maxlength="5" class="flex-1 px-3 py-2 bg-white border border-zinc-300 rounded-xl text-xs outline-none focus:border-zinc-950">
+              <button type="button" onclick="calculateShippingRates()" id="btn-calc-shipping" class="px-4 py-2 bg-zinc-950 text-white rounded-xl text-xs font-semibold hover:bg-zinc-800">Cotizar</button>
+            </div>
+            <div id="shipping-options-list" class="space-y-1.5 pt-1 hidden"></div>
+          </div>
+
+          <div class="space-y-1.5 text-xs text-zinc-600 border-t border-zinc-200 pt-3">
+            <div class="flex justify-between">
+              <span>Subtotal Productos</span>
+              <span class="font-semibold text-zinc-900" id="cart-subtotal">$0 MXN</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Costo de Entrega / Envío</span>
+              <span class="font-semibold text-zinc-900" id="cart-shipping-cost">$0 MXN</span>
+            </div>
+            <div class="flex justify-between text-sm font-extrabold text-zinc-950 pt-2 border-t border-zinc-200">
+              <span>Total a Pagar</span>
+              <span id="cart-total">$0 MXN</span>
+            </div>
+          </div>
+
+          <div id="action-step-1" class="space-y-2 pt-1">
+            <button type="button" onclick="handleProceedToCheckout()" id="btn-next-step" class="w-full bg-zinc-950 hover:bg-zinc-800 text-white py-3 rounded-xl font-bold text-sm shadow-md transition flex items-center justify-center gap-2">
+              <span>Continuar con mi Pedido &rarr;</span>
+            </button>
+            <p class="text-[10px] text-center text-zinc-400" id="auth-status-note">Requiere iniciar sesión en Five Friends para asociar tu compra.</p>
+          </div>
+
+          <div id="action-step-2" class="space-y-2 pt-1 hidden">
+            <button type="button" onclick="finalizeOrderAndPay()" id="btn-confirm-pay" class="w-full bg-[#009ee3] hover:bg-[#0081ba] text-white py-3.5 rounded-xl font-extrabold text-sm shadow-md transition flex items-center justify-center gap-2">
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+              <span>Pagar con Mercado Pago</span>
+            </button>
+            <p class="text-[10px] text-center text-zinc-400">Acepta Tarjetas, Transferencia SPEI y Efectivo en OXXO.</p>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -1268,6 +1428,7 @@
       } catch(err){ return null; }
     }
 
+    // FINALIZAR PEDIDO (REGISTRA DIRECTAMENTE EN SUPABASE Y LOCALSTORAGE)
     window.finalizeOrderAndPay = async function() {
       var sess = getSession();
       var name = document.getElementById('order-customer-name').value.trim();
@@ -1323,10 +1484,12 @@
         created_at: new Date().toISOString()
       };
 
+      // Guardar en Supabase
       if (supabaseClient) {
-        try { await supabaseClient.from('orders').insert([orderRecord]); } catch(e){}
+        try { await supabaseClient.from('orders').upsert([orderRecord]); } catch(e){}
       }
 
+      // Guardar en LocalStorage
       var allOrders = [];
       try { allOrders = JSON.parse(localStorage.getItem('five_friends_orders')) || []; } catch(e){}
       allOrders.unshift(orderRecord);
@@ -1348,7 +1511,7 @@
     };
 
     // -------------------------------------------------------------
-    // CARGAR CLIENTES DIRECTAMENTE DESDE SUPABASE PROFILES
+    // POBLAR EL DESPLEGABLE DE CLIENTES DESDE SUPABASE PROFILES
     // -------------------------------------------------------------
     async function populateManualClientDropdown() {
       var select = document.getElementById('man-client-select');
@@ -1402,7 +1565,7 @@
       }
     };
 
-    // GUARDADO SEGURO DE ORDEN MANUAL (CON RETROALIMENTACIÓN DE BASE DE DATOS)
+    // CREAR FOLIO MANUAL Y FORZAR SINCRONIZACIÓN EN SUPABASE
     window.handleCreateManualOrder = async function(e) {
       e.preventDefault();
       var name = document.getElementById('man-client-name').value.trim();
@@ -1419,7 +1582,7 @@
       }
 
       var btn = document.getElementById('btn-save-manual-order');
-      if (btn) { btn.disabled = true; btn.innerText = "Guardando en base de datos..."; }
+      if (btn) { btn.disabled = true; btn.innerText = "Guardando en Supabase..."; }
 
       var manualId = 'FF-MANUAL-' + Math.floor(100000 + Math.random() * 900000);
       var isWeb = delivery.indexOf('Web') !== -1;
@@ -1441,15 +1604,18 @@
         created_at: new Date().toISOString()
       };
 
-      // 1. Guardar en Supabase y verificar respuesta
+      // 1. Guardar en Supabase
+      var dbSuccess = false;
       if (supabaseClient) {
         try {
           var dbRes = await supabaseClient.from('orders').upsert([manualOrder]);
-          if (dbRes?.error) {
-            console.warn("Supabase manual order warning:", dbRes.error);
+          if (!dbRes?.error) {
+            dbSuccess = true;
+          } else {
+            console.error("Error al guardar orden manual en Supabase:", dbRes.error);
           }
         } catch(err){
-          console.warn("Supabase manual order exception:", err);
+          console.error("Excepción en Supabase:", err);
         }
       }
 
@@ -1461,13 +1627,19 @@
 
       if (btn) { btn.disabled = false; btn.innerText = "Crear y Asignar Orden"; }
 
-      alert("✓ Folio " + manualId + " generado y asignado con éxito a " + name + " (" + email + ").\n\nEl cliente ya puede verlo en su perfil y tú ya puedes gestionar su estatus.");
-      
+      var msg = "✓ Folio " + manualId + " generado y asignado con éxito a " + name + " (" + email + ").";
+      if (!dbSuccess && supabaseClient) {
+        msg += "\n\n(Aviso: Se guardó en la memoria local; asegúrate de ejecutar el script SQL en Supabase para que se sincronice en la nube).";
+      } else {
+        msg += "\n\nEl cliente ya puede verlo en su perfil en tiempo real con su estatus: " + status;
+      }
+
+      alert(msg);
       toggleManualOrderModal();
       await renderAdminOrdersTable();
     };
 
-    // RASTREO EN 5 ETAPAS PARA CLIENTE (FUSIONA SUPABASE Y MEMORIA LOCAL)
+    // RASTREO EN 5 ETAPAS (CONSULTA EXACTA A SUPABASE POR CORREO O USER_ID)
     async function renderUserOrdersTable() {
       var container = document.getElementById('user-orders-timeline-container');
       if (!container) return;
@@ -1476,30 +1648,42 @@
 
       var ordersMap = {};
 
-      // 1. Cargar local primero
-      try {
-        var localOrders = JSON.parse(localStorage.getItem('five_friends_orders')) || [];
-        localOrders.forEach(function(o){ if (o && o.id) ordersMap[o.id] = o; });
-      } catch(e){}
-
-      // 2. Cargar de Supabase
+      // 1. Cargar órdenes de Supabase por correo exacto
       if (supabaseClient) {
         try {
-          var res = await supabaseClient.from('orders').select('*').or('customer_email.ilike.' + sess.email + ',user_id.eq.' + sess.id).order('created_at', { ascending: false });
+          var clientEmail = sess.email ? sess.email.trim().toLowerCase() : "";
+          var res = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false });
           if (res?.data && Array.isArray(res.data)) {
-            res.data.forEach(function(o){ if (o && o.id) ordersMap[o.id] = o; });
+            res.data.forEach(function(o){
+              if (o && o.id) {
+                var oEmail = o.customer_email ? o.customer_email.trim().toLowerCase() : "";
+                if (oEmail === clientEmail || o.user_id === sess.id) {
+                  ordersMap[o.id] = o;
+                }
+              }
+            });
           }
-        } catch(e){}
+        } catch(e){
+          console.warn("Error leyendo órdenes de Supabase para usuario:", e);
+        }
       }
 
-      var allOrders = Object.values(ordersMap).sort(function(a, b){
-        return new Date(b.created_at || 0) - new Date(a.created_at || 0);
-      });
+      // 2. Fusionar con memoria local
+      try {
+        var localOrders = JSON.parse(localStorage.getItem('five_friends_orders')) || [];
+        var clientEmail = sess.email ? sess.email.trim().toLowerCase() : "";
+        localOrders.forEach(function(o){
+          if (o && o.id) {
+            var oEmail = o.customer_email ? o.customer_email.trim().toLowerCase() : "";
+            if (oEmail === clientEmail || o.user_id === sess.id) {
+              if (!ordersMap[o.id]) ordersMap[o.id] = o;
+            }
+          }
+        });
+      } catch(e){}
 
-      var userOrders = allOrders.filter(function(o){
-        var emailMatch = o.customer_email && o.customer_email.toLowerCase() === sess.email.toLowerCase();
-        var idMatch = o.user_id === sess.id;
-        return emailMatch || idMatch;
+      var userOrders = Object.values(ordersMap).sort(function(a, b){
+        return new Date(b.created_at || 0) - new Date(a.created_at || 0);
       });
 
       if (userOrders.length === 0) {
@@ -1541,7 +1725,7 @@
       }).join('');
     }
 
-    // TABLA DE PEDIDOS EN ADMIN (FUSIÓN ROBUSTA DE SUPABASE + LOCALSTORAGE)
+    // TABLA DE PEDIDOS EN ADMIN (DESCARGA COMPLETA DE SUPABASE + LOCALSTORAGE)
     async function renderAdminOrdersTable() {
       var table = document.getElementById('admin-orders-table');
       if (!table) return;
@@ -1554,21 +1738,25 @@
         localOrders.forEach(function(o){ if (o && o.id) ordersMap[o.id] = o; });
       } catch(e){}
 
-      // 2. Cargar de Supabase y fusionar
+      // 2. Cargar todas las órdenes de Supabase
       if (supabaseClient) {
         try {
           var res = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false });
           if (res?.data && Array.isArray(res.data)) {
-            res.data.forEach(function(o){ if (o && o.id) ordersMap[o.id] = o; });
+            res.data.forEach(function(o){
+              if (o && o.id) ordersMap[o.id] = o;
+            });
           }
-        } catch(e){}
+        } catch(e){
+          console.warn("Error leyendo órdenes de Supabase para admin:", e);
+        }
       }
 
       var allOrders = Object.values(ordersMap).sort(function(a, b){
         return new Date(b.created_at || 0) - new Date(a.created_at || 0);
       });
 
-      // Actualizar localStorage fusionado
+      // Respaldar todo en memoria local
       try { localStorage.setItem('five_friends_orders', JSON.stringify(allOrders)); } catch(e){}
 
       var hideDelivered = document.getElementById('adm-filter-hide-delivered')?.checked;
@@ -1625,9 +1813,10 @@
       if (!folio) return;
       folio = folio.trim();
 
-      // 1. Revisar si ya está en localStorage
       var allOrders = [];
       try { allOrders = JSON.parse(localStorage.getItem('five_friends_orders')) || []; } catch(e){}
+
+      // 1. Revisar si ya está en localStorage
       var existing = allOrders.find(function(o){ return o.id.toLowerCase() === folio.toLowerCase(); });
       if (existing) {
         alert("✓ Pedido encontrado en memoria: " + existing.customer_name + " - " + existing.items);
@@ -1910,13 +2099,13 @@
       if (supabaseClient) {
         try {
           var res = await supabaseClient.from('profiles').select('*');
-          if (res?.data) found = res.data.find(function(c){ return (c.email === id || c.phone === id) && c.raw_pass === pass; });
+          if (res?.data) found = res.data.find(function(c){ return (c.email && c.email.toLowerCase() === id || c.phone === id) && c.raw_pass === pass; });
         } catch(e){}
       }
       if (!found) {
         try {
           var local = JSON.parse(localStorage.getItem('five_friends_clients_cache')) || [];
-          found = local.find(function(c){ return (c.email === id || c.phone === id) && c.raw_pass === pass; });
+          found = local.find(function(c){ return (c.email && c.email.toLowerCase() === id || c.phone === id) && c.raw_pass === pass; });
         } catch(ex){}
       }
       if (found) {
