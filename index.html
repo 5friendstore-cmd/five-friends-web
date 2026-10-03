@@ -100,10 +100,17 @@
       if (tabKey === 'products') renderAdminProductsTable();
     };
 
-    window.toggleManualOrderModal = function() {
+    window.toggleManualOrderModal = async function() {
       var modal = document.getElementById('modal-manual-order');
-      if (modal) modal.classList.toggle('hidden');
-      populateManualClientDropdown();
+      if (modal) {
+        var isHidden = modal.classList.contains('hidden');
+        if (isHidden) {
+          modal.classList.remove('hidden');
+          await populateManualClientDropdown();
+        } else {
+          modal.classList.add('hidden');
+        }
+      }
     };
   </script>
 </head>
@@ -867,7 +874,7 @@
 
   </main>
 
-  <!-- MODAL: CREAR Y ASIGNAR FOLIO MANUAL A UN CLIENTE (NUEVO) -->
+  <!-- MODAL: CREAR Y ASIGNAR FOLIO MANUAL A UN CLIENTE (CONSULTA EN VIVO A SUPABASE) -->
   <div id="modal-manual-order" class="fixed inset-0 z-50 overflow-y-auto hidden">
     <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" onclick="toggleManualOrderModal()"></div>
     <div class="flex items-center justify-center min-h-screen p-4">
@@ -882,11 +889,14 @@
         </div>
 
         <form onsubmit="handleCreateManualOrder(event)" class="space-y-3.5 text-xs">
-          <!-- Opción: Seleccionar Cliente Registrado o Escribir Nuevo -->
+          <!-- Desplegable alimentado en vivo desde Supabase profiles -->
           <div>
-            <label class="block font-bold text-zinc-700 uppercase mb-1">Asignar a Cliente Registrado</label>
-            <select id="man-client-select" onchange="handleSelectExistingClient(this.value)" class="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-xl text-xs font-semibold outline-none focus:border-zinc-950">
-              <option value="">-- Seleccionar cliente o ingresar manual abajo --</option>
+            <div class="flex justify-between items-center mb-1">
+              <label class="block font-bold text-zinc-700 uppercase">Asignar a Cliente Registrado</label>
+              <button type="button" onclick="populateManualClientDropdown()" class="text-[10px] text-indigo-600 hover:underline font-semibold">↻ Refrescar lista</button>
+            </div>
+            <select id="man-client-select" onchange="handleSelectExistingClient(this.value)" class="w-full px-3 py-2.5 bg-zinc-50 border border-zinc-300 rounded-xl text-xs font-semibold outline-none focus:border-zinc-950">
+              <option value="">Cargando clientes de la base de datos...</option>
             </select>
           </div>
 
@@ -972,7 +982,7 @@
           </div>
         </div>
 
-        <!-- PASO 2: SELECCIÓN DE ENTREGA (PAQUETERÍA O PUNTO FÍSICO GRATIS) Y DATOS -->
+        <!-- PASO 2: SELECCIÓN DE ENTREGA Y DATOS -->
         <div id="cart-step-2" class="flex-1 overflow-y-auto p-5 space-y-4 hidden">
           <div class="bg-zinc-50 border border-zinc-200 rounded-xl p-3.5 space-y-3 text-xs">
             <div class="flex justify-between items-center border-b border-zinc-200 pb-2">
@@ -984,7 +994,7 @@
               <input type="text" id="order-customer-name" required class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
             </div>
             <div>
-              <label class="block font-semibold text-zinc-600 mb-1">Correo Electrónico (Para recibir notificaciones)</label>
+              <label class="block font-semibold text-zinc-600 mb-1">Correo Electrónico</label>
               <input type="email" id="order-customer-email" required class="w-full px-3 py-2 bg-white border border-zinc-300 rounded-lg text-xs outline-none focus:border-zinc-950">
             </div>
             <div>
@@ -1029,7 +1039,7 @@
             </div>
           </div>
 
-          <!-- Formulario Dirección de Paquetería (Se oculta si eligen Punto de Entrega) -->
+          <!-- Formulario Dirección de Paquetería -->
           <div id="checkout-address-section" class="bg-zinc-50 border border-zinc-200 rounded-xl p-3.5 space-y-3 text-xs hidden">
             <span class="font-bold text-zinc-900 uppercase block border-b border-zinc-200 pb-2">Dirección Completa de Envío</span>
             <div>
@@ -1137,7 +1147,6 @@
       }
     } catch(e){}
 
-    // LISTA DE LAS 5 ETAPAS OFICIALES (VÁLIDAS PARA 3D, COLECCIONABLES Y DESARROLLO WEB)
     const ORDER_STAGES = [
       "Recibido",
       "En preparación",
@@ -1500,18 +1509,47 @@
     };
 
     // -------------------------------------------------------------
-    // FUNCIÓN NUEVA: CREAR FOLIO MANUAL Y ASIGNAR A CLIENTE
+    // POBLAR EL DESPLEGABLE DE CLIENTES DESDE SUPABASE PROFILES
     // -------------------------------------------------------------
-    function populateManualClientDropdown() {
+    async function populateManualClientDropdown() {
       var select = document.getElementById('man-client-select');
       if (!select) return;
 
-      var list = [];
-      try { list = JSON.parse(localStorage.getItem('five_friends_clients_cache')) || []; } catch(e){}
+      select.innerHTML = '<option value="">Cargando clientes de la base de datos...</option>';
 
-      select.innerHTML = '<option value="">-- Seleccionar cliente o ingresar manual abajo --</option>' +
-        list.map(function(c){
-          return '<option value="' + c.email + '" data-name="' + (c.full_name || c.name || '') + '" data-phone="' + (c.phone || '') + '">' + (c.full_name || c.name || 'Cliente') + ' (' + c.email + ')</option>';
+      var list = [];
+      if (supabaseClient) {
+        try {
+          var res = await supabaseClient.from('profiles').select('*').order('full_name', { ascending: true });
+          if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+            list = res.data;
+          }
+        } catch(err) {
+          console.warn("Error cargando profiles de Supabase:", err);
+        }
+      }
+
+      if (list.length === 0) {
+        try {
+          list = JSON.parse(localStorage.getItem('five_friends_clients_cache')) || [];
+        } catch(e){}
+      }
+
+      // Filtrar correo institucional de admin
+      var validClients = list.filter(function(c){
+        return c.email && c.email.toLowerCase() !== '5friendstore@gmail.com';
+      });
+
+      if (validClients.length === 0) {
+        select.innerHTML = '<option value="">-- No hay clientes registrados (Ingresa los datos abajo) --</option>';
+        return;
+      }
+
+      select.innerHTML = '<option value="">-- Seleccionar cliente registrado (' + validClients.length + ') --</option>' +
+        validClients.map(function(c){
+          var name = c.full_name || c.name || 'Cliente';
+          var phone = c.phone || '';
+          return '<option value="' + c.email + '" data-name="' + name + '" data-phone="' + phone + '">' + name + ' — ' + c.email + '</option>';
         }).join('');
     }
 
@@ -1541,6 +1579,9 @@
         return;
       }
 
+      var btn = document.getElementById('btn-save-manual-order');
+      if (btn) { btn.disabled = true; btn.innerText = "Guardando en Supabase..."; }
+
       var manualId = 'FF-MANUAL-' + Math.floor(100000 + Math.random() * 900000);
       var isWeb = delivery.indexOf('Web') !== -1;
 
@@ -1561,7 +1602,6 @@
         created_at: new Date().toISOString()
       };
 
-      // Guardar en Supabase
       if (supabaseClient) {
         try {
           await supabaseClient.from('orders').insert([manualOrder]);
@@ -1570,13 +1610,14 @@
         }
       }
 
-      // Guardar en LocalStorage
       var allOrders = [];
       try { allOrders = JSON.parse(localStorage.getItem('five_friends_orders')) || []; } catch(e){}
       allOrders.unshift(manualOrder);
       localStorage.setItem('five_friends_orders', JSON.stringify(allOrders));
 
-      alert("✓ Folio " + manualId + " generado y asignado con éxito a " + name + " (" + email + ").\n\nEl cliente podrá verlo en tiempo real desde su perfil en Club Five Friends con su estatus: " + status);
+      if (btn) { btn.disabled = false; btn.innerText = "Crear y Asignar Orden"; }
+
+      alert("✓ Folio " + manualId + " generado y asignado con éxito a " + name + " (" + email + ").\n\nEl cliente ya puede verlo en tiempo real desde su perfil en Club Five Friends con su estatus: " + status);
       
       toggleManualOrderModal();
       renderAdminOrdersTable();
@@ -1590,8 +1631,6 @@
       if (!sess) return;
 
       var orders = [];
-      try { orders = JSON.parse(localStorage.getItem('five_friends_orders')) || []; } catch(e){}
-
       if (supabaseClient) {
         try {
           var res = await supabaseClient.from('orders').select('*').or('customer_email.eq.' + sess.email + ',user_id.eq.' + sess.id).order('created_at', { ascending: false });
@@ -1599,10 +1638,14 @@
         } catch(e){}
       }
 
-      var userOrders = orders.filter(function(o){ return o.customer_email === sess.email || o.user_id === sess.id; });
+      if (orders.length === 0) {
+        try { orders = JSON.parse(localStorage.getItem('five_friends_orders')) || []; } catch(e){}
+      }
+
+      var userOrders = orders.filter(function(o){ return (o.customer_email && o.customer_email.toLowerCase() === sess.email.toLowerCase()) || o.user_id === sess.id; });
 
       if (userOrders.length === 0) {
-        container.innerHTML = '<div class="text-center py-8 text-zinc-400 text-xs">Aún no tienes pedidos registrados.</div>';
+        container.innerHTML = '<div class="text-center py-8 text-zinc-400 text-xs">Aún no tienes pedidos registrados con este correo.</div>';
         return;
       }
 
@@ -1640,7 +1683,7 @@
       }).join('');
     }
 
-    // GESTIÓN DE PEDIDOS EN EL PANEL DE ADMINISTRADOR (SINCRONIZADO CON SUPABASE)
+    // GESTIÓN DE PEDIDOS EN EL PANEL DE ADMINISTRADOR
     async function renderAdminOrdersTable() {
       var table = document.getElementById('admin-orders-table');
       if (!table) return;
@@ -1966,6 +2009,7 @@
       e.preventDefault();
       var clientObj = {
         id: 'usr_' + Date.now(), name: document.getElementById('reg-name').value.trim(),
+        full_name: document.getElementById('reg-name').value.trim(),
         email: document.getElementById('reg-email').value.trim().toLowerCase(), phone: document.getElementById('reg-phone').value.trim(),
         birthday: document.getElementById('reg-birthday').value, raw_pass: document.getElementById('reg-password').value.trim(), total_spent: 0, type: 'client'
       };
@@ -1988,13 +2032,13 @@
       if (supabaseClient) {
         try {
           var res = await supabaseClient.from('profiles').select('*');
-          if (res?.data) found = res.data.find(function(c){ return (c.email === id || c.phone === id) && c.raw_pass === pass; });
+          if (res?.data) found = res.data.find(function(c){ return (c.email && c.email.toLowerCase() === id || c.phone === id) && c.raw_pass === pass; });
         } catch(e){}
       }
       if (!found) {
         try {
           var local = JSON.parse(localStorage.getItem('five_friends_clients_cache')) || [];
-          found = local.find(function(c){ return (c.email === id || c.phone === id) && c.raw_pass === pass; });
+          found = local.find(function(c){ return (c.email && c.email.toLowerCase() === id || c.phone === id) && c.raw_pass === pass; });
         } catch(ex){}
       }
       if (found) {
@@ -2046,15 +2090,30 @@
 
     async function loadAdminData() {
       var clients = [];
-      if (supabaseClient) { try { var res = await supabaseClient.from('profiles').select('*'); if (res?.data) clients = res.data; } catch(e){} }
+      if (supabaseClient) {
+        try {
+          var res = await supabaseClient.from('profiles').select('*').order('created_at', { ascending: false });
+          if (res?.data) clients = res.data;
+        } catch(e){}
+      }
       if (clients.length === 0) {
         try { clients = JSON.parse(localStorage.getItem('five_friends_clients_cache')) || []; } catch(e){}
       }
-      clients = clients.filter(function(c){ return c.email !== '5friendstore@gmail.com'; });
+
+      clients = clients.filter(function(c){ return c.email && c.email.toLowerCase() !== '5friendstore@gmail.com'; });
       document.getElementById('stat-client-count').innerText = clients.length;
       
       var orders = [];
-      try { orders = JSON.parse(localStorage.getItem('five_friends_orders')) || []; } catch(e){}
+      if (supabaseClient) {
+        try {
+          var oRes = await supabaseClient.from('orders').select('*');
+          if (oRes?.data) orders = oRes.data;
+        } catch(e){}
+      }
+      if (orders.length === 0) {
+        try { orders = JSON.parse(localStorage.getItem('five_friends_orders')) || []; } catch(e){}
+      }
+
       var totalSales = orders.reduce(function(acc, o){ return acc + Number(o.total || 0); }, 0);
       var totalCost = Math.round(totalSales * 0.35);
 
