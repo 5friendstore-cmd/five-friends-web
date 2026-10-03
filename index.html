@@ -51,7 +51,7 @@
       } else {
         menu.classList.add('hidden');
         if (bars) bars.classList.remove('hidden');
-        if (close) close.classList.remove('hidden');
+        if (close) close.classList.add('hidden');
       }
     };
 
@@ -80,7 +80,6 @@
       if (form) form.classList.remove('hidden');
     };
 
-    // NAVEGACIÓN MODULAR INTERNA DEL PANEL DE ADMINISTRADOR
     window.switchAdminTab = function(tabKey) {
       var adminTabs = ['orders', 'clients', 'calculator', 'products'];
       for (var i = 0; i < adminTabs.length; i++) {
@@ -99,6 +98,12 @@
       if (tabKey === 'clients') loadAdminData();
       if (tabKey === 'calculator') populateAdminCalculatorInputs();
       if (tabKey === 'products') renderAdminProductsTable();
+    };
+
+    window.toggleManualOrderModal = function() {
+      var modal = document.getElementById('modal-manual-order');
+      if (modal) modal.classList.toggle('hidden');
+      populateManualClientDropdown();
     };
   </script>
 </head>
@@ -144,12 +149,8 @@
         <button type="button" onclick="navigate('cotizador')" class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1.5 rounded-full border border-indigo-200">Cotizar</button>
         <button type="button" onclick="navigate('club')" class="bg-zinc-950 text-white text-xs font-semibold px-3 py-1.5 rounded-full">Club</button>
         <button type="button" onclick="toggleMobileMenu()" class="p-2 text-zinc-700 hover:text-zinc-950 focus:outline-none">
-          <svg id="menu-icon-bars" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
-          <svg id="menu-icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
+          <svg id="menu-icon-bars" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          <svg id="menu-icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
       </div>
 
@@ -499,15 +500,19 @@
             <div class="flex flex-col md:flex-row justify-between md:items-center gap-3 border-b border-zinc-100 pb-3">
               <div>
                 <h3 class="text-base sm:text-lg font-bold text-zinc-950">Gestión de Pedidos & Estatus en Vivo</h3>
-                <p class="text-xs text-zinc-500">Actualiza las etapas. Las órdenes se mantienen visibles hasta que las marques como Entregado.</p>
+                <p class="text-xs text-zinc-500">Crea folios manuales o cambia las etapas. Las órdenes se mantienen visibles hasta que las marques como Entregado.</p>
               </div>
 
               <div class="flex flex-wrap items-center gap-2">
+                <button type="button" onclick="toggleManualOrderModal()" class="text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3.5 py-2 rounded-xl transition shadow-sm flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                  <span>+ Crear Folio Manual</span>
+                </button>
                 <label class="flex items-center gap-2 cursor-pointer bg-zinc-50 border border-zinc-200 px-3 py-1.5 rounded-xl text-xs font-semibold text-zinc-700">
                   <input type="checkbox" id="adm-filter-hide-delivered" onchange="renderAdminOrdersTable()" checked class="rounded text-zinc-950">
                   <span>Ocultar entregados</span>
                 </label>
-                <button type="button" onclick="promptManualOrderLookup()" class="text-xs bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold px-3 py-1.5 rounded-xl hover:bg-indigo-100 transition">+ Buscar / Forzar Folio</button>
+                <button type="button" onclick="promptManualOrderLookup()" class="text-xs bg-zinc-100 border border-zinc-200 text-zinc-800 font-bold px-3 py-1.5 rounded-xl hover:bg-zinc-200 transition">Buscar Folio</button>
               </div>
             </div>
 
@@ -518,7 +523,7 @@
                     <th class="py-2.5">Folio / Fecha</th>
                     <th class="py-2.5">Cliente & Contacto</th>
                     <th class="py-2.5">Tipo / Entrega</th>
-                    <th class="py-2.5">Artículos</th>
+                    <th class="py-2.5">Artículos / Servicios</th>
                     <th class="py-2.5">Total ($)</th>
                     <th class="py-2.5">Estatus en Vivo (Cambiar)</th>
                   </tr>
@@ -861,6 +866,87 @@
     </section>
 
   </main>
+
+  <!-- MODAL: CREAR Y ASIGNAR FOLIO MANUAL A UN CLIENTE (NUEVO) -->
+  <div id="modal-manual-order" class="fixed inset-0 z-50 overflow-y-auto hidden">
+    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" onclick="toggleManualOrderModal()"></div>
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div class="relative bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl border border-zinc-200 z-10">
+        <div class="flex justify-between items-start border-b border-zinc-100 pb-3">
+          <div>
+            <span class="px-2.5 py-0.5 bg-indigo-50 text-indigo-700 text-[10px] font-bold rounded uppercase">Gestión de Taller</span>
+            <h3 class="text-lg font-bold text-zinc-950 mt-1">Generar Folio y Asignar a Cliente</h3>
+            <p class="text-xs text-zinc-500">Crea una orden manual para que el cliente pueda seguir su avance desde su portal.</p>
+          </div>
+          <button type="button" onclick="toggleManualOrderModal()" class="text-zinc-400 hover:text-zinc-800 text-xl font-bold">&times;</button>
+        </div>
+
+        <form onsubmit="handleCreateManualOrder(event)" class="space-y-3.5 text-xs">
+          <!-- Opción: Seleccionar Cliente Registrado o Escribir Nuevo -->
+          <div>
+            <label class="block font-bold text-zinc-700 uppercase mb-1">Asignar a Cliente Registrado</label>
+            <select id="man-client-select" onchange="handleSelectExistingClient(this.value)" class="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-xl text-xs font-semibold outline-none focus:border-zinc-950">
+              <option value="">-- Seleccionar cliente o ingresar manual abajo --</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block font-semibold text-zinc-600 mb-1">Nombre del Cliente *</label>
+              <input type="text" id="man-client-name" required placeholder="Nombre completo" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-xs outline-none focus:border-zinc-950">
+            </div>
+            <div>
+              <label class="block font-semibold text-zinc-600 mb-1">Correo Electrónico *</label>
+              <input type="email" id="man-client-email" required placeholder="correo@ejemplo.com" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-xs outline-none focus:border-zinc-950">
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-zinc-600 mb-1">Teléfono / WhatsApp</label>
+            <input type="tel" id="man-client-phone" placeholder="10 dígitos" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-xs outline-none focus:border-zinc-950">
+          </div>
+
+          <div>
+            <label class="block font-semibold text-zinc-600 mb-1">Servicios / Productos Asignados *</label>
+            <textarea id="man-order-items" required rows="2" placeholder="Ej. Desarrollo Web - Tienda Online con Mercado Pago&#10;o 2x Llavero Personalizado PETG" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-xs outline-none focus:border-zinc-950"></textarea>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block font-semibold text-zinc-600 mb-1">Monto Total ($ MXN) *</label>
+              <input type="number" id="man-order-total" required step="0.5" placeholder="Ej. 6500" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-xs font-bold outline-none focus:border-zinc-950">
+            </div>
+            <div>
+              <label class="block font-semibold text-zinc-600 mb-1">Estatus Inicial</label>
+              <select id="man-order-status" class="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-xl text-xs font-bold text-indigo-700 outline-none">
+                <option value="Recibido">1. Recibido</option>
+                <option value="En preparación" selected>2. En preparación</option>
+                <option value="Terminado">3. Terminado</option>
+                <option value="Enviado / Listo para recoger">4. Enviado / Listo para recoger</option>
+                <option value="Entregado">5. Entregado</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-zinc-600 mb-1">Modalidad de Entrega</label>
+            <select id="man-order-delivery" class="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-xl text-xs font-semibold outline-none">
+              <option value="Servicio Digital Web">Servicio Digital Web (En línea)</option>
+              <option value="Plaza Centella (Bazar Revolución)">Plaza Centella (Bazar Revolución)</option>
+              <option value="Plaza San Miguel (Bazar EE Networking)">Plaza San Miguel (Bazar EE Networking)</option>
+              <option value="Taller Central (Cuautitlán Izcalli)">Taller Central (Cuautitlán Izcalli)</option>
+              <option value="Envío por Paquetería">Envío a Domicilio por Paquetería</option>
+            </select>
+          </div>
+
+          <div class="pt-2 flex justify-end gap-2">
+            <button type="button" onclick="toggleManualOrderModal()" class="px-4 py-2 text-zinc-500 font-semibold hover:bg-zinc-100 rounded-xl">Cancelar</button>
+            <button type="submit" id="btn-save-manual-order" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition shadow-md">Crear y Asignar Orden</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <!-- CAJÓN DEL CARRITO DE COMPRAS CON PASOS Y OPCIÓN DE RETIRO EN PUNTOS -->
   <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
@@ -1334,7 +1420,6 @@
       } catch(err){ return null; }
     }
 
-    // FINALIZAR PEDIDO (CON ESTADO INICIAL "Recibido" PARA CUALQUIER TIPO DE COMPRA)
     window.finalizeOrderAndPay = async function() {
       var sess = getSession();
       var name = document.getElementById('order-customer-name').value.trim();
@@ -1385,12 +1470,11 @@
         subtotal: subtotal,
         shipping_cost: shippingCost,
         total: total,
-        status: 'Recibido', // ETAPA INICIAL
+        status: 'Recibido',
         checkout_url: checkoutUrl || '',
         created_at: new Date().toISOString()
       };
 
-      // GUARDAR EN SUPABASE DE INMEDIATO
       if (supabaseClient) {
         try { await supabaseClient.from('orders').insert([orderRecord]); } catch(e){}
       }
@@ -1413,6 +1497,89 @@
       } else {
         alert("¡Orden " + orderId + " registrada con éxito! Puedes consultar su estatus en tiempo real en tu perfil del Club.");
       }
+    };
+
+    // -------------------------------------------------------------
+    // FUNCIÓN NUEVA: CREAR FOLIO MANUAL Y ASIGNAR A CLIENTE
+    // -------------------------------------------------------------
+    function populateManualClientDropdown() {
+      var select = document.getElementById('man-client-select');
+      if (!select) return;
+
+      var list = [];
+      try { list = JSON.parse(localStorage.getItem('five_friends_clients_cache')) || []; } catch(e){}
+
+      select.innerHTML = '<option value="">-- Seleccionar cliente o ingresar manual abajo --</option>' +
+        list.map(function(c){
+          return '<option value="' + c.email + '" data-name="' + (c.full_name || c.name || '') + '" data-phone="' + (c.phone || '') + '">' + (c.full_name || c.name || 'Cliente') + ' (' + c.email + ')</option>';
+        }).join('');
+    }
+
+    window.handleSelectExistingClient = function(selectedEmail) {
+      if (!selectedEmail) return;
+      var select = document.getElementById('man-client-select');
+      var option = select.options[select.selectedIndex];
+      if (option) {
+        document.getElementById('man-client-name').value = option.getAttribute('data-name') || '';
+        document.getElementById('man-client-email').value = selectedEmail;
+        document.getElementById('man-client-phone').value = option.getAttribute('data-phone') || '';
+      }
+    };
+
+    window.handleCreateManualOrder = async function(e) {
+      e.preventDefault();
+      var name = document.getElementById('man-client-name').value.trim();
+      var email = document.getElementById('man-client-email').value.trim().toLowerCase();
+      var phone = document.getElementById('man-client-phone').value.trim();
+      var items = document.getElementById('man-order-items').value.trim();
+      var total = parseFloat(document.getElementById('man-order-total').value) || 0;
+      var status = document.getElementById('man-order-status').value;
+      var delivery = document.getElementById('man-order-delivery').value;
+
+      if (!name || !email || !items || total <= 0) {
+        alert("Completa el nombre, correo, descripción de productos y total válido.");
+        return;
+      }
+
+      var manualId = 'FF-MANUAL-' + Math.floor(100000 + Math.random() * 900000);
+      var isWeb = delivery.indexOf('Web') !== -1;
+
+      var manualOrder = {
+        id: manualId,
+        user_id: 'usr_manual',
+        customer_name: name,
+        customer_email: email,
+        customer_phone: phone || '-',
+        shipping_address: delivery,
+        shipping_method: isWeb ? 'Servicio Digital Web' : delivery,
+        items: items,
+        subtotal: total,
+        shipping_cost: 0,
+        total: total,
+        status: status,
+        checkout_url: '',
+        created_at: new Date().toISOString()
+      };
+
+      // Guardar en Supabase
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from('orders').insert([manualOrder]);
+        } catch(err){
+          console.warn("Supabase manual order insert:", err);
+        }
+      }
+
+      // Guardar en LocalStorage
+      var allOrders = [];
+      try { allOrders = JSON.parse(localStorage.getItem('five_friends_orders')) || []; } catch(e){}
+      allOrders.unshift(manualOrder);
+      localStorage.setItem('five_friends_orders', JSON.stringify(allOrders));
+
+      alert("✓ Folio " + manualId + " generado y asignado con éxito a " + name + " (" + email + ").\n\nEl cliente podrá verlo en tiempo real desde su perfil en Club Five Friends con su estatus: " + status);
+      
+      toggleManualOrderModal();
+      renderAdminOrdersTable();
     };
 
     // RASTREO VISUAL DE PEDIDOS EN 5 ETAPAS (PORTAL DEL CLIENTE)
@@ -1521,7 +1688,6 @@
       }).join('');
     }
 
-    // CAMBIAR ESTATUS EN TIEMPO REAL DESDE ADMIN
     window.updateOrderStatus = async function(orderId, newStatus) {
       if (supabaseClient) {
         try {
@@ -1541,7 +1707,6 @@
       renderUserOrdersTable();
     };
 
-    // BÚSQUEDA / RESCATE MANUAL DE PEDIDO POR FOLIO
     window.promptManualOrderLookup = async function() {
       var folio = prompt("Ingresa el Folio de la orden a consultar (Ej. FF-123456):");
       if (!folio) return;
@@ -1805,7 +1970,13 @@
         birthday: document.getElementById('reg-birthday').value, raw_pass: document.getElementById('reg-password').value.trim(), total_spent: 0, type: 'client'
       };
       if (supabaseClient) try { await supabaseClient.from('profiles').upsert(clientObj); } catch(e){}
+      
+      var list = [];
+      try { list = JSON.parse(localStorage.getItem('five_friends_clients_cache')) || []; } catch(ex){}
+      list.unshift(clientObj);
+      localStorage.setItem('five_friends_clients_cache', JSON.stringify(list));
       localStorage.setItem('five_friends_session', JSON.stringify(clientObj));
+
       showUserView(clientObj.name, 0); updateCartUI();
     };
 
@@ -1819,6 +1990,12 @@
           var res = await supabaseClient.from('profiles').select('*');
           if (res?.data) found = res.data.find(function(c){ return (c.email === id || c.phone === id) && c.raw_pass === pass; });
         } catch(e){}
+      }
+      if (!found) {
+        try {
+          var local = JSON.parse(localStorage.getItem('five_friends_clients_cache')) || [];
+          found = local.find(function(c){ return (c.email === id || c.phone === id) && c.raw_pass === pass; });
+        } catch(ex){}
       }
       if (found) {
         var sess = { id: found.id, type: 'client', name: found.full_name || found.name, email: found.email, phone: found.phone, total_spent: Number(found.total_spent || 0) };
@@ -1870,6 +2047,9 @@
     async function loadAdminData() {
       var clients = [];
       if (supabaseClient) { try { var res = await supabaseClient.from('profiles').select('*'); if (res?.data) clients = res.data; } catch(e){} }
+      if (clients.length === 0) {
+        try { clients = JSON.parse(localStorage.getItem('five_friends_clients_cache')) || []; } catch(e){}
+      }
       clients = clients.filter(function(c){ return c.email !== '5friendstore@gmail.com'; });
       document.getElementById('stat-client-count').innerText = clients.length;
       
