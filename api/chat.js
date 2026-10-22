@@ -17,8 +17,8 @@ export default async function handler(req, res) {
       return res.status(400).json({ respuesta: '⚠️ Error: El mensaje llegó vacío.' });
     }
 
-    // SOLUCIÓN: Cambiamos a la etiqueta "latest" para asegurar compatibilidad
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
+    // SOLUCIÓN: Cambiamos al modelo universal garantizado para cualquier versión del SDK
+    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
     const result = await model.generateContent(mensaje);
     
     return res.status(200).json({ respuesta: result.response.text() });
