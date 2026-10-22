@@ -25,8 +25,8 @@ Reglas estrictas:
 5. NO inventes precios que no estén en la charla. Si piden cotizar una pieza 3D nueva, diles que usen el botón "Cotizar" o que manden su archivo/foto al WhatsApp 56 3951 1105.
 6. Nunca hables de marcas de impresoras (como Bambu Lab). Solo di que usamos equipo de alta precisión.`;
 
-    // Conexión al modelo verificado: gemini-2.5-flash
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    // SOLUCIÓN: Cambiamos al modelo recomendado explícitamente por la API
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
     
     const response = await fetch(url, {
       method: 'POST',
