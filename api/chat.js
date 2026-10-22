@@ -1,6 +1,6 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-module.exports = async function (req, res) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método no permitido' });
   }
@@ -16,8 +16,8 @@ module.exports = async function (req, res) {
     
     return res.status(200).json({ respuesta: textoRespuesta });
   } catch (error) {
-    // Esta línea es clave: enviará el error exacto a tu panel de Logs en Vercel
+    // Imprime el error en los Logs de Vercel si algo falla con la API Key
     console.error("Detalle del error en Gemini:", error);
-    return res.status(500).json({ error: 'Error al procesar la solicitud' });
+    return res.status(500).json({ error: 'Error al procesar la solicitud', detalle: error.message });
   }
-};
+}
