@@ -8,8 +8,6 @@ export default async function handler(req, res) {
     if (!rawKey) {
       return res.status(500).json({ respuesta: '⚠️ Error: Vercel no detecta tu API Key.' });
     }
-
-    // Limpiamos espacios invisibles o comillas accidentales que rompen la URL
     const apiKey = rawKey.trim().replace(/['"]/g, '');
 
     const { mensaje } = req.body;
@@ -17,48 +15,40 @@ export default async function handler(req, res) {
       return res.status(400).json({ respuesta: '⚠️ Error: El mensaje llegó vacío.' });
     }
 
-    // 1. Intentamos la conexión directa a Gemini 1.5 Flash
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    // INSTRUCCIONES DEL SISTEMA (Personalidad de Five Friends)
+    const systemInstruction = `Eres el asistente de ventas amigable y experto de Five Friends.
+Reglas estrictas:
+1. Respuestas cortas, persuasivas y directas. Usa un tono cercano.
+2. Somos un taller en Cuautitlán Izcalli. Ofrecemos 3 pilares: Impresión 3D (PETG/PLA Pro), Coleccionables y Desarrollo Web.
+3. El tiempo de fabricación 3D es de 2 a 4 días. Tenemos garantía si la paquetería rompe la pieza.
+4. Las entregas en Plaza Centella y Plaza San Miguel son GRATIS ($0 MXN). Los envíos nacionales son por paquetería.
+5. NO inventes precios que no estén en la charla. Si piden cotizar una pieza 3D nueva, diles que usen el botón "Cotizar" o que manden su archivo/foto al WhatsApp 56 3951 1105.
+6. Nunca hables de marcas de impresoras (como Bambu Lab). Solo di que usamos equipo de alta precisión.`;
+
+    // Conexión al modelo verificado: gemini-2.5-flash
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
     
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        system_instruction: {
+          parts: [{ text: systemInstruction }]
+        },
         contents: [{ parts: [{ text: mensaje }] }]
       })
     });
 
     const data = await response.json();
 
-    // 2. Si Google dice "Not Found", escaneamos tu cuenta para ver qué modelos tienes habilitados
     if (!response.ok) {
-      try {
-        const listUrl = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
-        const listRes = await fetch(listUrl);
-        const listData = await listRes.json();
-        
-        let modelosDisponibles = "No se pudo leer tu lista de modelos.";
-        if (listData.models) {
-          // Filtramos y limpiamos los nombres para mostrarlos claros en el chat
-          const nombres = listData.models
-            .map(m => m.name.replace('models/', ''))
-            .filter(n => n.includes('gemini'));
-          modelosDisponibles = nombres.join('\n- ');
-        }
-
-        return res.status(500).json({ 
-          respuesta: `⚠️ Error de ruta: ${data.error?.message}\n\n💡 DIAGNÓSTICO: Tu API Key SÍ tiene acceso a estos modelos exactos:\n- ${modelosDisponibles}\n\n(Dime cuál aparece en esta lista para ajustarlo).` 
-        });
-      } catch(e) {
-         return res.status(500).json({ respuesta: `⚠️ Error de Google: ${data.error?.message}` });
-      }
+      return res.status(500).json({ respuesta: `⚠️ Error de Google: ${data.error?.message || 'Desconocido'}` });
     }
 
-    // 3. Si todo sale bien, respondemos el mensaje
     const textoRespuesta = data.candidates[0].content.parts[0].text;
     return res.status(200).json({ respuesta: textoRespuesta });
 
   } catch (error) {
-    return res.status(500).json({ respuesta: '⚠️ Error interno del servidor: ' + error.message });
+    return res.status(500).json({ respuesta: '⚠️ Error interno: ' + error.message });
   }
 }
