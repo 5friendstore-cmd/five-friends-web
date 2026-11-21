@@ -70,7 +70,6 @@ import {
 } from './admin.js';
 import { toggleAIChat, enviarMensajeAI } from './chat.js';
 
-// Exponer funciones globales para eventos HTML (onclick / onsubmit / oninput)
 Object.assign(window, {
   navigate,
   toggleMobileMenu,
@@ -129,14 +128,11 @@ Object.assign(window, {
   enviarMensajeAI
 });
 
-// Efecto tornasol reactivo al desplazamiento (scroll)
+// Movimiento parallax tornasol al navegar y hacer scroll
 window.addEventListener('scroll', () => {
-  const maxScroll = Math.max(document.body.scrollHeight - window.innerHeight, 1);
-  const pct = Math.min(Math.max((window.scrollY / maxScroll) * 35, 0), 35);
-  document.documentElement.style.setProperty('--scroll-shift', pct.toFixed(1) + '%');
+  document.documentElement.style.setProperty('--scroll-y', window.scrollY + 'px');
 }, { passive: true });
 
-// Arranque inicial de la SPA
 window.addEventListener('DOMContentLoaded', async () => {
   await loadWorkshopConfigFromDB();
   await fetchCatalogFromDatabase();
