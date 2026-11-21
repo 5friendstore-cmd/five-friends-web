@@ -129,6 +129,13 @@ Object.assign(window, {
   enviarMensajeAI
 });
 
+// Efecto tornasol reactivo al desplazamiento (scroll)
+window.addEventListener('scroll', () => {
+  const maxScroll = Math.max(document.body.scrollHeight - window.innerHeight, 1);
+  const pct = Math.min(Math.max((window.scrollY / maxScroll) * 35, 0), 35);
+  document.documentElement.style.setProperty('--scroll-shift', pct.toFixed(1) + '%');
+}, { passive: true });
+
 // Arranque inicial de la SPA
 window.addEventListener('DOMContentLoaded', async () => {
   await loadWorkshopConfigFromDB();
