@@ -1,4 +1,3 @@
-import { MP_PUBLIC_KEY } from './config.js';
 import {
   navigate,
   toggleMobileMenu,
@@ -70,13 +69,6 @@ import {
   syncAllAdminData
 } from './admin.js';
 import { toggleAIChat, enviarMensajeAI } from './chat.js';
-
-// Inicialización de SDK Mercado Pago
-try {
-  if (window.MercadoPago) {
-    window.mp = new window.MercadoPago(MP_PUBLIC_KEY, { locale: 'es-MX' });
-  }
-} catch (e) {}
 
 // Exponer funciones globales para eventos HTML (onclick / onsubmit / oninput)
 Object.assign(window, {
