@@ -70,6 +70,26 @@ import {
 } from './admin.js';
 import { toggleAIChat, enviarMensajeAI } from './chat.js';
 
+function applyThemeIcons(isDark) {
+  document.querySelectorAll('.icon-sun').forEach((el) => el.classList.toggle('hidden', !isDark));
+  document.querySelectorAll('.icon-moon').forEach((el) => el.classList.toggle('hidden', isDark));
+}
+
+export function toggleDarkMode() {
+  const isDark = document.documentElement.classList.toggle('dark');
+  try {
+    localStorage.setItem('five_friends_theme', isDark ? 'dark' : 'light');
+  } catch (e) {}
+  applyThemeIcons(isDark);
+}
+
+// Aplicar preferencia guardada al instante antes de renderizar
+try {
+  if (localStorage.getItem('five_friends_theme') === 'dark') {
+    document.documentElement.classList.add('dark');
+  }
+} catch (e) {}
+
 Object.assign(window, {
   navigate,
   toggleMobileMenu,
@@ -125,7 +145,8 @@ Object.assign(window, {
   deleteProduct,
   syncAllAdminData,
   toggleAIChat,
-  enviarMensajeAI
+  enviarMensajeAI,
+  toggleDarkMode
 });
 
 // Movimiento parallax tornasol al navegar y hacer scroll
@@ -134,6 +155,7 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 window.addEventListener('DOMContentLoaded', async () => {
+  applyThemeIcons(document.documentElement.classList.contains('dark'));
   await loadWorkshopConfigFromDB();
   await fetchCatalogFromDatabase();
   updateCartUI();
