@@ -19,6 +19,13 @@
 </head>
 <body class="text-zinc-900 min-h-screen flex flex-col antialiased selection:bg-zinc-950 selection:text-white relative">
 
+  <!-- Fondo Tornasol Perlado / Grises / Negro en Movimiento -->
+  <div class="tornasol-canvas" aria-hidden="true">
+    <div class="tornasol-orb-1"></div>
+    <div class="tornasol-orb-2"></div>
+    <div class="tornasol-orb-3"></div>
+  </div>
+
   <!-- Header / Barra de Navegación -->
   <header class="sticky top-0 z-40 glass border-b border-zinc-200/70">
     <div class="max-w-7xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between">
@@ -113,7 +120,7 @@
       <!-- Tarjetas de los 3 Pilares con Amplio Aire -->
       <div class="space-y-6 max-w-6xl mx-auto">
         <div class="text-center space-y-1.5">
-          <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">Nuestras Especialidades</span>
+          <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-500">Nuestras Especialidades</span>
           <h2 class="text-2xl sm:text-3xl font-extrabold text-zinc-950">Tres pilares, un mismo estándar</h2>
         </div>
 
@@ -140,9 +147,9 @@
             <div class="space-y-4">
               <div class="w-12 h-12 rounded-2xl bg-zinc-950 text-white flex items-center justify-center font-bold text-sm">&lt;/&gt;</div>
               <h3 class="text-xl font-bold text-zinc-950">Desarrollo Web</h3>
-              <p class="text-sm text-zinc-600 leading-relaxed">Landing pages y tiendas online integradas con Mercado Pago, listas para operar.</p>
+              <p class="text-sm text-zinc-600 leading-relaxed">Landing pages y tiendas online con opción de mantenimiento mensual de $200 MXN.</p>
             </div>
-            <span class="text-xs font-bold text-zinc-950 pt-2 inline-flex items-center gap-1.5">Ver soluciones &rarr;</span>
+            <span class="text-xs font-bold text-zinc-950 pt-2 inline-flex items-center gap-1.5">Ver planes web &rarr;</span>
           </div>
         </div>
       </div>
@@ -158,8 +165,8 @@
           <span class="text-xs text-zinc-500">Reimpresión sin costo ante daños.</span>
         </div>
         <div class="card-iridescent p-5 rounded-2xl space-y-1">
-          <span class="text-xs font-bold text-zinc-950 block">Entrega Gratis $0</span>
-          <span class="text-xs text-zinc-500">En bazares y puntos aliados.</span>
+          <span class="text-xs font-bold text-zinc-950 block">Recolección $0 MXN</span>
+          <span class="text-xs text-zinc-500">En oficina, bazares y puntos aliados.</span>
         </div>
         <div class="card-iridescent p-5 rounded-2xl space-y-1">
           <span class="text-xs font-bold text-zinc-950 block">Pago Protegido</span>
@@ -173,9 +180,9 @@
     <section id="sec-cotizador" class="hidden section-fade space-y-8">
       <div class="max-w-2xl mx-auto space-y-8">
         <div class="text-center space-y-2.5">
-          <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">Calculadora Express</span>
+          <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-500">Calculadora Express</span>
           <h2 class="text-3xl sm:text-4xl font-extrabold text-zinc-950">Cotiza tu Pieza 3D</h2>
-          <p class="text-sm text-zinc-500">Calcula al instante con los datos de tu laminador o elige un tamaño estimado.</p>
+          <p class="text-sm text-zinc-600">Calcula al instante con los datos de tu laminador o elige un tamaño estimado.</p>
         </div>
 
         <div class="flex bg-zinc-200/80 p-1.5 rounded-2xl max-w-sm mx-auto text-xs font-bold">
@@ -191,7 +198,7 @@
                 <span class="text-zinc-400 font-normal text-[11px]">Gramos (g)</span>
               </label>
               <div class="relative">
-                <input type="number" id="calc-client-grams" oninput="calculateClientQuote()" placeholder="Ej. 65" min="1" step="0.5" class="w-full pl-4 pr-10 py-3.5 bg-white/80 border border-zinc-300 rounded-2xl text-base font-semibold outline-none focus:bg-white focus:border-zinc-950 transition">
+                <input type="number" id="calc-client-grams" oninput="calculateClientQuote()" placeholder="Ej. 65" min="1" step="0.5" class="w-full pl-4 pr-10 py-3.5 bg-white/85 border border-zinc-300 rounded-2xl text-base font-semibold outline-none focus:bg-white focus:border-zinc-950 transition">
                 <span class="absolute right-4 top-4 text-xs text-zinc-400 font-bold">g</span>
               </div>
             </div>
@@ -202,7 +209,7 @@
                 <span class="text-zinc-400 font-normal text-[11px]">Horas (h)</span>
               </label>
               <div class="relative">
-                <input type="number" id="calc-client-hours" oninput="calculateClientQuote()" placeholder="Ej. 3.5" min="0.1" step="0.1" class="w-full pl-4 pr-10 py-3.5 bg-white/80 border border-zinc-300 rounded-2xl text-base font-semibold outline-none focus:bg-white focus:border-zinc-950 transition">
+                <input type="number" id="calc-client-hours" oninput="calculateClientQuote()" placeholder="Ej. 3.5" min="0.1" step="0.1" class="w-full pl-4 pr-10 py-3.5 bg-white/85 border border-zinc-300 rounded-2xl text-base font-semibold outline-none focus:bg-white focus:border-zinc-950 transition">
                 <span class="absolute right-4 top-4 text-xs text-zinc-400 font-bold">hrs</span>
               </div>
             </div>
@@ -235,17 +242,17 @@
           <div class="space-y-4">
             <label class="block text-xs font-bold text-zinc-800 uppercase tracking-wider">Selecciona el tamaño aproximado:</label>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div onclick="selectPresetSize(40, 2, 'Pieza Chica (hasta 6 cm)')" class="preset-card bg-white/80 border border-zinc-200 p-5 rounded-2xl cursor-pointer hover:border-zinc-950 transition text-center space-y-1.5">
+              <div onclick="selectPresetSize(40, 2, 'Pieza Chica (hasta 6 cm)')" class="preset-card bg-white/85 border border-zinc-200 p-5 rounded-2xl cursor-pointer hover:border-zinc-950 transition text-center space-y-1.5">
                 <span class="text-base block font-bold text-zinc-950">Chica (~5 cm)</span>
                 <span class="text-xs text-zinc-500 block">Llaveros, tokens</span>
                 <span class="text-xs font-bold text-zinc-900 block pt-1">$130 - $160 MXN</span>
               </div>
-              <div onclick="selectPresetSize(90, 4.5, 'Pieza Mediana (hasta 12 cm)')" class="preset-card bg-white/80 border border-zinc-200 p-5 rounded-2xl cursor-pointer hover:border-zinc-950 transition text-center space-y-1.5">
+              <div onclick="selectPresetSize(90, 4.5, 'Pieza Mediana (hasta 12 cm)')" class="preset-card bg-white/85 border border-zinc-200 p-5 rounded-2xl cursor-pointer hover:border-zinc-950 transition text-center space-y-1.5">
                 <span class="text-base block font-bold text-zinc-950">Mediana (~12 cm)</span>
                 <span class="text-xs text-zinc-500 block">Soportes, figuras</span>
                 <span class="text-xs font-bold text-zinc-900 block pt-1">$260 - $340 MXN</span>
               </div>
-              <div onclick="selectPresetSize(180, 9, 'Pieza Grande (hasta 20 cm)')" class="preset-card bg-white/80 border border-zinc-200 p-5 rounded-2xl cursor-pointer hover:border-zinc-950 transition text-center space-y-1.5">
+              <div onclick="selectPresetSize(180, 9, 'Pieza Grande (hasta 20 cm)')" class="preset-card bg-white/85 border border-zinc-200 p-5 rounded-2xl cursor-pointer hover:border-zinc-950 transition text-center space-y-1.5">
                 <span class="text-base block font-bold text-zinc-950">Grande (~20 cm)</span>
                 <span class="text-xs text-zinc-500 block">Organizadores, cascos</span>
                 <span class="text-xs font-bold text-zinc-900 block pt-1">$450 - $650 MXN</span>
@@ -253,7 +260,7 @@
             </div>
           </div>
 
-          <div class="bg-white/70 border border-zinc-200/80 p-5 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="bg-white/75 border border-zinc-200/80 p-5 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="text-xs text-zinc-600 space-y-0.5">
               <span class="font-bold text-zinc-950 block text-sm">¿Tienes un archivo .STL u .OBJ?</span>
               <span>Mándanos el modelo por WhatsApp para cotización exacta.</span>
@@ -271,9 +278,9 @@
     <section id="sec-puntos" class="hidden section-fade space-y-8">
       <div class="flex flex-col sm:flex-row justify-between sm:items-end gap-4 border-b border-zinc-200/80 pb-6">
         <div class="space-y-1">
-          <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">Recolección sin Costo</span>
-          <h2 class="text-3xl font-extrabold tracking-tight text-zinc-950">Puntos de Entrega & Bazares</h2>
-          <p class="text-sm text-zinc-500">Recoge tus pedidos en cualquiera de nuestras sedes físicas con envío $0 MXN.</p>
+          <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-500">Recolección sin Costo</span>
+          <h2 class="text-3xl font-extrabold tracking-tight text-zinc-950">Puntos de Entrega & Oficina</h2>
+          <p class="text-sm text-zinc-600">Recoge tus pedidos en nuestra oficina o en cualquiera de nuestras sedes físicas con envío $0 MXN.</p>
         </div>
         <a href="https://maps.app.goo.gl/ZxUudbQPvvGbz2Xq8" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 bg-zinc-950 text-white text-xs font-bold rounded-xl hover:bg-zinc-800 transition flex items-center gap-1.5 w-fit">
           <span>Ver Mapa Oficial</span>
@@ -285,55 +292,55 @@
         <div class="card-iridescent rounded-3xl p-6 space-y-3">
           <div class="flex items-center justify-between">
             <span class="text-[10px] font-bold px-2.5 py-1 bg-zinc-950 text-white rounded-full uppercase">Envío $0</span>
-            <span class="text-xs text-zinc-400 font-medium">Bazar</span>
+            <span class="text-xs text-zinc-500 font-medium">Oficina / Taller</span>
+          </div>
+          <h3 class="text-base font-bold text-zinc-950">Five Friends (Oficina & Taller Central)</h3>
+          <p class="text-xs text-zinc-600 leading-relaxed">Retiro directo en nuestra oficina/taller en Cuautitlán Izcalli.</p>
+        </div>
+
+        <div class="card-iridescent rounded-3xl p-6 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold px-2.5 py-1 bg-zinc-950 text-white rounded-full uppercase">Envío $0</span>
+            <span class="text-xs text-zinc-500 font-medium">Bazar</span>
           </div>
           <h3 class="text-base font-bold text-zinc-950">Plaza Centella (Bazar Revolución)</h3>
-          <p class="text-xs text-zinc-500 leading-relaxed">Stand físico oficial en bazar para entregas y exhibición.</p>
+          <p class="text-xs text-zinc-600 leading-relaxed">Stand físico oficial en bazar para entregas y exhibición.</p>
         </div>
 
         <div class="card-iridescent rounded-3xl p-6 space-y-3">
           <div class="flex items-center justify-between">
             <span class="text-[10px] font-bold px-2.5 py-1 bg-zinc-950 text-white rounded-full uppercase">Envío $0</span>
-            <span class="text-xs text-zinc-400 font-medium">Bazar</span>
+            <span class="text-xs text-zinc-500 font-medium">Bazar</span>
           </div>
           <h3 class="text-base font-bold text-zinc-950">Plaza San Miguel (EE Networking)</h3>
-          <p class="text-xs text-zinc-500 leading-relaxed">Entrega programada en fechas oficiales de bazar.</p>
-        </div>
-
-        <div class="card-iridescent rounded-3xl p-6 space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] font-bold px-2.5 py-1 bg-zinc-950 text-white rounded-full uppercase">Envío $0</span>
-            <span class="text-xs text-zinc-400 font-medium">Taller</span>
-          </div>
-          <h3 class="text-base font-bold text-zinc-950">Five Friends (Taller Central)</h3>
-          <p class="text-xs text-zinc-500 leading-relaxed">Retiro directo en taller de manufactura (Cuautitlán Izcalli).</p>
+          <p class="text-xs text-zinc-600 leading-relaxed">Entrega programada en fechas oficiales de bazar.</p>
         </div>
 
         <div class="card-iridescent rounded-3xl p-6 space-y-3">
           <div class="flex items-center justify-between">
             <span class="text-[10px] font-bold px-2.5 py-1 bg-zinc-200 text-zinc-800 rounded-full uppercase">Punto Aliado</span>
-            <span class="text-xs text-zinc-400 font-medium">Showroom</span>
+            <span class="text-xs text-zinc-500 font-medium">Showroom</span>
           </div>
           <h3 class="text-base font-bold text-zinc-950">Taiyari</h3>
-          <p class="text-xs text-zinc-500 leading-relaxed">Punto autorizado de recolección para pedidos confirmados.</p>
+          <p class="text-xs text-zinc-600 leading-relaxed">Punto autorizado de recolección para pedidos confirmados.</p>
         </div>
 
         <div class="card-iridescent rounded-3xl p-6 space-y-3">
           <div class="flex items-center justify-between">
             <span class="text-[10px] font-bold px-2.5 py-1 bg-zinc-200 text-zinc-800 rounded-full uppercase">Punto Aliado</span>
-            <span class="text-xs text-zinc-400 font-medium">Showroom</span>
+            <span class="text-xs text-zinc-500 font-medium">Showroom</span>
           </div>
           <h3 class="text-base font-bold text-zinc-950">Haruss Cake</h3>
-          <p class="text-xs text-zinc-500 leading-relaxed">Recolección de paquetes y piezas en sede aliada.</p>
+          <p class="text-xs text-zinc-600 leading-relaxed">Recolección de paquetes y piezas en sede aliada.</p>
         </div>
 
         <div class="card-iridescent rounded-3xl p-6 space-y-3">
           <div class="flex items-center justify-between">
             <span class="text-[10px] font-bold px-2.5 py-1 bg-zinc-200 text-zinc-800 rounded-full uppercase">Punto Aliado</span>
-            <span class="text-xs text-zinc-400 font-medium">Local</span>
+            <span class="text-xs text-zinc-500 font-medium">Local</span>
           </div>
           <h3 class="text-base font-bold text-zinc-950">Farmacias del Dr. Economix</h3>
-          <p class="text-xs text-zinc-500 leading-relaxed">Entrega local de piezas ligeras y coleccionables.</p>
+          <p class="text-xs text-zinc-600 leading-relaxed">Entrega local de piezas ligeras y coleccionables.</p>
         </div>
       </div>
     </section>
@@ -342,9 +349,9 @@
     <section id="sec-faq" class="hidden section-fade space-y-8">
       <div class="max-w-3xl mx-auto space-y-8">
         <div class="space-y-1">
-          <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">Respaldo Total</span>
+          <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-500">Respaldo Total</span>
           <h2 class="text-3xl font-extrabold text-zinc-950">Garantías y Preguntas Frecuentes</h2>
-          <p class="text-sm text-zinc-500">Información clara sobre tiempos de taller, envíos y materiales.</p>
+          <p class="text-sm text-zinc-600">Información clara sobre tiempos de taller, envíos y mantenimiento web.</p>
         </div>
 
         <div class="space-y-4">
@@ -354,18 +361,18 @@
           </div>
 
           <div class="card-iridescent rounded-3xl p-6 sm:p-7 space-y-2">
-            <h4 class="font-bold text-base text-zinc-950">¿Cuánto tiempo tarda en fabricarse un pedido?</h4>
+            <h4 class="font-bold text-base text-zinc-950">¿Cómo funciona la recolección en oficina o punto de entrega?</h4>
+            <p class="text-sm text-zinc-600 leading-relaxed">Al finalizar tu compra, selecciona <strong>Recolección en Oficina / Punto Físico</strong> y elige la sede que más te convenga. No pagas envío ni necesitas cotizar paquetería.</p>
+          </div>
+
+          <div class="card-iridescent rounded-3xl p-6 sm:p-7 space-y-2">
+            <h4 class="font-bold text-base text-zinc-950">¿Qué incluye el mantenimiento mensual de $200 MXN en páginas web?</h4>
+            <p class="text-sm text-zinc-600 leading-relaxed">Incluye todos los cambios que requieras durante el mes (actualización de precios, fotos, textos, nuevos productos o ajustes visuales) además de soporte técnico continuo.</p>
+          </div>
+
+          <div class="card-iridescent rounded-3xl p-6 sm:p-7 space-y-2">
+            <h4 class="font-bold text-base text-zinc-950">¿Cuánto tiempo tarda en fabricarse un pedido 3D?</h4>
             <p class="text-sm text-zinc-600 leading-relaxed">De <strong>2 a 4 días hábiles</strong> de producción. Si necesitas una entrega urgente para evento o regalo, contáctanos para priorizar tu orden.</p>
-          </div>
-
-          <div class="card-iridescent rounded-3xl p-6 sm:p-7 space-y-2">
-            <h4 class="font-bold text-base text-zinc-950">¿Cómo funcionan las entregas gratuitas en punto físico?</h4>
-            <p class="text-sm text-zinc-600 leading-relaxed">Elige "Recoger en Punto de Entrega" al pagar. Cuando tu orden cambie a <em>Enviado / Listo para recoger</em>, te notificamos horario y ubicación exacta.</p>
-          </div>
-
-          <div class="card-iridescent rounded-3xl p-6 sm:p-7 space-y-2">
-            <h4 class="font-bold text-base text-zinc-950">¿Qué materiales utilizan en el taller?</h4>
-            <p class="text-sm text-zinc-600 leading-relaxed"><strong>PLA Pro</strong> para figuras y coleccionables con acabado fino, y <strong>PETG técnico</strong> para piezas funcionales sometidas a esfuerzo o temperatura.</p>
           </div>
         </div>
       </div>
@@ -375,22 +382,22 @@
     <section id="sec-contacto" class="hidden section-fade space-y-8">
       <div class="max-w-xl mx-auto card-iridescent p-7 sm:p-10 rounded-3xl space-y-6">
         <div class="space-y-1">
-          <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">Atención Directa</span>
+          <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-500">Atención Directa</span>
           <h2 class="text-2xl sm:text-3xl font-extrabold text-zinc-950">Contáctanos</h2>
-          <p class="text-sm text-zinc-500">Escríbenos sobre proyectos 3D, coleccionables o desarrollo web.</p>
+          <p class="text-sm text-zinc-600">Escríbenos sobre proyectos 3D, coleccionables o desarrollo web.</p>
         </div>
         <form class="space-y-4" onsubmit="event.preventDefault(); alert('Mensaje recibido. Nos pondremos en contacto contigo.'); this.reset();">
           <div>
             <label class="block text-xs font-semibold uppercase tracking-wider text-zinc-600 mb-1.5">Nombre Completo</label>
-            <input type="text" required class="w-full px-4 py-3 bg-white/80 border border-zinc-300 rounded-2xl text-sm outline-none focus:bg-white focus:border-zinc-950">
+            <input type="text" required class="w-full px-4 py-3 bg-white/85 border border-zinc-300 rounded-2xl text-sm outline-none focus:bg-white focus:border-zinc-950">
           </div>
           <div>
             <label class="block text-xs font-semibold uppercase tracking-wider text-zinc-600 mb-1.5">Correo Electrónico</label>
-            <input type="email" required class="w-full px-4 py-3 bg-white/80 border border-zinc-300 rounded-2xl text-sm outline-none focus:bg-white focus:border-zinc-950">
+            <input type="email" required class="w-full px-4 py-3 bg-white/85 border border-zinc-300 rounded-2xl text-sm outline-none focus:bg-white focus:border-zinc-950">
           </div>
           <div>
             <label class="block text-xs font-semibold uppercase tracking-wider text-zinc-600 mb-1.5">Detalle de tu Proyecto</label>
-            <textarea rows="4" required class="w-full px-4 py-3 bg-white/80 border border-zinc-300 rounded-2xl text-sm outline-none focus:bg-white focus:border-zinc-950"></textarea>
+            <textarea rows="4" required class="w-full px-4 py-3 bg-white/85 border border-zinc-300 rounded-2xl text-sm outline-none focus:bg-white focus:border-zinc-950"></textarea>
           </div>
           <button type="submit" class="w-full bg-zinc-950 text-white py-3.5 rounded-2xl text-sm font-semibold hover:bg-zinc-800 transition shadow-md">Enviar Mensaje</button>
         </form>
@@ -401,9 +408,9 @@
     <section id="sec-catalogo" class="hidden section-fade space-y-8">
       <div class="flex flex-col md:flex-row justify-between md:items-end gap-4 border-b border-zinc-200/80 pb-6">
         <div class="space-y-1">
-          <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">Tienda Oficial</span>
+          <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-500">Tienda & Servicios</span>
           <h2 class="text-3xl font-extrabold tracking-tight text-zinc-950">Catálogo Five Friends</h2>
-          <p class="text-sm text-zinc-500">Piezas 3D, coleccionables y servicios digitales con pago protegido.</p>
+          <p class="text-sm text-zinc-600">Piezas físicas 3D, coleccionables y planes de desarrollo web.</p>
         </div>
 
         <div class="w-full md:w-72">
@@ -413,10 +420,10 @@
 
       <!-- NIVEL 1: FILTROS PRINCIPALES -->
       <div class="flex gap-2.5 overflow-x-auto pb-1 scrollbar-none">
-        <button type="button" onclick="setMacroFilter('all')" id="btn-macro-all" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap bg-zinc-950 text-white shadow-sm">Todos los Productos</button>
-        <button type="button" onclick="setMacroFilter('3D')" id="btn-macro-3d" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Impresión 3D</button>
-        <button type="button" onclick="setMacroFilter('Coleccionables')" id="btn-macro-col" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Coleccionables</button>
-        <button type="button" onclick="setMacroFilter('Web')" id="btn-macro-web" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-400">Desarrollo Web & Tiendas</button>
+        <button type="button" onclick="setMacroFilter('all')" id="btn-macro-all" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap bg-zinc-950 text-white shadow-sm">Todos los Productos</button>
+        <button type="button" onclick="setMacroFilter('3D')" id="btn-macro-3d" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white/80 border border-zinc-200 text-zinc-700 hover:border-zinc-400">Impresión 3D</button>
+        <button type="button" onclick="setMacroFilter('Coleccionables')" id="btn-macro-col" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white/80 border border-zinc-200 text-zinc-700 hover:border-zinc-400">Coleccionables</button>
+        <button type="button" onclick="setMacroFilter('Web')" id="btn-macro-web" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white/80 border border-zinc-200 text-zinc-700 hover:border-zinc-400">Desarrollo Web & Tiendas</button>
       </div>
 
       <!-- NIVEL 2: SUBCATEGORÍAS DINÁMICAS -->
@@ -441,11 +448,11 @@
         <form id="form-login" class="space-y-4" onsubmit="handleLogin(event)">
           <div>
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1.5">Correo o Teléfono</label>
-            <input type="text" id="login-identifier" required placeholder="correo@ejemplo.com o 5512345678" class="w-full px-4 py-3 bg-white/80 border border-zinc-300 rounded-2xl text-sm outline-none focus:border-zinc-950">
+            <input type="text" id="login-identifier" required placeholder="Usuario" autocomplete="off" class="w-full px-4 py-3 bg-white/85 border border-zinc-300 rounded-2xl text-sm outline-none focus:border-zinc-950">
           </div>
           <div>
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1.5">Contraseña</label>
-            <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-4 py-3 bg-white/80 border border-zinc-300 rounded-2xl text-sm outline-none focus:border-zinc-950">
+            <input type="password" id="login-password" required placeholder="Contraseña" autocomplete="new-password" class="w-full px-4 py-3 bg-white/85 border border-zinc-300 rounded-2xl text-sm outline-none focus:border-zinc-950">
           </div>
           <div class="flex justify-end">
             <button type="button" onclick="sendPasswordToEmail('cliente')" class="text-xs text-zinc-500 hover:underline">¿Olvidaste tu contraseña?</button>
@@ -457,23 +464,23 @@
         <form id="form-register" class="space-y-3.5 hidden" onsubmit="handleRegister(event)">
           <div>
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Nombre Completo</label>
-            <input type="text" id="reg-name" required placeholder="Tu nombre" class="w-full px-4 py-2.5 bg-white/80 border border-zinc-300 rounded-2xl text-sm">
+            <input type="text" id="reg-name" required placeholder="Tu nombre" class="w-full px-4 py-2.5 bg-white/85 border border-zinc-300 rounded-2xl text-sm">
           </div>
           <div>
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Correo Electrónico</label>
-            <input type="email" id="reg-email" required placeholder="tu@correo.com" class="w-full px-4 py-2.5 bg-white/80 border border-zinc-300 rounded-2xl text-sm">
+            <input type="email" id="reg-email" required placeholder="tu@correo.com" class="w-full px-4 py-2.5 bg-white/85 border border-zinc-300 rounded-2xl text-sm">
           </div>
           <div>
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Número Telefónico</label>
-            <input type="tel" id="reg-phone" required placeholder="10 dígitos" class="w-full px-4 py-2.5 bg-white/80 border border-zinc-300 rounded-2xl text-sm">
+            <input type="tel" id="reg-phone" required placeholder="10 dígitos" class="w-full px-4 py-2.5 bg-white/85 border border-zinc-300 rounded-2xl text-sm">
           </div>
           <div>
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Fecha de Cumpleaños</label>
-            <input type="date" id="reg-birthday" required class="w-full px-4 py-2.5 bg-white/80 border border-zinc-300 rounded-2xl text-sm">
+            <input type="date" id="reg-birthday" required class="w-full px-4 py-2.5 bg-white/85 border border-zinc-300 rounded-2xl text-sm">
           </div>
           <div>
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1">Contraseña</label>
-            <input type="password" id="reg-password" required minlength="6" placeholder="Mínimo 6 caracteres" class="w-full px-4 py-2.5 bg-white/80 border border-zinc-300 rounded-2xl text-sm">
+            <input type="password" id="reg-password" required minlength="6" placeholder="Mínimo 6 caracteres" class="w-full px-4 py-2.5 bg-white/85 border border-zinc-300 rounded-2xl text-sm">
           </div>
           <button type="submit" id="btn-register" class="w-full bg-zinc-950 text-white py-3.5 rounded-2xl text-sm font-semibold hover:bg-zinc-800 transition mt-2 shadow-md">Crear Cuenta</button>
         </form>
@@ -483,11 +490,11 @@
           <div class="bg-zinc-100/90 p-3 rounded-2xl text-xs text-zinc-600">Acceso exclusivo a administradores de Five Friends.</div>
           <div>
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1.5">Correo Institucional</label>
-            <input type="email" id="admin-email" required placeholder="Usuario" autocomplete="off" class="w-full px-4 py-3 bg-white/80 border border-zinc-300 rounded-2xl text-sm">
+            <input type="email" id="admin-email" required placeholder="Usuario" autocomplete="off" class="w-full px-4 py-3 bg-white/85 border border-zinc-300 rounded-2xl text-sm">
           </div>
           <div>
             <label class="block text-xs font-semibold uppercase text-zinc-600 mb-1.5">Clave Maestra</label>
-            <input type="password" id="admin-password" required placeholder="Contraseña" autocomplete="new-password" class="w-full px-4 py-3 bg-white/80 border border-zinc-300 rounded-2xl text-sm">
+            <input type="password" id="admin-password" required placeholder="Contraseña" autocomplete="new-password" class="w-full px-4 py-3 bg-white/85 border border-zinc-300 rounded-2xl text-sm">
           </div>
           <button type="submit" class="w-full bg-zinc-950 text-white py-3.5 rounded-2xl text-sm font-semibold hover:bg-zinc-800 transition shadow-md">Entrar al Panel Modular</button>
         </form>
@@ -1010,7 +1017,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label class="block font-semibold text-zinc-600 mb-1">Monto Total ($ MXN) *</label>
-              <input type="number" id="man-order-total" required step="0.5" placeholder="Ej. 6500" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-xs font-bold outline-none focus:border-zinc-950">
+              <input type="number" id="man-order-total" required step="0.5" placeholder="Ej. 6000" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-xs font-bold outline-none focus:border-zinc-950">
             </div>
             <div>
               <label class="block font-semibold text-zinc-600 mb-1">Estatus Inicial</label>
@@ -1028,7 +1035,7 @@
             <label class="block font-semibold text-zinc-600 mb-1">Modalidad de Entrega</label>
             <select id="man-order-delivery" class="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-xl text-xs font-semibold outline-none">
               <option value="Servicio Digital Web">Servicio Digital Web (En línea)</option>
-              <option value="Five Friends (Taller Central)">Five Friends (Taller Central)</option>
+              <option value="Five Friends (Oficina & Taller Central)">Five Friends (Oficina & Taller Central)</option>
               <option value="Plaza Centella (Bazar Revolución)">Plaza Centella (Bazar Revolución)</option>
               <option value="Plaza San Miguel (Bazar EE Networking)">Plaza San Miguel (Bazar EE Networking)</option>
               <option value="Taiyari">Taiyari</option>
@@ -1092,23 +1099,23 @@
             </div>
           </div>
 
-          <!-- SELECTOR DE MODALIDAD: PAQUETERÍA VS RECOGER EN PUNTO -->
+          <!-- SELECTOR DE MODALIDAD: RECOLECCIÓN EN OFICINA/PUNTO VS ENVÍO PAQUETERÍA -->
           <div id="delivery-mode-container" class="bg-white border border-zinc-200 rounded-xl p-3.5 space-y-3 text-xs">
-            <span class="font-bold text-zinc-900 uppercase block border-b border-zinc-100 pb-1.5">Método de Recepción del Pedido</span>
+            <span class="font-bold text-zinc-900 uppercase block border-b border-zinc-100 pb-1.5">¿Cómo deseas recibir tu pedido?</span>
             
             <div class="space-y-2">
-              <label class="flex items-start gap-2.5 p-2.5 border border-zinc-200 rounded-xl cursor-pointer hover:border-zinc-950 transition">
+              <label class="flex items-start gap-2.5 p-3 border-2 border-zinc-950 bg-zinc-50/70 rounded-xl cursor-pointer transition">
                 <input type="radio" name="delivery_method" value="pickup" id="deliv-pickup" onchange="toggleDeliveryMode('pickup')" checked class="mt-0.5 text-zinc-950">
                 <div>
-                  <div class="font-bold text-zinc-900 flex items-center gap-1.5">
-                    <span>Recoger en Punto de Entrega / Bazar</span>
-                    <span class="px-1.5 py-0.2 bg-emerald-100 text-emerald-800 text-[9px] font-extrabold rounded uppercase">Envío $0 MXN</span>
+                  <div class="font-bold text-zinc-950 flex items-center gap-1.5">
+                    <span>Recolección en Oficina / Punto Físico</span>
+                    <span class="px-2 py-0.5 bg-zinc-950 text-white text-[9px] font-extrabold rounded-full uppercase">Envío $0 MXN</span>
                   </div>
-                  <p class="text-[11px] text-zinc-500 mt-0.5">Retira tu pedido personalmente sin costo adicional en nuestras sedes físicas.</p>
+                  <p class="text-[11px] text-zinc-600 mt-0.5">Pasa por tu pedido sin costo de envío ni cotización de paquetería.</p>
                 </div>
               </label>
 
-              <label class="flex items-start gap-2.5 p-2.5 border border-zinc-200 rounded-xl cursor-pointer hover:border-zinc-950 transition">
+              <label class="flex items-start gap-2.5 p-3 border border-zinc-200 rounded-xl cursor-pointer hover:border-zinc-950 transition">
                 <input type="radio" name="delivery_method" value="shipping" id="deliv-shipping" onchange="toggleDeliveryMode('shipping')" class="mt-0.5 text-zinc-950">
                 <div>
                   <div class="font-bold text-zinc-900">Envío a Domicilio por Paquetería</div>
@@ -1117,11 +1124,11 @@
               </label>
             </div>
 
-            <!-- Selector de Sucursal/Bazar Físico -->
+            <!-- Selector de Oficina / Punto Físico -->
             <div id="pickup-location-box" class="pt-2">
-              <label class="block font-semibold text-zinc-700 mb-1">Selecciona el Punto de Entrega:</label>
-              <select id="order-pickup-spot" class="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs font-semibold outline-none focus:border-zinc-950">
-                <option value="Five Friends (Taller Central)">Five Friends (Taller Central - Cuautitlán Izcalli)</option>
+              <label class="block font-semibold text-zinc-700 mb-1">Elige el punto donde pasarás a recolectar:</label>
+              <select id="order-pickup-spot" class="w-full px-3 py-2.5 bg-zinc-50 border border-zinc-300 rounded-lg text-xs font-semibold outline-none focus:border-zinc-950">
+                <option value="Five Friends (Oficina & Taller Central)">Five Friends (Oficina & Taller Central - Cuautitlán Izcalli)</option>
                 <option value="Plaza Centella (Bazar Revolución)">Plaza Centella (Bazar Revolución)</option>
                 <option value="Plaza San Miguel (Bazar EE Networking)">Plaza San Miguel (Bazar EE Networking)</option>
                 <option value="Taiyari">Taiyari</option>
@@ -1131,7 +1138,7 @@
             </div>
           </div>
 
-          <!-- Formulario Dirección de Paquetería -->
+          <!-- Formulario Dirección de Paquetería (Solo visible si elige Envío a Domicilio) -->
           <div id="checkout-address-section" class="bg-zinc-50 border border-zinc-200 rounded-xl p-3.5 space-y-3 text-xs hidden">
             <span class="font-bold text-zinc-900 uppercase block border-b border-zinc-200 pb-2">Dirección Completa de Envío</span>
             <div>
