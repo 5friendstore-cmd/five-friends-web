@@ -116,9 +116,9 @@ export function updateCartUI() {
       const isWeb = item.category === 'Desarrollo Web';
       const img = item.image_url
         ? '<img src="' + item.image_url + '" class="w-12 h-12 rounded-lg object-cover border border-zinc-200">'
-        : '<div class="w-12 h-12 bg-zinc-100 rounded-lg flex items-center justify-center font-bold text-xs text-zinc-400">' + (isWeb ? '</>' : '3D') + '</div>';
+        : '<div class="w-12 h-12 bg-zinc-100 rounded-lg flex items-center justify-center font-bold text-xs text-zinc-500">' + (isWeb ? '</>' : '3D') + '</div>';
 
-      return '<div class="flex items-center justify-between gap-3 border-b border-zinc-100 pb-3"><div class="flex items-center gap-3">' + img + '<div><h4 class="text-xs font-bold text-zinc-900 leading-snug line-clamp-1">' + item.title + '</h4><span class="text-xs font-bold text-zinc-950">$' + item.price.toLocaleString() + ' MXN</span>' + (isWeb ? '<span class="text-[10px] text-emerald-600 font-semibold block">Servicio Digital (Sin Envío)</span>' : '') + '</div></div><div class="flex items-center gap-2"><div class="flex items-center border border-zinc-200 rounded-lg"><button onclick="changeQuantity(\'' + item.id + '\', -1)" class="px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-100">-</button><span class="px-2 text-xs font-bold">' + item.quantity + '</span><button onclick="changeQuantity(\'' + item.id + '\', 1)" class="px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-100">+</button></div><button onclick="removeFromCart(\'' + item.id + '\')" class="text-zinc-400 hover:text-rose-600 text-sm font-bold ml-1">&times;</button></div></div>';
+      return '<div class="flex items-center justify-between gap-3 border-b border-zinc-100 pb-3"><div class="flex items-center gap-3">' + img + '<div><h4 class="text-xs font-bold text-zinc-900 leading-snug line-clamp-1">' + item.title + '</h4><span class="text-xs font-bold text-zinc-950">$' + item.price.toLocaleString() + ' MXN</span></div></div><div class="flex items-center gap-2"><div class="flex items-center border border-zinc-200 rounded-lg"><button onclick="changeQuantity(\'' + item.id + '\', -1)" class="px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-100">-</button><span class="px-2 text-xs font-bold">' + item.quantity + '</span><button onclick="changeQuantity(\'' + item.id + '\', 1)" class="px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-100">+</button></div><button onclick="removeFromCart(\'' + item.id + '\')" class="text-zinc-400 hover:text-rose-600 text-sm font-bold ml-1">&times;</button></div></div>';
     }).join('');
   }
 
@@ -138,10 +138,15 @@ export function updateCartUI() {
 
   if (subLabel) subLabel.innerText = '$' + subtotal.toLocaleString() + ' MXN';
   if (shipLabel) {
-    if (!hasPhysical) shipLabel.innerText = '$0 MXN (Servicio Digital)';
-    else if (selectedDeliveryType === 'pickup') shipLabel.innerText = '$0 MXN (Punto de Entrega)';
-    else if (selectedShippingRate) shipLabel.innerText = '$' + shippingCost.toLocaleString() + ' MXN';
-    else shipLabel.innerText = 'Pendiente de cotizar';
+    if (!hasPhysical) {
+      shipLabel.innerText = '$0 MXN (Servicio Digital)';
+    } else if (selectedDeliveryType === 'pickup') {
+      shipLabel.innerText = '$0 MXN (Recolección en Punto)';
+    } else if (selectedShippingRate) {
+      shipLabel.innerText = '$' + shippingCost.toLocaleString() + ' MXN';
+    } else {
+      shipLabel.innerText = 'Cotizar envío arriba';
+    }
   }
   if (totLabel) totLabel.innerText = '$' + total.toLocaleString() + ' MXN';
 }
@@ -152,6 +157,7 @@ export function goToCartStep(step) {
   const a1 = document.getElementById('action-step-1');
   const a2 = document.getElementById('action-step-2');
   const title = document.getElementById('cart-drawer-title');
+  const shipCalcBox = document.getElementById('shipping-calculator-box');
 
   if (step === 2) {
     if (s1) s1.classList.add('hidden');
@@ -159,11 +165,14 @@ export function goToCartStep(step) {
     if (a1) a1.classList.add('hidden');
     if (a2) a2.classList.remove('hidden');
     if (title) title.innerText = 'Entrega & Pago';
+    // Asegurar estado visual limpio según el método activo (por defecto pickup = sin cotizador de envío)
+    toggleDeliveryMode(selectedDeliveryType);
   } else {
     if (s1) s1.classList.remove('hidden');
     if (s2) s2.classList.add('hidden');
     if (a1) a1.classList.remove('hidden');
     if (a2) a2.classList.add('hidden');
+    if (shipCalcBox) shipCalcBox.classList.add('hidden');
     if (title) title.innerText = 'Tu Carrito de Compras';
   }
 }
@@ -185,6 +194,12 @@ export function handleProceedToCheckout() {
     if (phoneInp && !phoneInp.value) phoneInp.value = sess.phone || '';
   }
 
+  // Por defecto dejamos marcada la recolección en punto físico ($0 envío)
+  const pickupRadio = document.getElementById('deliv-pickup');
+  if (pickupRadio && selectedDeliveryType === 'pickup') {
+    pickupRadio.checked = true;
+  }
+
   goToCartStep(2);
 }
 
@@ -193,7 +208,7 @@ export async function calculateShippingRates() {
   const btn = document.getElementById('btn-calc-shipping');
   const list = document.getElementById('shipping-options-list');
   if (!zip || zip.length !== 5) {
-    alert("Ingresa un Código Postal válido.");
+    alert("Ingresa un Código Postal válido de 5 dígitos.");
     return;
   }
 
@@ -278,7 +293,8 @@ export async function finalizeOrderAndPay() {
     deliveryInfo = "Servicio Digital Web (Sin Flete)";
     shippingCost = 0;
   } else if (selectedDeliveryType === 'pickup') {
-    deliveryInfo = "Punto de Entrega: " + document.getElementById('order-pickup-spot').value;
+    const spot = document.getElementById('order-pickup-spot').value;
+    deliveryInfo = "Recolección en Punto: " + spot;
     shippingCost = 0;
   } else {
     const addr = document.getElementById('order-address').value.trim();
@@ -286,11 +302,15 @@ export async function finalizeOrderAndPay() {
     const city = document.getElementById('order-city').value.trim();
     const cp = document.getElementById('order-zip').value.trim();
     if (!addr || !col || !city || !cp) {
-      alert("Completa tu dirección de envío o selecciona Punto de Entrega sin costo.");
+      alert("Completa tu dirección de envío o selecciona Recolección en Punto de Entrega ($0 MXN).");
       return;
     }
-    deliveryInfo = "Envío: " + addr + ", " + col + ", " + city + " CP " + cp;
-    shippingCost = selectedShippingRate ? selectedShippingRate.cost : 135;
+    if (!selectedShippingRate) {
+      alert("Por favor cotiza y selecciona una opción de paquetería antes de continuar.");
+      return;
+    }
+    deliveryInfo = "Envío (" + selectedShippingRate.provider + "): " + addr + ", " + col + ", " + city + " CP " + cp;
+    shippingCost = selectedShippingRate.cost;
   }
 
   const btn = document.getElementById('btn-confirm-pay');
@@ -313,7 +333,7 @@ export async function finalizeOrderAndPay() {
     shipping_address: deliveryInfo,
     shipping_method: isWebDevOnly
       ? 'Servicio Digital Web'
-      : (selectedDeliveryType === 'pickup' ? 'Punto de Entrega (Gratis)' : 'Envío Paquetería'),
+      : (selectedDeliveryType === 'pickup' ? 'Recolección en Punto (Gratis)' : 'Envío Paquetería'),
     items: itemsText,
     subtotal: subtotal,
     shipping_cost: shippingCost,
