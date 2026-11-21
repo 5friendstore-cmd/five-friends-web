@@ -31,11 +31,11 @@
     <div class="max-w-7xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between">
       
       <button onclick="navigate('inicio')" class="flex items-center cursor-pointer focus:outline-none py-1 transition-transform hover:scale-105" title="Five Friends Inicio">
-        <img src="./src/assets/logo.png" alt="Five Friends" class="h-12 sm:h-14 w-auto object-contain mix-blend-multiply">
+        <img src="./src/assets/logo.png" alt="Five Friends" class="brand-logo h-12 sm:h-14 w-auto object-contain">
       </button>
 
       <!-- Menú Desktop -->
-      <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-zinc-600">
+      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-600">
         <button type="button" onclick="navigate('inicio')" class="hover:text-zinc-950 transition">Inicio</button>
         <button type="button" onclick="navigate('catalogo')" class="hover:text-zinc-950 transition">Catálogo</button>
         <button type="button" onclick="navigate('cotizador')" class="text-zinc-950 font-semibold hover:opacity-75 transition flex items-center gap-1.5">
@@ -45,6 +45,13 @@
         <button type="button" onclick="navigate('puntos')" class="hover:text-zinc-950 transition">Puntos</button>
         <button type="button" onclick="navigate('faq')" class="hover:text-zinc-950 transition">Garantías</button>
         <button type="button" onclick="navigate('contacto')" class="hover:text-zinc-950 transition">Contacto</button>
+
+        <!-- Botón Modo Nocturno Desktop -->
+        <button type="button" onclick="toggleDarkMode()" class="p-2.5 rounded-full border border-zinc-200/80 bg-white/80 text-zinc-800 hover:scale-105 transition focus:outline-none" title="Cambiar a Modo Nocturno / Claro">
+          <svg class="icon-moon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+          <svg class="icon-sun w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+        </button>
+
         <button type="button" onclick="navigate('club')" class="bg-zinc-950 text-white px-5 py-2.5 rounded-full hover:bg-zinc-800 transition shadow-sm font-semibold text-xs tracking-wide">Club Five Friends</button>
         
         <button type="button" onclick="toggleCartDrawer()" class="relative p-2 text-zinc-800 hover:text-zinc-950 focus:outline-none" title="Ver Carrito">
@@ -56,7 +63,13 @@
       </nav>
 
       <!-- Botones Móvil -->
-      <div class="flex items-center gap-2.5 md:hidden">
+      <div class="flex items-center gap-2 md:hidden">
+        <!-- Botón Modo Nocturno Móvil -->
+        <button type="button" onclick="toggleDarkMode()" class="p-2 rounded-full border border-zinc-200/80 bg-white/80 text-zinc-800 focus:outline-none" aria-label="Modo Nocturno">
+          <svg class="icon-moon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+          <svg class="icon-sun w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+        </button>
+
         <button type="button" onclick="toggleCartDrawer()" class="relative p-2 text-zinc-800 focus:outline-none" aria-label="Carrito">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
@@ -91,14 +104,23 @@
     <!-- SECCIÓN 1: INICIO -->
     <section id="sec-inicio" class="section-fade space-y-20 sm:space-y-24">
       
-      <!-- Hero Limpio y Respirable -->
-      <div class="text-center max-w-3xl mx-auto space-y-6 pt-4 sm:pt-10">
+      <!-- Hero con Identidad de Marca Central -->
+      <div class="text-center max-w-3xl mx-auto space-y-6 pt-2 sm:pt-6">
+        
+        <!-- Logotipo Protagónico (Tamaño Grande Equilibrado) + Slogan Oficial -->
+        <div class="flex flex-col items-center justify-center space-y-4">
+          <img src="./src/assets/logo.png" alt="Five Friends" class="brand-logo w-36 sm:w-44 md:w-48 h-auto object-contain select-none">
+          <p class="font-display text-lg sm:text-2xl font-bold tracking-tight text-zinc-950">
+            “Crea lo que imaginas, colecciona lo que sueñas”
+          </p>
+        </div>
+
         <div class="inline-flex items-center gap-2.5 px-4 py-1.5 card-iridescent rounded-full text-xs font-semibold text-zinc-700">
           <span class="w-2 h-2 rounded-full bg-zinc-900 animate-pulse"></span>
           <span>Cuautitlán Izcalli • Envíos a todo México</span>
         </div>
 
-        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-zinc-950 leading-[1.1]">
+        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-zinc-950 leading-[1.12]">
           Fabricación 3D, Coleccionables y Desarrollo Web
         </h1>
 
