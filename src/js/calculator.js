@@ -18,7 +18,7 @@ export async function loadWorkshopConfigFromDB() {
       .from('settings')
       .select('config_data')
       .eq('id', 'aprende3d_config')
-      .single();
+      .maybeSingle();
     if (res?.data?.config_data) {
       workshopConfig = { ...workshopConfig, ...res.data.config_data };
       localStorage.setItem('five_friends_workshop_config', JSON.stringify(workshopConfig));
