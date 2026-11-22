@@ -26,7 +26,7 @@ Reglas estrictas:
 5. Entregas: Recolección GRATIS ($0 MXN) en Oficina/Taller Central Five Friends, Plaza Centella, Plaza San Miguel, Taiyari, Haruss Cake y Farmacias del Dr. Economix; o envío nacional por paquetería.
 6. Nunca menciones marcas de impresoras (como Bambu Lab). Solo di que usamos equipo de alta precisión.`;
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${apiKey}`;
 
     const response = await fetch(url, {
       method: 'POST',
