@@ -38,10 +38,7 @@ Reglas estrictas:
         contents: [{ parts: [{ text: mensaje }] }],
         generationConfig: {
           temperature: 0.5,
-          maxOutputTokens: 250,
-          thinkingConfig: {
-            thinkingBudget: 0
-          }
+          maxOutputTokens: 250
         }
       })
     });
