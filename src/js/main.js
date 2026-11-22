@@ -7,6 +7,7 @@ import {
   toggleManualOrderModal
 } from './navigation.js';
 import {
+  loadTaxonomyFromDB,
   fetchCatalogFromDatabase,
   filterCategoryFromHome,
   setMacroFilter,
@@ -56,6 +57,14 @@ import {
   handleCreateManualOrder,
   loadAdminData,
   handleAdminValidateCoupon,
+  populateProductCategorySelect,
+  renderAdminTaxonomyManager,
+  handleCreateCategory,
+  handleRenameCategory,
+  handleDeleteCategory,
+  handleCreateSubcategory,
+  handleRenameSubcategory,
+  handleDeleteSubcategory,
   toggleShippingFields,
   updateImagePreview,
   handleImageFileUpload,
@@ -83,7 +92,6 @@ export function toggleDarkMode() {
   applyThemeIcons(isDark);
 }
 
-// Aplicar preferencia guardada al instante antes de renderizar
 try {
   if (localStorage.getItem('five_friends_theme') === 'dark') {
     document.documentElement.classList.add('dark');
@@ -133,6 +141,14 @@ Object.assign(window, {
   handleCreateManualOrder,
   loadAdminData,
   handleAdminValidateCoupon,
+  populateProductCategorySelect,
+  renderAdminTaxonomyManager,
+  handleCreateCategory,
+  handleRenameCategory,
+  handleDeleteCategory,
+  handleCreateSubcategory,
+  handleRenameSubcategory,
+  handleDeleteSubcategory,
   toggleShippingFields,
   updateImagePreview,
   handleImageFileUpload,
@@ -149,13 +165,13 @@ Object.assign(window, {
   toggleDarkMode
 });
 
-// Movimiento parallax tornasol al navegar y hacer scroll
 window.addEventListener('scroll', () => {
   document.documentElement.style.setProperty('--scroll-y', window.scrollY + 'px');
 }, { passive: true });
 
 window.addEventListener('DOMContentLoaded', async () => {
   applyThemeIcons(document.documentElement.classList.contains('dark'));
+  await loadTaxonomyFromDB();
   await loadWorkshopConfigFromDB();
   await fetchCatalogFromDatabase();
   updateCartUI();
