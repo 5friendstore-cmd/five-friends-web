@@ -107,7 +107,6 @@
       <!-- Hero con Identidad de Marca Central -->
       <div class="text-center max-w-3xl mx-auto space-y-6 pt-2 sm:pt-6">
         
-        <!-- Logotipo Protagónico (Tamaño Grande Equilibrado) + Slogan Oficial -->
         <div class="flex flex-col items-center justify-center space-y-4">
           <img src="./src/assets/logo.png" alt="Five Friends" class="brand-logo w-36 sm:w-44 md:w-48 h-auto object-contain select-none">
           <p class="font-display text-lg sm:text-2xl font-bold tracking-tight text-zinc-950">
@@ -139,7 +138,7 @@
         </div>
       </div>
 
-      <!-- Tarjetas de los 3 Pilares con Amplio Aire -->
+      <!-- Tarjetas de los 3 Pilares -->
       <div class="space-y-6 max-w-6xl mx-auto">
         <div class="text-center space-y-1.5">
           <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-500">Nuestras Especialidades</span>
@@ -440,13 +439,8 @@
         </div>
       </div>
 
-      <!-- NIVEL 1: FILTROS PRINCIPALES -->
-      <div class="flex gap-2.5 overflow-x-auto pb-1 scrollbar-none">
-        <button type="button" onclick="setMacroFilter('all')" id="btn-macro-all" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap bg-zinc-950 text-white shadow-sm">Todos los Productos</button>
-        <button type="button" onclick="setMacroFilter('3D')" id="btn-macro-3d" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white/80 border border-zinc-200 text-zinc-700 hover:border-zinc-400">Impresión 3D</button>
-        <button type="button" onclick="setMacroFilter('Coleccionables')" id="btn-macro-col" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white/80 border border-zinc-200 text-zinc-700 hover:border-zinc-400">Coleccionables</button>
-        <button type="button" onclick="setMacroFilter('Web')" id="btn-macro-web" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition whitespace-nowrap bg-white/80 border border-zinc-200 text-zinc-700 hover:border-zinc-400">Desarrollo Web & Tiendas</button>
-      </div>
+      <!-- NIVEL 1: FILTROS PRINCIPALES DINÁMICOS -->
+      <div id="macro-filters-bar" class="flex gap-2.5 overflow-x-auto pb-1 scrollbar-none"></div>
 
       <!-- NIVEL 2: SUBCATEGORÍAS DINÁMICAS -->
       <div class="flex items-center gap-2 overflow-x-auto pb-2 pt-1 border-t border-zinc-200/60 scrollbar-none" id="subcategories-bar"></div>
@@ -814,8 +808,44 @@
           </div>
         </div>
 
-        <!-- MÓDULO 4: PRODUCTOS -->
+        <!-- MÓDULO 4: PRODUCTOS & TAXONOMÍA -->
         <div id="adm-panel-products" class="hidden space-y-6">
+
+          <!-- GESTOR DE CATEGORÍAS Y SUBCATEGORÍAS VINCULADAS -->
+          <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-5 shadow-sm">
+            <div class="border-b border-zinc-100 pb-3">
+              <span class="px-2.5 py-0.5 bg-zinc-950 text-white text-[10px] font-extrabold rounded-md uppercase">Ramificación del Catálogo</span>
+              <h3 class="text-base sm:text-lg font-bold text-zinc-950 mt-1">Gestor de Categorías & Subcategorías</h3>
+              <p class="text-xs text-zinc-500">Crea categorías principales, vincula subcategorías a cada una, renómbralas (se actualizan en todos tus productos) o elimínalas.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Crear Categoría Padre -->
+              <form onsubmit="handleCreateCategory(event)" class="bg-zinc-50 border border-zinc-200 p-4 rounded-2xl space-y-3">
+                <span class="text-xs font-bold text-zinc-900 uppercase block">+ Nueva Categoría Principal</span>
+                <div class="flex gap-2">
+                  <input type="text" id="new-cat-name" required placeholder="Ej. Accesorios Gamer" class="flex-1 px-3 py-2 bg-white border border-zinc-300 rounded-xl text-xs outline-none focus:border-zinc-950">
+                  <input type="text" id="new-cat-icon" maxlength="4" placeholder="Ícono (3D)" class="w-24 px-2.5 py-2 bg-white border border-zinc-300 rounded-xl text-xs text-center outline-none focus:border-zinc-950">
+                </div>
+                <button type="submit" class="w-full bg-zinc-950 text-white py-2 rounded-xl text-xs font-bold hover:bg-zinc-800 transition">Crear Categoría</button>
+              </form>
+
+              <!-- Crear Subcategoría Vinculada -->
+              <form onsubmit="handleCreateSubcategory(event)" class="bg-zinc-50 border border-zinc-200 p-4 rounded-2xl space-y-3">
+                <span class="text-xs font-bold text-zinc-900 uppercase block">+ Nueva Subcategoría Vinculada</span>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <select id="new-subcat-parent" required class="px-3 py-2 bg-white border border-zinc-300 rounded-xl text-xs font-semibold outline-none focus:border-zinc-950"></select>
+                  <input type="text" id="new-subcat-name" required placeholder="Nombre de subcategoría" class="px-3 py-2 bg-white border border-zinc-300 rounded-xl text-xs outline-none focus:border-zinc-950">
+                </div>
+                <button type="submit" class="w-full bg-zinc-950 text-white py-2 rounded-xl text-xs font-bold hover:bg-zinc-800 transition">Vincular Subcategoría</button>
+              </form>
+            </div>
+
+            <!-- Árbol Interactivo de Categorías y Subcategorías -->
+            <div id="admin-taxonomy-tree" class="space-y-3"></div>
+          </div>
+
+          <!-- FORMULARIO AGREGAR / EDITAR PRODUCTO -->
           <div class="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm">
             <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-b border-zinc-100 pb-3">
               <div>
@@ -853,29 +883,8 @@
               </div>
 
               <div>
-                <label class="block text-xs font-semibold text-zinc-600 mb-1">Categoría / Pilar</label>
-                <select id="adm-p-category" onchange="toggleShippingFields(this.value)" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950">
-                  <optgroup label="Pilar: Servicios Digitales">
-                    <option value="Desarrollo Web">Desarrollo Web (Sin Envío)</option>
-                  </optgroup>
-                  <optgroup label="Pilar: Coleccionables">
-                    <option value="Coleccionables">Coleccionables (General)</option>
-                    <option value="Figuras y Mas">Figuras y Mas (Coleccionables)</option>
-                    <option value="Dioramas y Bases">Dioramas y Bases</option>
-                    <option value="TCG y Cartas">TCG y Cartas</option>
-                  </optgroup>
-                  <optgroup label="Pilar: Impresión 3D">
-                    <option value="Impresión 3D">Impresión 3D (General)</option>
-                    <option value="Posavasos, Platos y Portalatas">Posavasos, Platos y Portalatas</option>
-                    <option value="Llaveros y Portallaveros">Llaveros y Portallaveros</option>
-                    <option value="Videojuegos y Juegos de Mesa">Videojuegos y Juegos de Mesa</option>
-                    <option value="Estuches y Alcancias">Estuches y Alcancias</option>
-                    <option value="Exhibidores y Joyeros">Exhibidores y Joyeros</option>
-                    <option value="Separadores y Accesorios para Libros">Separadores y Accesorios para Libros</option>
-                    <option value="Lámparas y Lítofanias">Lámparas y Lítofanias</option>
-                    <option value="Macetas y Floreros">Macetas y Floreros</option>
-                  </optgroup>
-                </select>
+                <label class="block text-xs font-semibold text-zinc-600 mb-1">Categoría / Subcategoría</label>
+                <select id="adm-p-category" onchange="toggleShippingFields(this.value)" class="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm outline-none focus:border-zinc-950"></select>
               </div>
 
               <div id="shipping-dimensions-box" class="sm:col-span-2 md:col-span-4 bg-zinc-50 border border-zinc-200 p-3.5 rounded-xl space-y-2">
